@@ -20,6 +20,9 @@ class Rapport
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
+    #[ORM\ManyToOne(inversedBy: 'rapport')]
+    private ?Project $project = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +48,18 @@ class Rapport
     public function setContent(string $content): static
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    public function getProject(): ?Project
+    {
+        return $this->project;
+    }
+
+    public function setProject(?Project $project): static
+    {
+        $this->project = $project;
 
         return $this;
     }
