@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProjectRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
@@ -21,6 +23,21 @@ class Project
 
     #[ORM\Column]
     private ?bool $statut = null;
+
+    #[ORM\ManyToOne(inversedBy: 'project')]
+    private ?User $user = null;
+
+    #[ORM\OneToMany(mappedBy: 'project', targetEntity: job::class)]
+    private Collection $job;
+
+    #[ORM\OneToMany(mappedBy: 'project', targetEntity: rapport::class)]
+    private Collection $rapport;
+
+    public function __construct()
+    {
+        $this->job = new ArrayCollection();
+        $this->rapport = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -59,6 +76,78 @@ class Project
     public function setStatut(bool $statut): static
     {
         $this->statut = $statut;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, job>
+     */
+    public function getJob(): Collection
+    {
+        return $this->job;
+    }
+
+    public function addJob(job $job): static
+    {
+        if (!$this->job->contains($job)) {
+            $this->job->add($job);
+            $job->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeJob(job $job): static
+    {
+        if ($this->job->removeElement($job)) {
+            // set the owning side to null (unless already changed)
+            if ($job->getProject() === $this) {
+                $job->setProject(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, rapport>
+     */
+    public function getRapport(): Collection
+    {
+        return $this->rapport;
+    }
+
+    public function addRapport(rapport $rapport): static
+    {
+        if (!$this->rapport->contains($rapport)) {
+            $this->rapport->add($rapport);
+            $rapport->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRapport(rapport $rapport): static
+    {
+        if ($this->rapport->removeElement($rapport)) {
+            // set the owning side to null (unless already changed)
+            if ($rapport->getProject() === $this) {
+                $rapport->setProject(null);
+            }
+        }
 
         return $this;
     }

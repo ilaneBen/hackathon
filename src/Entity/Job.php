@@ -20,6 +20,9 @@ class Job
     #[ORM\Column(type: Types::TEXT)]
     private ?string $detail = null;
 
+    #[ORM\ManyToOne(inversedBy: 'job')]
+    private ?Project $project = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +48,18 @@ class Job
     public function setDetail(string $detail): static
     {
         $this->detail = $detail;
+
+        return $this;
+    }
+
+    public function getProject(): ?Project
+    {
+        return $this->project;
+    }
+
+    public function setProject(?Project $project): static
+    {
+        $this->project = $project;
 
         return $this;
     }
