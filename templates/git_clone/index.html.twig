@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello GitCloneController!{% endblock %}
+
+{% block body %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Cloner le dépôt Git</title>
+</head>
+<body>
+    <h1>Cloner le dépôt Git</h1>
+    <form action="http://localhost:8000/git/clone" method="post">
+        <input type="submit" value="Cloner le dépôt Git">
+    </form>
+</body>
+</html>
+
+{% endblock %}
