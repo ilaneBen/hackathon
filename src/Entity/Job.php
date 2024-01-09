@@ -17,11 +17,16 @@ class Job
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $detail = null;
+
 
     #[ORM\ManyToOne(inversedBy: 'job')]
     private ?Project $project = null;
+
+    #[ORM\Column]
+    private ?bool $Resultat = null;
+
+    #[ORM\Column]
+    private array $detail = [];
 
     public function getId(): ?int
     {
@@ -40,17 +45,7 @@ class Job
         return $this;
     }
 
-    public function getDetail(): ?string
-    {
-        return $this->detail;
-    }
 
-    public function setDetail(string $detail): static
-    {
-        $this->detail = $detail;
-
-        return $this;
-    }
 
     public function getProject(): ?Project
     {
@@ -60,6 +55,30 @@ class Job
     public function setProject(?Project $project): static
     {
         $this->project = $project;
+
+        return $this;
+    }
+
+    public function isResultat(): ?bool
+    {
+        return $this->Resultat;
+    }
+
+    public function setResultat(bool $Resultat): static
+    {
+        $this->Resultat = $Resultat;
+
+        return $this;
+    }
+
+    public function getDetail(): array
+    {
+        return $this->detail;
+    }
+
+    public function setDetail(array $detail): static
+    {
+        $this->detail = $detail;
 
         return $this;
     }
