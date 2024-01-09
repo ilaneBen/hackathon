@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 use App\Entity\Job;
-use App\Entity\Rapport;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,29 +47,18 @@ class GitCloneController extends AbstractController
 
 			// Exécuter et enregistrer la commande Composer Audit
 			$composerAuditOutput = $this->executeComposerAudit($destination);
-			$php_vOutput = $this->executePHP_V($destination);
 
 			// Préparer le détail pour le stockage
-			$detailComposerAudit = empty($composerAuditOutput) ? ['result' => 'Aucune faille'] : ['result' => $composerAuditOutput];
-			$detailPhp_v = empty($php_vOutput) ? ['result' => 'Aucune faille'] : ['result' => $php_vOutput];
+			$detail = empty($composerAuditOutput) ? ['result' => 'Aucune faille'] : ['result' => $composerAuditOutput];
 
 			// Enregistrer le résultat de Composer Audit en tant que job
 			$composerAuditJob = new Job();
 			$composerAuditJob->setName('Composer Audit');
 			$composerAuditJob->setResultat(empty($composerAuditOutput) ? 'Aucune faille' : $composerAuditOutput);
-			$composerAuditJob->setDetail($detailComposerAudit); // Assigner le détail sous forme de tableau
+			$composerAuditJob->setDetail($detail); // Assigner le détail sous forme de tableau
 			$entityManager->persist($composerAuditJob);
 			$entityManager->flush();
 
-			$Php_vJob = new Job();
-			$Php_vJob->setName('Php Version');
-			$Php_vJob->setResultat(empty($php_vOutput) ? 'Aucune faille' : $php_vOutput);
-			$Php_vJob->setDetail($detailPhp_v); // Assigner le détail sous forme de tableau
-			$entityManager->persist($Php_vJob);
-			$entityManager->flush();
-
-
-			//$raport = new Rapport();
 
 			// Renvoyer la sortie comme réponse
 			$message = "Clonage du dépôt Git réussi.";
@@ -102,24 +90,7 @@ class GitCloneController extends AbstractController
 			return $exception->getMessage();
 		}
 	}
-	private function executePHP_V(): string
-	{
-		$php_vCommand = 'php-v';
 
-		// Créer un processus pour exécuter la commande Composer Audit dans le répertoire cloné
-		$process = Process::fromShellCommandline($php_vCommand);
-
-		try {
-			// Exécuter la commande Composer Audit
-			$process->mustRun();
-
-			// Récupérer la sortie de la commande
-			return $process->getOutput();
-		} catch (ProcessFailedException $exception) {
-			// En cas d'échec de Composer Audit, retourner un message d'erreur
-			return $exception->getMessage();
-		}
-	}
 	private function isValidGitUrl($url)
 	{
 		// Expression régulière pour valider l'URL Git
