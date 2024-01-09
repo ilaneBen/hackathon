@@ -28,6 +28,9 @@ class Job
     #[ORM\Column]
     private array $detail = [];
 
+    #[ORM\ManyToOne(inversedBy: 'job')]
+    private ?Rapport $rapport = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -79,6 +82,18 @@ class Job
     public function setDetail(array $detail): static
     {
         $this->detail = $detail;
+
+        return $this;
+    }
+
+    public function getRapport(): ?Rapport
+    {
+        return $this->rapport;
+    }
+
+    public function setRapport(?Rapport $rapport): static
+    {
+        $this->rapport = $rapport;
 
         return $this;
     }
