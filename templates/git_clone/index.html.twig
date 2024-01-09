@@ -3,18 +3,15 @@
 {% block title %}Hello GitCloneController!{% endblock %}
 
 {% block body %}
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Cloner le dépôt Git</title>
-</head>
-<body>
-    <h1>Cloner le dépôt Git</h1>
-    <form action="http://localhost:8000/git/clone" method="post">
-        <input type="submit" value="Cloner le dépôt Git">
-    </form>
-</body>
-</html>
+    <body>
+    <h1>Clonage de dépôt Git</h1>
+
+    {{ form_start(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.url, {'attr': {'placeholder': 'https://github.com/username/repository.git', 'required': true}}) }}
+
+    <button type="submit">Cloner le dépôt</button>
+    {{ form_end(form) }}
+    </body>
 
 {% endblock %}
