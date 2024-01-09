@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RapportRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -22,6 +24,14 @@ class Rapport
 
     #[ORM\ManyToOne(inversedBy: 'rapport')]
     private ?Project $project = null;
+
+    #[ORM\OneToMany(mappedBy: 'rapport', targetEntity: job::class)]
+    private Collection $job;
+
+    public function __construct()
+    {
+        $this->job = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -60,6 +70,36 @@ class Rapport
     public function setProject(?Project $project): static
     {
         $this->project = $project;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, job>
+     */
+    public function getJob(): Collection
+    {
+        return $this->job;
+    }
+
+    public function addJob(job $job): static
+    {
+        if (!$this->job->contains($job)) {
+            $this->job->add($job);
+            $job->setRapport($this);
+        }
+
+        return $this;
+    }
+
+    public function removeJob(job $job): static
+    {
+        if ($this->job->removeElement($job)) {
+            // set the owning side to null (unless already changed)
+            if ($job->getRapport() === $this) {
+                $job->setRapport(null);
+            }
+        }
 
         return $this;
     }
