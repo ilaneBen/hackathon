@@ -17,7 +17,7 @@ class GitCloneController extends AbstractController
 		$message = 'Bienvenue sur la page de clonage de dépôt Git !';
 
 		// Renvoyer une réponse avec une vue Twig
-		return $this->render('git_clone/index.html.twig', [
+		return $this->render('project/show.html.twig', [
 			'message' => $message,
 		]);
 	}
@@ -52,7 +52,12 @@ class GitCloneController extends AbstractController
 			$output = $process->getOutput();
 
 			// Renvoyer la sortie comme réponse
-			return new Response($output);
+			 new Response($output);
+
+			 $message ="";
+			return $this->render('project/show.html.twig', [
+				'message' => $message,
+			]);
 		} catch (ProcessFailedException $exception) {
 			// En cas d'échec, récupérer et renvoyer l'erreur
 			return new Response($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);

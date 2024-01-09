@@ -3,15 +3,15 @@
 {% block title %}Hello GitCloneController!{% endblock %}
 
 {% block body %}
-<body>
-  <h1>Clonage de dépôt Git</h1>
+    <body>
+    <h1>Clonage de dépôt Git</h1>
 
-    <form action="{{ path('git_clone') }}" method="get">
-        <label for="repository">URL du dépôt Git :</label><br>
-        <input type="text" id="repository" name="repository" placeholder="https://github.com/username/repository.git" required><br><br>
+    {{ form_start(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.url, {'attr': {'placeholder': 'https://github.com/username/repository.git', 'required': true}}) }}
 
-        <button type="submit">Cloner le dépôt</button>
-    </form>
-</body>
+    <button type="submit">Cloner le dépôt</button>
+    {{ form_end(form) }}
+    </body>
 
 {% endblock %}
