@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
-use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
@@ -18,24 +17,21 @@ class LoginAuthenticator extends AbstractAuthenticator
 {
     public function supports(Request $request): ?bool
     {
-        // return $request->headers->has('X-AUTH-TOKEN');
-        return true;
+        return $request->headers->has('X-AUTH-TOKEN') || $request->request->get('token');
+        // return true;
     }
 
     public function authenticate(Request $request): Passport
     {
-        $requestArray = $request->toArray();
+        $inputBag = $request->request;
 
-        $email = $requestArray['email'];
+        $email = $inputBag->get('email');
 
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
 
         return new Passport(
             new UserBadge($email),
-            new PasswordCredentials($requestArray['password']),
-            [
-                // new CsrfTokenBadge('authenticate', $requestArray['_csrf_token']),
-            ]
+            new PasswordCredentials($inputBag->get('password'))
         );
     }
 
