@@ -23,14 +23,19 @@ class UserController extends AbstractController
         return $this->json(['code' => 200, 'message' => 'Connected']);
     }
 
+    #[Route('/signup_view', name: 'signup_view', methods: ['GET', 'POST'])]
+    public function signUp_view(): Response
+    {
+        return $this->render('user/signup.html.twig');
+    }
+
     #[Route('/signup', name: 'signup', methods: ['GET', 'POST'])]
     public function signUp(
-        Request $request, 
-        EntityManagerInterface $em, 
-        LoginAuthenticator $loginAuthenticator, 
+        Request $request,
+        EntityManagerInterface $em,
+        LoginAuthenticator $loginAuthenticator,
         UserPasswordHasherInterface $passwordHasher
-    ): Response
-    {
+    ): Response {
         // dd('signup');
 
         $inputBag = $request->request;
@@ -39,10 +44,10 @@ class UserController extends AbstractController
         $firstName = $inputBag->get('firstName');
         $name = $inputBag->get('name');
 
-        if(!$email || !$password || !$firstName || !$name){
+        if (!$email || !$password || !$firstName || !$name) {
             return $this->json(['code' => 400, 'message' => "Bad request"]);
         }
-        
+
         $user = new User;
         $hashedPassword = $passwordHasher->hashPassword(
             $user,
