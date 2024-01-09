@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Project;
-use App\Form\Project1Type;
+use App\Form\ProjectType;
 use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,7 +26,7 @@ class ProjectController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $project = new Project();
-        $form = $this->createForm(Project1Type::class, $project);
+        $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -55,7 +55,7 @@ class ProjectController extends AbstractController
     #[Route('/{id}/edit', name: 'app_project_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Project $project, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(Project1Type::class, $project);
+        $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
