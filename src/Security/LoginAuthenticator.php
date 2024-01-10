@@ -29,13 +29,15 @@ class LoginAuthenticator extends AbstractAuthenticator
         $email = $inputBag->get('email');
         $csrfToken = $inputBag->get('csrf');
 
+        // dd($csrfToken);
+
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
 
         return new Passport(
             new UserBadge($email),
             new PasswordCredentials($inputBag->get('password')),
             [
-                [new CsrfTokenBadge('signin', $csrfToken)]
+                new CsrfTokenBadge('signin', $csrfToken),
             ]
         );
     }
