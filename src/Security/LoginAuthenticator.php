@@ -22,18 +22,14 @@ class LoginAuthenticator extends AbstractAuthenticator
 {
     public function __construct(
         private EntityManagerInterface $em,
-        private LoginAuthenticator $loginAuthenticator,
         private UserPasswordHasherInterface $passwordHasher,
         private UserRepository $userRepository,
-    )
-    {
-        
+    ) {
     }
 
     public function supports(Request $request): ?bool
     {
-        return $request->headers->has('X-AUTH-TOKEN') || $request->request->get('csrf');
-        // return true;
+        return $request->request->has('csrf');
     }
 
     public function authenticate(Request $request): Passport
@@ -45,38 +41,49 @@ class LoginAuthenticator extends AbstractAuthenticator
         $firstName = $inputBag->get('firstName');
         $name = $inputBag->get('name');
         $csrfToken = $inputBag->get('csrf');
+        $type = $inputBag->get('type');
 
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
 
-        if ($email && $password) {
+        if ($email && $password && $type) {
             $user = $this->userRepository->findOneBy(['email' => $email]);
 
-            if (!$user && $firstName && $name) {
-                $inputBag = $request->request;
+            if ($type === 'signup') {
+                if (!$user) {
+                    if (!$firstName || !$name) {
+                        throw new AuthenticationException('Identifiants manquants');
+                    }
 
-                $user = new User;
-                $hashedPassword = $this->passwordHasher->hashPassword(
-                    $user,
-                    $password
-                );
+                    $inputBag = $request->request;
 
-                $user->setEmail($email);
-                $user->setPassword($hashedPassword);
-                $user->setFirstName($firstName);
-                $user->setName($name);
+                    $user = new User;
+                    $hashedPassword = $this->passwordHasher->hashPassword(
+                        $user,
+                        $password
+                    );
 
-                $this->em->persist($user);
-                $this->em->flush();
+                    $user->setEmail($email);
+                    $user->setPassword($hashedPassword);
+                    $user->setFirstName($firstName);
+                    $user->setName($name);
+
+                    $this->em->persist($user);
+                    $this->em->flush();
+                } else {
+                    throw new AuthenticationException('L\'utilisateur existe déjà');
+                }
+            } else {
+                throw new AuthenticationException('Identifiants invalides');
             }
-        }else{
-            $email = $password = "";
+        } else {
+            throw new AuthenticationException('Identifiants manquants');
         }
 
         return new Passport(
             new UserBadge($email),
             new PasswordCredentials($password),
             [
-                new CsrfTokenBadge('signin', $csrfToken),
+                new CsrfTokenBadge($type, $csrfToken),
             ]
         );
     }
@@ -88,9 +95,10 @@ class LoginAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
+
         $data = [
             'code' => 403,
-            'message' => 'Unauthorized: ' . strtr($exception->getMessageKey(), $exception->getMessageData())
+            'message' => strtr($exception->getMessage(), $exception->getMessageData())
         ];
 
         return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);

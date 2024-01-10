@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import clsx from "clsx";
 
 export default function ({ title, csrf, redirectPath }) {
@@ -8,13 +8,14 @@ export default function ({ title, csrf, redirectPath }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const formRef = useRef(null);
 
-  const submitForm = () => {
+  const onFormSubmit = (e) => {
+    e.preventDefault();
+
     setError("");
     setIsLoading(true);
 
-    const formData = new FormData(formRef.current);
+    const formData = new FormData(e.target);
 
     fetch("/api/signup", {
       method: "POST",
@@ -22,7 +23,7 @@ export default function ({ title, csrf, redirectPath }) {
     })
       .then((res) => res.json())
       .then((res) => {
-        // If success, redirect to signin.
+        // If success, redirect the page.
         if (res?.code === 200) {
           window.location.href = redirectPath;
         } else {
@@ -34,7 +35,7 @@ export default function ({ title, csrf, redirectPath }) {
   };
 
   return (
-    <form ref={formRef} className="row user-form">
+    <form onSubmit={onFormSubmit} className="row user-form">
       <h1>{title}</h1>
 
       {error && (
@@ -93,10 +94,11 @@ export default function ({ title, csrf, redirectPath }) {
       </div>
 
       <input type="hidden" name="csrf" value={csrf} />
+      <input type="hidden" name="type" value="signup" />
 
       <div className="form-group col-12">
-        <button type="button" onClick={submitForm} className={clsx("btn btn-primary", isLoading && "disabled")}>
-          S'inscrire
+        <button type="submit" className={clsx("btn btn-primary", isLoading && "disabled")}>
+          {isLoading ? "Création du compte..." : "S'inscrire"}
         </button>
       </div>
     </form>

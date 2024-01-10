@@ -1,10 +1,3 @@
-{% set user = app.user %}
-{% set homePath = path('home') %}
-{% set signinPath = path('user_signin') %}
-{% set signupPath = path('user_signup') %}
-{% set projectsPath = path('project_index') %}
-{% set signoutPath = path('user_signout') %}
-
 <!DOCTYPE html>
 <html>
 	<head>
@@ -25,13 +18,13 @@
 	</head>
 	<body>
 		<div {{ react_component('Base/Header/index', {
-      isLogged: user,
-      homePath: homePath,
-      signinPath: signinPath,
-      signupPath: signupPath,
-      projectsPath: projectsPath,
-      signoutPath: signoutPath
-    } ) }}></div>
+      		isLogged: app.user,
+      		homePath: path('home'),
+      		signinPath: path('user_signin'),
+			signupPath: path('user_signup'),
+			projectsPath: path('project_index'),
+			signoutPath: path('user_signout'),
+    	} ) }}></div>
 
 		<div class="container"> {% block body %}{% endblock %}
 			</div>
