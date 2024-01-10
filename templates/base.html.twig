@@ -1,8 +1,9 @@
-{% set isLogged = is_granted('user') %}
-{% set homePath = '/' %}
+{% set user = app.user %}
+{% set homePath = path('home') %}
 {% set signinPath = path('user_signin') %}
 {% set signupPath = path('user_signup') %}
 {% set projectsPath = path('project_index') %}
+{% set signoutPath = path('user_signout') %}
 
 <!DOCTYPE html>
 <html>
@@ -23,11 +24,16 @@
 		{% endblock %}
 	</head>
 	<body>
-		<div {{ react_component('Base/Header/index', { isLogged: false, homePath: homePath, signinPath: signinPath, signupPath: signupPath, projectsPath: projectsPath } ) }}></div>
+		<div {{ react_component('Base/Header/index', {
+      isLogged: user,
+      homePath: homePath,
+      signinPath: signinPath,
+      signupPath: signupPath,
+      projectsPath: projectsPath,
+      signoutPath: signoutPath
+    } ) }}></div>
 
-		<div class="container">
-      {% block body %}
-      {% endblock %}
-		</div>
-	</body>
+		<div class="container"> {% block body %}{% endblock %}
+			</div>
+		</body>
 	</html>

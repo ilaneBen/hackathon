@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import clsx from "clsx";
 
-export default function ({ title, csrf }) {
+export default function ({ title, csrf, redirectPath }) {
   const [firstName, setFirstName] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -24,7 +24,7 @@ export default function ({ title, csrf }) {
       .then((res) => {
         // If success, redirect to signin.
         if (res?.code === 200) {
-          window.location.href = "/signin";
+          window.location.href = redirectPath;
         } else {
           setError(res?.message);
         }

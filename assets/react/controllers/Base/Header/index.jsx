@@ -1,11 +1,11 @@
 import React from "react";
 
-export default function ({ isLogged, homePath, signinPath, signupPath, projectsPath }) {
+export default function ({ isLogged, homePath, signinPath, signupPath, projectsPath, signoutPath }) {
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
-      <div className="container-fluid">
-        <a className="navbar-brand" href="#">
-          Le Site le Plus Bg
+      <div className="container">
+        <a className="navbar-brand" href={homePath}>
+          Analyseur
         </a>
         <button
           className="navbar-toggler"
@@ -26,11 +26,18 @@ export default function ({ isLogged, homePath, signinPath, signupPath, projectsP
               </a>
             </li>
             {isLogged ? (
-              <li className="nav-item">
-                <a className="nav-link" href={projectsPath}>
-                  Mes projets
-                </a>
-              </li>
+              <>
+                <li className="nav-item">
+                  <a className="nav-link" href={projectsPath}>
+                    Mes projets
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href={signoutPath}>
+                    Se déconnecter
+                  </a>
+                </li>
+              </>
             ) : (
               <>
                 <li className="nav-item">

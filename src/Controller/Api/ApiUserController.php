@@ -15,12 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class ApiUserController extends AbstractController
 {
     #[Route('/signin', name: 'signin', methods: ['POST'])]
-    public function signIn(
-        Request $request,
-        LoginAuthenticator $loginAuthenticator
-    ): Response {
-        $loginAuthenticator->authenticate($request);
-
+    public function signIn(): Response
+    {
         return $this->json(['code' => 200, 'message' => 'Connected']);
     }
 

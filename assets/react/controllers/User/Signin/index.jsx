@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import clsx from "clsx";
 
-export default function ({ title, csrf }) {
+export default function ({ title, csrf, redirectPath }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -21,11 +21,8 @@ export default function ({ title, csrf }) {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log("res", res);
-
-        // If success, redirect to signin.
         if (res?.code === 200) {
-          console.log("Connexion réussie");
+          window.location = redirectPath;
         } else {
           setError(res?.message);
         }
