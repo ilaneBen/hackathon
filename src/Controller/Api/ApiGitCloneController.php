@@ -59,36 +59,54 @@ class ApiGitCloneController extends AbstractController
         $phpStanOutput = $phpStan->getOutput();
 
         $detailPhpStan = empty($phpStanOutput) ? ['result' => 'Aucune faille'] : ['result' => $phpStanOutput];
+			
+			// Exécuter PHP MD
+			$phpCs = new Process(['../../vendor/bin/phpcs', "../../public/repoClone/src"]);
+			$phpCs->setWorkingDirectory(realpath(__DIR__ . "/../../../public/repoClone"));
+        $phpCs->run();
+        $phpCsOutput = $phpCs->getOutput();
+		// dd($phpCs);
 
+        $detailphpCs = empty($phpCsOutput) ? ['result' => 'Aucune faille'] : ['result' => $phpCsOutput];
+
+		
         // Enregistrer les résultats de Composer Audit et PHPStan en tant que jobs
         $composerAuditJob = new Job();
         $composerAuditJob->setName('Composer Audit');
-        $composerAuditJob->setResultat(true);
+		$boolPhp = empty($composerAuditOutput); // Vérifie si $composerAuditOutput est vide
+        $composerAuditJob->setResultat($this->checkAuditOutput($composerAuditOutput));
         $composerAuditJob->setDetail($detail);
         $entityManager->persist($composerAuditJob);
 
         $phpStanJob = new Job();
         $phpStanJob->setName('PHP STAN');
-        $phpStanJob->setResultat(true);
+        $phpStanJob->setResultat($this->checkAuditOutput($phpStanOutput));
         $phpStanJob->setDetail($detailPhpStan);
         $entityManager->persist($phpStanJob);
+        
+		$phpCsJob = new Job();
+        $phpCsJob->setName('PHP Cs');
+        $phpCsJob->setResultat($this->checkAuditOutput($phpCsOutput));
+        $phpCsJob->setDetail($detailphpCs);
+        $entityManager->persist($phpCsJob);
 
         // Créer un rapport
         $rapport = new Rapport();
         $rapport->addJob($composerAuditJob);
+        $rapport->addJob($phpCsJob);
         $rapport->addJob($phpStanJob);
         $rapport->setDate(new \DateTimeImmutable('now'));
-        $rapport->setContent($composerAuditJob->getName());
+        $rapport->setContent("rapoort N°".$rapport->getId());
         $composerAuditJob->setRapport($rapport);
         $phpStanJob->setRapport($rapport);
         $entityManager->persist($rapport);
-
+$entityManager->flush();
         // Nettoyer le répertoire cloné une fois terminé
         $filesystem = new Filesystem();
         $filesystem->remove('repoClone');
 
         // Sauvegarder les entités et renvoyer la réponse
-        $entityManager->flush();
+        
 
         $message = "Clonage du dépôt Git réussi.";
         return $this->render('git_clone/resultat.html.twig', [
@@ -128,4 +146,13 @@ class ApiGitCloneController extends AbstractController
 		// Vérification avec la regex
 		return preg_match($regex, $url);
 	}
+	function checkAuditOutput($composerAuditOutput) {
+        if (empty($composerAuditOutput)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+			// Vérification pour s'assurer que $boolPhp est un booléen
+
 }
