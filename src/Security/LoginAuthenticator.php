@@ -45,38 +45,42 @@ class LoginAuthenticator extends AbstractAuthenticator
 
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
 
-        if ($email && $password && $type) {
-            $user = $this->userRepository->findOneBy(['email' => $email]);
+        if ((!$email || !$password || !$type)) {
+            throw new AuthenticationException('Identifiants manquants');
+        }
 
-            if ($type === 'signup') {
-                if (!$user) {
-                    if (!$firstName || !$name) {
-                        throw new AuthenticationException('Identifiants manquants');
-                    }
+        $user = $this->userRepository->findOneBy(['email' => $email]);
 
-                    $inputBag = $request->request;
-
-                    $user = new User;
-                    $hashedPassword = $this->passwordHasher->hashPassword(
-                        $user,
-                        $password
-                    );
-
-                    $user->setEmail($email);
-                    $user->setPassword($hashedPassword);
-                    $user->setFirstName($firstName);
-                    $user->setName($name);
-
-                    $this->em->persist($user);
-                    $this->em->flush();
-                } else {
-                    throw new AuthenticationException('L\'utilisateur existe déjà');
-                }
-            } else {
+        if ($type === 'signup') {
+            if(!$firstName || !$name){
+                throw new AuthenticationException('Identifiants manquants');
+            }
+            if($user) {
+                throw new AuthenticationException('L\'utilisateur existe déjà');
+            }
+            
+        } else if ($type === 'signin') {
+            if(!$user) {
                 throw new AuthenticationException('Identifiants invalides');
             }
-        } else {
-            throw new AuthenticationException('Identifiants manquants');
+        }
+
+        if ($type === 'signup' && !$user) {
+            $inputBag = $request->request;
+
+            $user = new User;
+            $hashedPassword = $this->passwordHasher->hashPassword(
+                $user,
+                $password
+            );
+
+            $user->setEmail($email);
+            $user->setPassword($hashedPassword);
+            $user->setFirstName($firstName);
+            $user->setName($name);
+
+            $this->em->persist($user);
+            $this->em->flush();
         }
 
         return new Passport(
