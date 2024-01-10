@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import clsx from "clsx";
 
-export default function ({ title }) {
+export default function ({ title, csrf }) {
   const [firstName, setFirstName] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -91,6 +91,8 @@ export default function ({ title }) {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
+
+      <input type="hidden" name="csrf" value={csrf} />
 
       <div className="form-group col-12">
         <button type="button" onClick={submitForm} className={clsx("btn btn-primary", isLoading && "disabled")}>

@@ -2,8 +2,10 @@
 
 {% set title = "Se connecter" %}
 
-{% block title %}{{title}}{% endblock %}
+{% block title %}
+	{{title}}
+{% endblock %}
 
 {% block body %}
-    <div {{ react_component('User/Signin/index', { title: title }) }}></div>
+	<div {{ react_component('User/Signin/index', { title: title, csrf: csrf_token('signin') } ) }}></div>
 {% endblock %}
