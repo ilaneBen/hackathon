@@ -41,6 +41,7 @@ class ApiGitCloneController extends AbstractController
 			// dd($pwd->getOutput());
 			// Exécuter et enregistrer la commande Composer Audit
 			$composerAudit = new Process(["composer", "audit", "--locked", "--format=json", $destination]);
+			$composerAudit->setWorkingDirectory($destination);
 			$composerAudit->run();
 
 			$composerAuditOutput = $composerAudit->getOutput();
@@ -50,6 +51,7 @@ class ApiGitCloneController extends AbstractController
 
 			// executer php stan
 			$phpStan = new Process(["php", "-d", "memory_limit=512M", realpath(__DIR__ . "/../../../vendor/bin/phpstan"), "analyse", "-c", "phpstan.neon.dist", $destination]);
+			$phpStan->setWorkingDirectory($destination);
 			$phpStan->run();
 			$phpStanOutput = $phpStan->getOutput();
 			
