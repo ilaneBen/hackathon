@@ -79,7 +79,6 @@
                 $composerAuditOutput = $composerAudit->getOutput();
 
                 $detail = empty($composerAuditOutput) ? ['result' => 'Aucune faille'] : ['result' => $composerAuditOutput];
-                $detail = empty($composerAuditOutput) ? ['result' => 'Aucune faille'] : ['result' => $composerAuditOutput];
 
                 // Exécuter PHPStan
                 $phpStan = new Process(['../../vendor/bin/phpstan', 'analyse', 'src', 'tests']);
