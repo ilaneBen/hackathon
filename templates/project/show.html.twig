@@ -32,7 +32,7 @@
 
     <a href="{{ path('project_edit', {'id': project.id}) }}">edit</a>
     {% if project.url %}
-        <a href="{{ path('api_git_clone', {'repository': project.url}) }}">Clone Repository</a>
+        <a href="{{ path('api_git_clone', {"project": project.id }) }}">Clone Repository</a>
     {% endif %}
     {{ include('project/_delete_form.html.twig') }}
 {% endblock %}

@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\Job;
+use App\Entity\Project;
 use App\Entity\Rapport;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,11 +17,12 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/git', name: 'git_')]
 class ApiGitCloneController extends AbstractController
 {
-	#[Route('/clone', name: 'clone')]
-	public function gitClone (Request $request, EntityManagerInterface $entityManager): Response
+	#[Route('/clone/{project}', name: 'clone')]
+	public function gitClone ( Project $project, Request $request, EntityManagerInterface $entityManager): Response
 	{
+
 		// Récupérer l'URL du dépôt Git depuis la requête
-		$repositoryUrl = $request->query->get('repository');
+		$repositoryUrl = $project->getUrl();
 
 		// Vérifier si une URL de dépôt a été fournie
 		if (!$repositoryUrl) {
@@ -92,6 +94,7 @@ class ApiGitCloneController extends AbstractController
 
 			// Créer un rapport
 			$rapport = new Rapport();
+			$rapport->setProject($project);
 			$rapport->addJob($composerAuditJob);
 			$rapport->addJob($phpCsJob);
 			$rapport->addJob($phpStanJob);
