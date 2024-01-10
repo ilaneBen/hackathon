@@ -28,11 +28,11 @@
 
     {{ message }}
 
-    <a href="{{ path('app_project_index') }}">back to list</a>
+    <a href="{{ path('project_index') }}">back to list</a>
 
-    <a href="{{ path('app_project_edit', {'id': project.id}) }}">edit</a>
+    <a href="{{ path('project_edit', {'id': project.id}) }}">edit</a>
     {% if project.url %}
-        <a href="{{ path('git_clone', {'repository': project.url}) }}">Clone Repository</a>
+        <a href="{{ path('api_git_clone', {'repository': project.url}) }}">Clone Repository</a>
     {% endif %}
     {{ include('project/_delete_form.html.twig') }}
 {% endblock %}
