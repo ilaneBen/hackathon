@@ -19,7 +19,7 @@ class Job
 
 
 
-    #[ORM\ManyToOne(inversedBy: 'job')]
+    #[ORM\ManyToOne(inversedBy: 'Job')]
     private ?Project $project = null;
 
     #[ORM\Column]
@@ -28,7 +28,7 @@ class Job
     #[ORM\Column]
     private array $detail = [];
 
-    #[ORM\ManyToOne(inversedBy: 'job')]
+    #[ORM\ManyToOne(inversedBy: 'Job')]
     private ?Rapport $rapport = null;
 
     public function getId(): ?int

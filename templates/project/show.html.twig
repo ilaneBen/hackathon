@@ -34,6 +34,7 @@
             <tr>
                 <th>Report ID</th>
                 <th>Details</th>
+                <th>Voir</th>
             </tr>
             </thead>
             <tbody>
@@ -41,6 +42,7 @@
                 <tr>
                     <td>{{ report.id }}</td>
                     <td>{{ report.content }}</td>
+                    <td><a href="/rapport/{{ report.id  }}">Voir rapport</td>
                 </tr>
             {% endfor %}
             </tbody>
