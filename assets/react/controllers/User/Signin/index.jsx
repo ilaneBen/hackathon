@@ -13,7 +13,6 @@ export default function ({ title }) {
 
     setIsLoading(true);
 
-    const errorMessage = "Une erreur est survenue.";
     const formData = new FormData(formRef.current);
 
     fetch("/api/signin", {
@@ -31,7 +30,7 @@ export default function ({ title }) {
           setError(res?.message);
         }
       })
-      .catch(() => setError(errorMessage))
+      .catch(() => setError("Une erreur est survenue."))
       .finally(() => setIsLoading(false));
   };
 
