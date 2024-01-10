@@ -34,11 +34,7 @@ class ApiGitCloneController extends AbstractController
 		$process = new Process(["git", "clone", $repositoryUrl, "repoClone"]);
 		$process->run(); // Exécute la commande git clone
 		try {
-			// $cd = new Process(["cd", "repoClone"]);
-			// $cd->run();
-			// $pwd = new Process(["pwd"]);
-			// $pwd->run();
-			// dd($pwd->getOutput());
+			sleep(1);
 
 			// Exécuter et enregistrer la commande Composer Audit
 			$composerAudit = new Process(["composer", "audit", "--locked", "--format=json"]);
