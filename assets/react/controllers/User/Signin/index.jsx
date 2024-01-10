@@ -2,8 +2,6 @@ import React, { useRef, useState } from "react";
 import clsx from "clsx";
 
 export default function ({ title }) {
-  const [firstName, setFirstName] = useState("");
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -12,20 +10,23 @@ export default function ({ title }) {
 
   const submitForm = () => {
     setError("");
+
     setIsLoading(true);
 
     const errorMessage = "Une erreur est survenue.";
     const formData = new FormData(formRef.current);
 
-    fetch("/api/signup", {
+    fetch("/api/signin", {
       method: "POST",
       body: formData,
     })
       .then((res) => res.json())
       .then((res) => {
+        console.log("res", res);
+
         // If success, redirect to signin.
         if (res?.code === 200) {
-          window.location.href = "/signin";
+          console.log("Connexion réussie");
         } else {
           setError(res?.message);
         }
@@ -44,30 +45,6 @@ export default function ({ title }) {
           <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
       )}
-
-      <div className="form-group col-6">
-        <label htmlFor="firstName">Prénom</label>
-        <input
-          type="text"
-          id="firstName"
-          name="firstName"
-          className="form-control"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-        />
-      </div>
-
-      <div className="form-group col-6">
-        <label htmlFor="name">Nom</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          className="form-control"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </div>
 
       <div className="form-group col-12">
         <label htmlFor="email">Email</label>
@@ -95,7 +72,7 @@ export default function ({ title }) {
 
       <div className="form-group col-12">
         <button type="button" onClick={submitForm} className={clsx("btn btn-primary", isLoading && "disabled")}>
-          S'inscrire
+          Se connecter
         </button>
       </div>
     </form>

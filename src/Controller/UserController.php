@@ -9,10 +9,15 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/', 'user_')]
 class UserController extends AbstractController
 {
-
-    #[Route('/signup', name: 'signup', methods: ['GET', 'POST'])]
+    #[Route('/signup', name: 'signup', methods: ['GET'])]
     public function signUp_view(): Response
     {
         return $this->render('user/signup.html.twig');
+    }
+
+    #[Route('/signin', name: 'signin', methods: ['GET'])]
+    public function signIn_view(): Response
+    {
+        return $this->render('user/signin.html.twig');
     }
 }

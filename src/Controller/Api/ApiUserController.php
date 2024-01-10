@@ -14,25 +14,23 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/', 'user_')]
 class ApiUserController extends AbstractController
 {
-    #[Route('/signin', name: 'signin', methods: ['GET'])]
+    #[Route('/signin', name: 'signin', methods: ['POST'])]
     public function signIn(
-        Request $request, 
+        Request $request,
         LoginAuthenticator $loginAuthenticator
-    ): Response
-    {
+    ): Response {
         $loginAuthenticator->authenticate($request);
 
         return $this->json(['code' => 200, 'message' => 'Connected']);
     }
 
-    #[Route('/signup', name: 'signup', methods: ['GET', 'POST'])]
+    #[Route('/signup', name: 'signup', methods: ['POST'])]
     public function signUp(
         Request $request,
         EntityManagerInterface $em,
         LoginAuthenticator $loginAuthenticator,
         UserPasswordHasherInterface $passwordHasher
-    ): Response 
-    {
+    ): Response {
 
         $inputBag = $request->request;
         $email = $inputBag->get('email');
@@ -41,7 +39,12 @@ class ApiUserController extends AbstractController
         $name = $inputBag->get('name');
 
         if (!$email || !$password || !$firstName || !$name) {
-            return $this->json(['code' => 400, 'message' => "Bad request"]);
+            return $this->json(['code' => 400, 'message' => "Veuillez remplir tous les champs."]);
+        }
+
+        $user = $em->getRepository(User::class)->findOneBy(['email' => $email]);
+        if ($user) {
+            return $this->json(['code' => 400, 'message' => "Un utilisateur avec cet email existe déjà."]);
         }
 
         $user = new User;
