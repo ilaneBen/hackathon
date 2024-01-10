@@ -6,6 +6,7 @@ use App\Entity\Job;
 use App\Entity\Rapport;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -61,7 +62,8 @@ class ApiGitCloneController extends AbstractController
 			//$entityManager->flush();
 			$entityManager->persist($raport);
 			$entityManager->flush();
-
+			$filesystem = new Filesystem();
+			$filesystem->remove('repoClone');
 			// Renvoyer la sortie comme réponse
 			$message = "Clonage du dépôt Git réussi.";
 			return $this->render('git_clone/resultat.html.twig', [
