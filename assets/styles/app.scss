@@ -8,18 +8,18 @@ body {
 }
 
 .container:has(.user-form) {
-  height: 100%;
+  margin-top: 100px;
   display: flex;
-  align-items: center;
   justify-content: center;
 }
 
 .user-form {
-  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+  box-shadow: rgb(99 99 99 / 30%) 0px 2px 8px 0px;
   padding: 5% 10%;
   row-gap: 15px;
   width: 1000px;
   max-width: 90vw;
+  border-radius: 8px;
 
   .form-group button {
     width: 40%;
