@@ -7,17 +7,17 @@ use App\Entity\Rapport;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Process\Process;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/git', name: 'git_')]
 class ApiGitCloneController extends AbstractController
 {
 	#[Route('/clone', name: 'clone')]
-	public function gitClone(Request $request, EntityManagerInterface $entityManager): Response
+	public function gitClone (Request $request, EntityManagerInterface $entityManager): Response
 	{
 		// Récupérer l'URL du dépôt Git depuis la requête
 		$repositoryUrl = $request->query->get('repository');
@@ -43,82 +43,82 @@ class ApiGitCloneController extends AbstractController
 			}
 		}, null, 300000); // Attendre jusqu'à 300 secondes (ajustez si nécessaire)
 
-    try {
-        // Exécuter la commande Composer Audit
-        $composerAudit = new Process(["composer", "audit", "--locked", "--format=json"]);
-        $composerAudit->setWorkingDirectory(realpath(__DIR__ . "/../../../public/repoClone"));
-        $composerAudit->run();
-        $composerAuditOutput = $composerAudit->getOutput();
+		try {
+			// Exécuter la commande Composer Audit
+			$composerAudit = new Process(["composer", "audit", "--locked", "--format=json"]);
+			$composerAudit->setWorkingDirectory(realpath(__DIR__ . "/../../../public/repoClone"));
+			$composerAudit->run();
+			$composerAuditOutput = $composerAudit->getOutput();
 
-        $detail = empty($composerAuditOutput) ? ['result' => 'Aucune faille'] : ['result' => $composerAuditOutput];
+			$detail = empty($composerAuditOutput) ? ['result' => 'Aucune faille'] : ['result' => $composerAuditOutput];
 
-        // Exécuter PHPStan
-        $phpStan = new Process(['../../vendor/bin/phpstan', 'analyse', 'src', 'tests']);
-        $phpStan->setWorkingDirectory(realpath(__DIR__ . "/../../../public/repoClone"));
-        $phpStan->run();
-        $phpStanOutput = $phpStan->getOutput();
+			// Exécuter PHPStan
+			$phpStan = new Process(['../../vendor/bin/phpstan', 'analyse', 'src', 'tests']);
+			$phpStan->setWorkingDirectory(realpath(__DIR__ . "/../../../public/repoClone"));
+			$phpStan->run();
+			$phpStanOutput = $phpStan->getOutput();
 
-        $detailPhpStan = empty($phpStanOutput) ? ['result' => 'Aucune faille'] : ['result' => $phpStanOutput];
-			
+			$detailPhpStan = empty($phpStanOutput) ? ['result' => 'Aucune faille'] : ['result' => $phpStanOutput];
+
 			// Exécuter PHP MD
 			$phpCs = new Process(['../../vendor/bin/phpcs', "../../public/repoClone/src"]);
 			$phpCs->setWorkingDirectory(realpath(__DIR__ . "/../../../public/repoClone"));
-        $phpCs->run();
-        $phpCsOutput = $phpCs->getOutput();
-		// dd($phpCs);
+			$phpCs->run();
+			$phpCsOutput = $phpCs->getOutput();
+			// dd($phpCs);
 
-        $detailphpCs = empty($phpCsOutput) ? ['result' => 'Aucune faille'] : ['result' => $phpCsOutput];
+			$detailphpCs = empty($phpCsOutput) ? ['result' => 'Aucune faille'] : ['result' => $phpCsOutput];
 
-		
-        // Enregistrer les résultats de Composer Audit et PHPStan en tant que jobs
-        $composerAuditJob = new Job();
-        $composerAuditJob->setName('Composer Audit');
-		$boolPhp = empty($composerAuditOutput); // Vérifie si $composerAuditOutput est vide
-        $composerAuditJob->setResultat($this->checkAuditOutput($composerAuditOutput));
-        $composerAuditJob->setDetail($detail);
-        $entityManager->persist($composerAuditJob);
 
-        $phpStanJob = new Job();
-        $phpStanJob->setName('PHP STAN');
-        $phpStanJob->setResultat($this->checkAuditOutput($phpStanOutput));
-        $phpStanJob->setDetail($detailPhpStan);
-        $entityManager->persist($phpStanJob);
-        
-		$phpCsJob = new Job();
-        $phpCsJob->setName('PHP Cs');
-        $phpCsJob->setResultat($this->checkAuditOutput($phpCsOutput));
-        $phpCsJob->setDetail($detailphpCs);
-        $entityManager->persist($phpCsJob);
+			// Enregistrer les résultats de Composer Audit et PHPStan en tant que jobs
+			$composerAuditJob = new Job();
+			$composerAuditJob->setName('Composer Audit');
+			$boolPhp = empty($composerAuditOutput); // Vérifie si $composerAuditOutput est vide
+			$composerAuditJob->setResultat($this->checkAuditOutput($composerAuditOutput));
+			$composerAuditJob->setDetail($detail);
+			$entityManager->persist($composerAuditJob);
 
-        // Créer un rapport
-        $rapport = new Rapport();
-        $rapport->addJob($composerAuditJob);
-        $rapport->addJob($phpCsJob);
-        $rapport->addJob($phpStanJob);
-        $rapport->setDate(new \DateTimeImmutable('now'));
-        $rapport->setContent("rapoort N°".$rapport->getId());
-        $composerAuditJob->setRapport($rapport);
-        $phpStanJob->setRapport($rapport);
-        $entityManager->persist($rapport);
-$entityManager->flush();
-        // Nettoyer le répertoire cloné une fois terminé
-        $filesystem = new Filesystem();
-        $filesystem->remove('repoClone');
+			$phpStanJob = new Job();
+			$phpStanJob->setName('PHP STAN');
+			$phpStanJob->setResultat($this->checkAuditOutput($phpStanOutput));
+			$phpStanJob->setDetail($detailPhpStan);
+			$entityManager->persist($phpStanJob);
 
-        // Sauvegarder les entités et renvoyer la réponse
-        
+			$phpCsJob = new Job();
+			$phpCsJob->setName('PHP Cs');
+			$phpCsJob->setResultat($this->checkAuditOutput($phpCsOutput));
+			$phpCsJob->setDetail($detailphpCs);
+			$entityManager->persist($phpCsJob);
 
-        $message = "Clonage du dépôt Git réussi.";
-        return $this->render('git_clone/resultat.html.twig', [
-			'message' => $message,
-		]);
-    } catch (ProcessFailedException $exception) {
+			// Créer un rapport
+			$rapport = new Rapport();
+			$rapport->addJob($composerAuditJob);
+			$rapport->addJob($phpCsJob);
+			$rapport->addJob($phpStanJob);
+			$rapport->setDate(new \DateTimeImmutable('now'));
+			$rapport->setContent("rapoort N°" . $rapport->getId());
+			$composerAuditJob->setRapport($rapport);
+			$phpStanJob->setRapport($rapport);
+			$entityManager->persist($rapport);
+			$entityManager->flush();
+			// Nettoyer le répertoire cloné une fois terminé
+			$filesystem = new Filesystem();
+			$filesystem->remove('repoClone');
+
+			// Sauvegarder les entités et renvoyer la réponse
+
+
+			$message = "Clonage du dépôt Git réussi.";
+			return $this->render('git_clone/resultat.html.twig', [
+				'message' => $message,
+			]);
+		} catch (ProcessFailedException $exception) {
 			// Gérer les erreurs
 			return new Response($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	private function executeComposerAudit(): string
+	private function executeComposerAudit (): string
 	{
 		$composerAuditCommand = 'composer audit --locked --format=json';
 
@@ -137,7 +137,7 @@ $entityManager->flush();
 		}
 	}
 
-	private function isValidGitUrl($url)
+	private function isValidGitUrl ($url)
 	{
 		// Expression régulière pour valider l'URL Git
 		$regex = '/^(github|https?|ssh):\/\/[^\s@]+(@|:\/\/)([^\/:]+)[:\/]Leslie\/([^\/:]+)\/(.+).git$/i';
@@ -146,13 +146,15 @@ $entityManager->flush();
 		// Vérification avec la regex
 		return preg_match($regex, $url);
 	}
-	function checkAuditOutput($composerAuditOutput) {
-        if (empty($composerAuditOutput)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-			// Vérification pour s'assurer que $boolPhp est un booléen
+
+	function checkAuditOutput ($composerAuditOutput)
+	{
+		if (empty($composerAuditOutput)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	// Vérification pour s'assurer que $boolPhp est un booléen
 
 }
