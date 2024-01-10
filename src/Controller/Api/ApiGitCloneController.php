@@ -58,7 +58,11 @@ class ApiGitCloneController extends AbstractController
         $phpStan->run();
         $phpStanOutput = $phpStan->getOutput();
 
+        // Exécuter PHPStan
         $detailPhpStan = empty($phpStanOutput) ? ['result' => 'Aucune faille'] : ['result' => $phpStanOutput];
+
+        // Get the PHP version
+        $phpVersion = phpversion();
 
         // Enregistrer les résultats de Composer Audit et PHPStan en tant que jobs
         $composerAuditJob = new Job();
@@ -73,6 +77,13 @@ class ApiGitCloneController extends AbstractController
         $phpStanJob->setDetail($detailPhpStan);
         $entityManager->persist($phpStanJob);
 
+        $phpVersionJob = new Job();
+        $phpVersionJob->setName('PHP Version');
+        $phpVersionJob->setResultat(true);
+        $phpVersionJob->setDetail((array)$phpVersion);
+        $entityManager->persist($phpVersionJob);
+
+
         // Créer un rapport
         $rapport = new Rapport();
         $rapport->addJob($composerAuditJob);
@@ -81,11 +92,13 @@ class ApiGitCloneController extends AbstractController
         $rapport->setContent($composerAuditJob->getName());
         $composerAuditJob->setRapport($rapport);
         $phpStanJob->setRapport($rapport);
+        $phpVersionJob->setRapport($rapport);
         $entityManager->persist($rapport);
 
         // Nettoyer le répertoire cloné une fois terminé
-        $filesystem = new Filesystem();
-        $filesystem->remove('repoClone');
+        /*$filesystem = new Filesystem();
+        $filesystem->remove('repoClone');*/
+        rmdir('repoClone');
 
         // Sauvegarder les entités et renvoyer la réponse
         $entityManager->flush();
