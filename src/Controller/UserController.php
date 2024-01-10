@@ -20,4 +20,10 @@ class UserController extends AbstractController
     {
         return $this->render('user/signin.html.twig');
     }
+
+    #[Route('/logout', name: 'logout', methods: ['GET'])]
+    public function logout(): Response
+    {
+        return $this->redirectToRoute('user_signup');
+    }
 }
