@@ -44,7 +44,7 @@ class ApiGitCloneController extends AbstractController
 			// Enregistrer le résultat de Composer Audit en tant que job
 			$composerAuditJob = new Job();
 			$composerAuditJob->setName('Composer Audit');
-			$composerAuditJob->setResultat(empty($composerAuditOutput) ? 'Aucune faille' : $composerAuditOutput);
+			$composerAuditJob->setResultat(true);
 			$composerAuditJob->setDetail($detail); // Assigner le détail sous forme de tableau
 			$entityManager->persist($composerAuditJob);
 			$entityManager->flush();
