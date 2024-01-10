@@ -39,9 +39,10 @@ class ApiGitCloneController extends AbstractController
 			// $pwd = new Process(["pwd"]);
 			// $pwd->run();
 			// dd($pwd->getOutput());
+
 			// Exécuter et enregistrer la commande Composer Audit
-			$composerAudit = new Process(["composer", "audit", "--locked", "--format=json", $destination]);
-			$composerAudit->setWorkingDirectory($destination);
+			$composerAudit = new Process(["composer", "audit", "--locked", "--format=json"]);
+			$composerAudit->setWorkingDirectory('repoClone');
 			$composerAudit->run();
 
 			$composerAuditOutput = $composerAudit->getOutput();
@@ -50,7 +51,7 @@ class ApiGitCloneController extends AbstractController
 
 
 			// executer php stan
-			$phpStan = new Process(["php", "-d", "memory_limit=512M", realpath(__DIR__ . "/../../../vendor/bin/phpstan"), "analyse", "-c", "phpstan.neon.dist", $destination]);
+			$phpStan =new Process(['../../vendor/bin/phpstan', 'analyse', 'src', 'tests']);
 			$phpStan->setWorkingDirectory($destination);
 			$phpStan->run();
 			$phpStanOutput = $phpStan->getOutput();
@@ -58,7 +59,7 @@ class ApiGitCloneController extends AbstractController
 			$detailPhpStan = empty($phpStanOutput) ? ['result' => 'Aucune faille'] : ['result' => $phpStanOutput];
 			
 			// Préparer le détail pour le stockage
-			dd($composerAudit, $phpStan);
+
 
 			// Enregistrer le résultat de Composer Audit en tant que job
 			$composerAuditJob = new Job();
