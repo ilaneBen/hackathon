@@ -43,18 +43,18 @@ class ApiGitCloneController extends AbstractController
 			}
 		}, null, 300000); // Attendre jusqu'à 300 secondes (ajustez si nécessaire)
 
-		try {
-			// Exécuter la commande Composer Audit
-			$composerAudit = new Process(["composer", "audit", "--locked", "--format=json"]);
-			$composerAudit->setWorkingDirectory(realpath(__DIR__ . "/../../../public/repoClone"));
-			$composerAudit->run();
-			$composerAuditOutput = $composerAudit->getOutput();
+    try {
+        // Exécuter la commande Composer Audit
+        $composerAudit = new Process(["composer", "audit", "--locked", "--format=json"]);
+        $composerAudit->setWorkingDirectory(realpath(__DIR__ . "/../../../public/repoClone"));
+        $composerAudit->run();
+        $composerAuditOutput = $composerAudit->getOutput();
 
-			$detail = empty($composerAuditOutput) ? ['result' => 'Aucune faille'] : ['result' => $composerAuditOutput];
+        $detail = empty($composerAuditOutput) ? ['result' => 'Aucune faille'] : ['result' => $composerAuditOutput];
 
-			// Exécuter PHPStan
-			$phpStan = new Process(['../../vendor/bin/phpstan', 'analyse', 'src', 'tests']);
-			$phpStan->setWorkingDirectory(realpath(__DIR__ . "/../../../public/repoClone"));
+        // Exécuter PHPStan
+        $phpStan = new Process(['../../vendor/bin/phpstan', 'analyse', 'src', 'tests']);
+        $phpStan->setWorkingDirectory(realpath(__DIR__ . "/../../../public/repoClone"));
         $phpStan->run();
         $phpStanOutput = $phpStan->getOutput();
 
