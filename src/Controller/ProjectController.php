@@ -7,6 +7,7 @@ use App\Form\ProjectType;
 use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,13 +15,26 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/project', name: 'project_')]
 class ProjectController extends AbstractController
 {
+	public function __construct(private Security $security) {}
     #[Route('/', name: 'index', methods: ['GET'])]
-    public function index(ProjectRepository $projectRepository): Response
-    {
-        return $this->render('project/index.html.twig', [
-            'projects' => $projectRepository->findAll(),
-        ]);
-    }
+	public function index(ProjectRepository $projectRepository): Response
+	{
+		// Récupérer l'utilisateur actuel
+		$currentUser = $this->security->getUser();
+
+		// Vérifier si un utilisateur est connecté
+		if ($currentUser) {
+			// Récupérer les projets de l'utilisateur actuel
+			$projects = $projectRepository->findBy(['user' => $currentUser]); // Assurez-vous de modifier 'user' avec le champ approprié
+		} else {
+			// Gérer le cas où aucun utilisateur n'est connecté, peut-être rediriger vers une page de connexion
+			$projects = [];
+		}
+
+		return $this->render('project/index.html.twig', [
+			'projects' => $projects,
+		]);
+	}
 
     #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
