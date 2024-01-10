@@ -1,3 +1,5 @@
+@import "./common.scss";
+
 html {
   height: 100%;
 }
@@ -7,19 +9,26 @@ body {
   height: 100%;
 }
 
-.container:has(.user-form) {
+.container.base {
   margin-top: 100px;
-  display: flex;
-  justify-content: center;
+
+  &:has(.user-form) {
+    display: flex;
+    justify-content: center;
+  }
 }
 
 .user-form {
   box-shadow: rgb(99 99 99 / 30%) 0px 2px 8px 0px;
-  padding: 5% 10%;
+  padding: 26px 50px;
   row-gap: 15px;
   width: 1000px;
   max-width: 90vw;
   border-radius: 8px;
+
+  @include mobile {
+    padding: 26px 6px;
+  }
 
   .form-group button {
     width: 40%;

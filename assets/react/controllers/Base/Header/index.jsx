@@ -25,19 +25,22 @@ export default function ({ isLogged, homePath, signinPath, signupPath, projectsP
                 Accueil
               </a>
             </li>
+            {isLogged && (
+              <li className="nav-item">
+                <a className="nav-link" href={projectsPath}>
+                  Mes projets
+                </a>
+              </li>
+            )}
+          </ul>
+
+          <ul className="navbar-nav ml-auto mb-2 mb-lg-0">
             {isLogged ? (
-              <>
-                <li className="nav-item">
-                  <a className="nav-link" href={projectsPath}>
-                    Mes projets
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href={signoutPath}>
-                    Se déconnecter
-                  </a>
-                </li>
-              </>
+              <li className="nav-item">
+                <a className="nav-link" href={signoutPath}>
+                  Se déconnecter
+                </a>
+              </li>
             ) : (
               <>
                 <li className="nav-item">

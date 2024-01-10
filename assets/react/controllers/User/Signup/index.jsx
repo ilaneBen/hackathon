@@ -97,7 +97,7 @@ export default function ({ title, csrf, redirectPath }) {
       <input type="hidden" name="type" value="signup" />
 
       <div className="form-group col-12">
-        <button type="submit" className={clsx("btn btn-primary", isLoading && "disabled")}>
+        <button type="submit" className={clsx("btn btn-primary btn-lg", isLoading && "disabled")}>
           {isLoading ? "Création du compte..." : "S'inscrire"}
         </button>
       </div>
