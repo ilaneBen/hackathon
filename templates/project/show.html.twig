@@ -27,12 +27,34 @@
     </table>
 
     {{ message }}
+    {% if project.rapport is not empty %}
+        <h2>Project Reports</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Report ID</th>
+                <th>Details</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for report in project.rapport %}
+                <tr>
+                    <td>{{ report.id }}</td>
+                    <td>{{ report.content }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No reports available for this project.</p>
+    {% endif %}
+
 
     <a href="{{ path('project_index') }}">back to list</a>
 
     <a href="{{ path('project_edit', {'id': project.id}) }}">edit</a>
     {% if project.url %}
-        <a href="{{ path('api_git_clone', {'repository': project.url}) }}">Clone Repository</a>
+        <a href="{{ path('api_git_clone', {"project": project.id }) }}">Clone Repository</a>
     {% endif %}
     {{ include('project/_delete_form.html.twig') }}
 {% endblock %}
