@@ -1,5 +1,9 @@
 {% extends "base.html.twig" %}
 
+{% set title = "Se connecter" %}
+
+{% block title %}{{title}}{% endblock %}
+
 {% block body %}
-    
+    <div {{ react_component('User/Signin/index', { title: title }) }}></div>
 {% endblock %}

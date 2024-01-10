@@ -1,0 +1,41 @@
+html {
+  height: 100%;
+}
+
+body {
+  background-color: white;
+  height: 100%;
+}
+
+.container:has(.user-form) {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.user-form {
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
+    rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+  padding: 5% 10%;
+  row-gap: 15px;
+
+  button {
+    width: 40%;
+    min-width: fit-content;
+
+    transition: border-bottom 0.5s, background-color 0.5s, color 0.5s;
+    background-color: #505050;
+    color: white;
+    border: 1px solid #0000007c;
+
+    &:hover {
+      border-bottom: 1px solid #0000007c;
+      background-color: unset;
+      color: #505050;
+    }
+  }
+
+  > .form-group:last-child {
+    text-align: center;
+  }
+}
