@@ -16,6 +16,32 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 #[Route('/git', name: 'git_')]
 class ApiGitCloneController extends AbstractController
 {
+
+    private function getPhpVersionFromComposerJson(): ?string
+    {
+        // Assuming the path to the composer.json file
+        $composerJsonPath = realpath(__DIR__ . "/../../../public/repoClone/composer.json");
+
+        // Read the contents of composer.json
+        $composerJsonContents = file_get_contents($composerJsonPath);
+
+        if ($composerJsonContents === false) {
+            // Handle the case when reading fails
+            return null;
+        }
+
+        // Decode the JSON content
+        $composerData = json_decode($composerJsonContents, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            // Handle JSON decoding error
+            return null;
+        }
+
+        // Retrieve the PHP version from the "require" section
+        return $composerData['require']['php'] ?? null;
+    }
+
 	#[Route('/clone', name: 'clone')]
 	public function gitClone(Request $request, EntityManagerInterface $entityManager): Response
 	{
@@ -43,74 +69,73 @@ class ApiGitCloneController extends AbstractController
 			}
 		}, null, 300000); // Attendre jusqu'à 300 secondes (ajustez si nécessaire)
 
-    try {
-        // Exécuter la commande Composer Audit
-        $composerAudit = new Process(["composer", "audit", "--locked", "--format=json"]);
-        $composerAudit->setWorkingDirectory(realpath(__DIR__ . "/../../../public/repoClone"));
-        $composerAudit->run();
-        $composerAuditOutput = $composerAudit->getOutput();
+        try {
+            // Execute the Composer Audit command
+            $composerAudit = new Process(["composer", "audit", "--locked", "--format=json"]);
+            $composerAudit->setWorkingDirectory(realpath(__DIR__ . "/../../../public/repoClone"));
+            $composerAudit->run();
+            $composerAuditOutput = $composerAudit->getOutput();
 
-        $detail = empty($composerAuditOutput) ? ['result' => 'Aucune faille'] : ['result' => $composerAuditOutput];
+            $detail = empty($composerAuditOutput) ? ['result' => 'Aucune faille'] : ['result' => $composerAuditOutput];
 
-        // Exécuter PHPStan
-        $phpStan = new Process(['../../vendor/bin/phpstan', 'analyse', 'src', 'tests']);
-        $phpStan->setWorkingDirectory(realpath(__DIR__ . "/../../../public/repoClone"));
-        $phpStan->run();
-        $phpStanOutput = $phpStan->getOutput();
+            // Execute PHPStan
+            $phpStan = new Process(['../../vendor/bin/phpstan', 'analyse', 'src', 'tests']);
+            $phpStan->setWorkingDirectory(realpath(__DIR__ . "/../../../public/repoClone"));
+            $phpStan->run();
+            $phpStanOutput = $phpStan->getOutput();
 
-        // Exécuter PHPStan
-        $detailPhpStan = empty($phpStanOutput) ? ['result' => 'Aucune faille'] : ['result' => $phpStanOutput];
+            // Get the PHP version from composer.json
+            $phpVersion = $this->getPhpVersionFromComposerJson();
 
-        // Get the PHP version
-        $phpVersion = phpversion();
+            // Execute PHPStan
+            $detailPhpStan = empty($phpStanOutput) ? ['result' => 'Aucune faille'] : ['result' => $phpStanOutput];
 
-        // Enregistrer les résultats de Composer Audit et PHPStan en tant que jobs
-        $composerAuditJob = new Job();
-        $composerAuditJob->setName('Composer Audit');
-        $composerAuditJob->setResultat(true);
-        $composerAuditJob->setDetail($detail);
-        $entityManager->persist($composerAuditJob);
+            // Enregistrer les résultats de Composer Audit, PHPStan, and PHP Version en tant que jobs
+            $composerAuditJob = new Job();
+            $composerAuditJob->setName('Composer Audit');
+            $composerAuditJob->setResultat(true);
+            $composerAuditJob->setDetail($detail);
+            $entityManager->persist($composerAuditJob);
 
-        $phpStanJob = new Job();
-        $phpStanJob->setName('PHP STAN');
-        $phpStanJob->setResultat(true);
-        $phpStanJob->setDetail($detailPhpStan);
-        $entityManager->persist($phpStanJob);
+            $phpStanJob = new Job();
+            $phpStanJob->setName('PHP STAN');
+            $phpStanJob->setResultat(true);
+            $phpStanJob->setDetail($detailPhpStan);
+            $entityManager->persist($phpStanJob);
 
-        $phpVersionJob = new Job();
-        $phpVersionJob->setName('PHP Version');
-        $phpVersionJob->setResultat(true);
-        $phpVersionJob->setDetail((array)$phpVersion);
-        $entityManager->persist($phpVersionJob);
+            $phpVersionJob = new Job();
+            $phpVersionJob->setName('PHP Version');
+            $phpVersionJob->setResultat(true);
+            $phpVersionJob->setDetail((array)$phpVersion);
+            $entityManager->persist($phpVersionJob);
 
+            // Créer un rapport
+            $rapport = new Rapport();
+            $rapport->addJob($composerAuditJob);
+            $rapport->addJob($phpStanJob);
+            $rapport->addJob($phpVersionJob);
+            $rapport->setDate(new \DateTimeImmutable('now'));
+            $rapport->setContent($composerAuditJob->getName());
+            $composerAuditJob->setRapport($rapport);
+            $phpStanJob->setRapport($rapport);
+            $phpVersionJob->setRapport($rapport);
+            $entityManager->persist($rapport);
 
-        // Créer un rapport
-        $rapport = new Rapport();
-        $rapport->addJob($composerAuditJob);
-        $rapport->addJob($phpStanJob);
-        $rapport->setDate(new \DateTimeImmutable('now'));
-        $rapport->setContent($composerAuditJob->getName());
-        $composerAuditJob->setRapport($rapport);
-        $phpStanJob->setRapport($rapport);
-        $phpVersionJob->setRapport($rapport);
-        $entityManager->persist($rapport);
+            // Nettoyer le répertoire cloné une fois terminé
+            /*$filesystem = new Filesystem();
+            $filesystem->remove('repoClone');*/
 
-        // Nettoyer le répertoire cloné une fois terminé
-        /*$filesystem = new Filesystem();
-        $filesystem->remove('repoClone');*/
-        rmdir('repoClone');
+            // Sauvegarder les entités et renvoyer la réponse
+            $entityManager->flush();
 
-        // Sauvegarder les entités et renvoyer la réponse
-        $entityManager->flush();
-
-        $message = "Clonage du dépôt Git réussi.";
-        return $this->render('git_clone/resultat.html.twig', [
-			'message' => $message,
-		]);
-    } catch (ProcessFailedException $exception) {
-			// Gérer les erreurs
-			return new Response($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
-		}
+            $message = "Clonage du dépôt Git réussi.";
+            return $this->render('git_clone/resultat.html.twig', [
+                'message' => $message,
+            ]);
+        } catch (\Exception $exception) {
+            // Handle exceptions appropriately
+            return new Response($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 	}
 
 	private function executeComposerAudit(): string
