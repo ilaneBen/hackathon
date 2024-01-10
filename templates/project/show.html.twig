@@ -3,30 +3,22 @@
 {% block title %}Project{% endblock %}
 
 {% block body %}
-    <h1>Project</h1>
-
+    <h1>Project {{ project.name }}</h1>
+    <h2 class="bg-success">  {{ message }}</h2>
     <table class="table">
         <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ project.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ project.name }}</td>
-            </tr>
-            <tr>
-                <th>Url</th>
-                <td>{{ project.url }}</td>
-            </tr>
-            <tr>
-                <th>Statut</th>
-                <td>{{ project.statut ? 'Yes' : 'No' }}</td>
-            </tr>
+        <tr>
+            <th>Url</th>
+            <td>{{ project.url }}</td>
+        </tr>
+        <tr>
+            <th>Statut</th>
+            <td>{{ project.statut ? 'Yes' : 'No' }}</td>
+        </tr>
         </tbody>
     </table>
 
-    {{ message }}
+
     {% if project.rapport is not empty %}
         <h2>Project Reports</h2>
         <table class="table">
@@ -42,7 +34,7 @@
                 <tr>
                     <td>{{ report.id }}</td>
                     <td>{{ report.content }}</td>
-                    <td><a href="/rapport/{{ report.id  }}">Voir rapport</td>
+                    <td><a href="/rapport/{{ report.id }}">Voir rapport</td>
                 </tr>
             {% endfor %}
             </tbody>

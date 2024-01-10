@@ -106,25 +106,28 @@
                 // Enregistrer les résultats de Composer Audit et PHPStan en tant que jobs
                 $composerAuditJob = new Job();
                 $composerAuditJob->setName('Composer Audit');
-                $boolPhp = empty($composerAuditOutput); // Vérifie si $composerAuditOutput est vide
+                $composerAuditJob->setProject($project);
                 $composerAuditJob->setResultat($this->checkAuditOutput($composerAuditOutput));
                 $composerAuditJob->setDetail($detail);
                 $entityManager->persist($composerAuditJob);
 
                 $phpStanJob = new Job();
                 $phpStanJob->setName('PHP STAN');
+                $phpStanJob->setProject($project);
                 $phpStanJob->setResultat($this->checkAuditOutput($phpStanOutput));
                 $phpStanJob->setDetail($detailPhpStan);
                 $entityManager->persist($phpStanJob);
 
                 $phpVersionJob = new Job();
                 $phpVersionJob->setName('PHP Version');
+                $phpVersionJob->setProject($project);
                 $phpVersionJob->setResultat(true);
                 $phpVersionJob->setDetail((array)$phpVersion);
                 $entityManager->persist($phpVersionJob);
 
                 $phpCsJob = new Job();
                 $phpCsJob->setName('PHP Cs');
+                $phpCsJob->setProject($project);
                 $phpCsJob->setResultat($this->checkAuditOutput($phpCsOutput));
                 $phpCsJob->setDetail($detailphpCs);
                 $entityManager->persist($phpCsJob);
@@ -149,8 +152,9 @@
                 // Sauvegarder les entités et renvoyer la réponse
                 $entityManager->flush();
 
-                $message = "Clonage du dépôt Git réussi.";
-                return $this->render('git_clone/resultat.html.twig', [
+                $message = "Analyse du dépôt Git réussi.";
+                return $this->render('project/show.html.twig', [
+					'project'=>$project,
                     'message' => $message,
                 ]);
             } catch (ProcessFailedException $exception) {
