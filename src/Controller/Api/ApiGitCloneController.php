@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\Job;
+use App\Entity\Rapport;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,17 +30,19 @@ class ApiGitCloneController extends AbstractController
 		$destination = 'repoClone'; // Utiliser un chemin relatif par rapport à la racine du projet
 
 		// Créer un processus pour exécuter la commande git clone dans le répertoire spécifié
-		$process = new Process(["git", "clone", $repositoryUrl, $destination]);
-
+		$process = new Process(["git", "clone", $repositoryUrl, "repoClone"]);
+		$process->run(); // Exécute la commande git clone
 		try {
-			// Exécuter la commande git clone
-			$process->mustRun();
 
 			// Exécuter et enregistrer la commande Composer Audit
-			$composerAuditOutput = $this->executeComposerAudit($destination);
+			$composerAudit = new Process(["composer", "audit", "--locked", "--format=json"]);
+			$composerAudit->run();
+			$composerAuditOutput = $composerAudit->getOutput();
+
 
 			// Préparer le détail pour le stockage
 			$detail = empty($composerAuditOutput) ? ['result' => 'Aucune faille'] : ['result' => $composerAuditOutput];
+
 
 			// Enregistrer le résultat de Composer Audit en tant que job
 			$composerAuditJob = new Job();
@@ -49,6 +52,15 @@ class ApiGitCloneController extends AbstractController
 			$entityManager->persist($composerAuditJob);
 			$entityManager->flush();
 
+			$raport = new Rapport();
+			$raport->addJob($composerAuditJob);
+			$raport->setDate(new \DateTimeImmutable('now'));
+			$raport->setContent($composerAuditJob->getName());
+			$composerAuditJob->setRapport($raport);
+			$entityManager->persist($composerAuditJob);
+			//$entityManager->flush();
+			$entityManager->persist($raport);
+			$entityManager->flush();
 
 			// Renvoyer la sortie comme réponse
 			$message = "Clonage du dépôt Git réussi.";
@@ -59,6 +71,7 @@ class ApiGitCloneController extends AbstractController
 			// En cas d'échec du clonage ou de Composer Audit, récupérer et renvoyer l'erreur
 			return new Response($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
 		}
+
 	}
 
 
