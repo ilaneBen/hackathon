@@ -28,11 +28,14 @@ class RapportController extends AbstractController
     #[Route('/{id}', name: 'app_rapport_delete', methods: ['POST'])]
     public function delete(Request $request, Rapport $rapport, EntityManagerInterface $entityManager): Response
     {
+		$project = $rapport->getProject();
+		$message = "rapport ".$rapport->getContent()." a bien été suprimer";
         if ($this->isCsrfTokenValid('delete'.$rapport->getId(), $request->request->get('_token'))) {
             $entityManager->remove($rapport);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_rapport_index', [], Response::HTTP_SEE_OTHER);
-    }
+		return $this->redirectToRoute('project_show', ['id' => $project->getId(), 'message' => $message], Response::HTTP_SEE_OTHER);
+
+	}
 }
