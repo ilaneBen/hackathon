@@ -28,22 +28,35 @@ class ApiGitCloneController extends AbstractController
 		}
 
 		// Chemin relatif du répertoire de destination
-		$destination = 'repoClone'; // Utiliser un chemin relatif par rapport à la racine du projet
+		$destination = realpath(__DIR__ . "/../../../public/repoClone"); // Utiliser un chemin relatif par rapport à la racine du projet
 
 		// Créer un processus pour exécuter la commande git clone dans le répertoire spécifié
 		$process = new Process(["git", "clone", $repositoryUrl, "repoClone"]);
 		$process->run(); // Exécute la commande git clone
 		try {
-
+			// $cd = new Process(["cd", "repoClone"]);
+			// $cd->run();
+			// $pwd = new Process(["pwd"]);
+			// $pwd->run();
+			// dd($pwd->getOutput());
 			// Exécuter et enregistrer la commande Composer Audit
-			$composerAudit = new Process(["composer", "audit", "--locked", "--format=json"]);
+			$composerAudit = new Process(["composer", "audit", "--locked", "--format=json", $destination]);
 			$composerAudit->run();
+
 			$composerAuditOutput = $composerAudit->getOutput();
-
-
-			// Préparer le détail pour le stockage
+			
 			$detail = empty($composerAuditOutput) ? ['result' => 'Aucune faille'] : ['result' => $composerAuditOutput];
 
+
+			// executer php stan
+			$phpStan = new Process(["php", "-d", "memory_limit=512M", realpath(__DIR__ . "/../../../vendor/bin/phpstan"), "analyse", "-c", "phpstan.neon.dist", $destination]);
+			$phpStan->run();
+			$phpStanOutput = $phpStan->getOutput();
+			
+			$detailPhpStan = empty($phpStanOutput) ? ['result' => 'Aucune faille'] : ['result' => $phpStanOutput];
+			
+			// Préparer le détail pour le stockage
+			dd($composerAudit, $phpStan);
 
 			// Enregistrer le résultat de Composer Audit en tant que job
 			$composerAuditJob = new Job();
@@ -53,15 +66,26 @@ class ApiGitCloneController extends AbstractController
 			$entityManager->persist($composerAuditJob);
 			$entityManager->flush();
 
+			$phpStanJob = new Job();
+			$phpStanJob->setName('PHP STAN');
+			$phpStanJob->setResultat(true);
+			$phpStanJob->setDetail($detailPhpStan); // Assigner le détail sous forme de tableau
+			$entityManager->persist($phpStanJob);
+			$entityManager->flush();
+
 			$raport = new Rapport();
 			$raport->addJob($composerAuditJob);
+			$raport->addJob($phpStanJob);
 			$raport->setDate(new \DateTimeImmutable('now'));
 			$raport->setContent($composerAuditJob->getName());
 			$composerAuditJob->setRapport($raport);
-			$entityManager->persist($composerAuditJob);
+			$phpStanJob->setRapport($raport);
+			$entityManager->persist($composerAuditJob, $phpStanJob);
 			//$entityManager->flush();
 			$entityManager->persist($raport);
 			$entityManager->flush();
+
+
 			$filesystem = new Filesystem();
 			$filesystem->remove('repoClone');
 			// Renvoyer la sortie comme réponse
