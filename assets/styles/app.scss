@@ -40,3 +40,20 @@ body {
     text-align: center;
   }
 }
+
+.modal-form {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+
+  > .form-group:last-child {
+    text-align: center;
+
+    button {
+      width: 20%;
+      min-width: fit-content;
+      margin-top: 14px;
+    }
+  }
+}

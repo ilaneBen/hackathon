@@ -7,5 +7,5 @@
 {% endblock %}
 
 {% block body %}
-	<div {{ react_component('User/Signin/index', { title: title, csrf: csrf_token('signin'), redirectPath: path('project_index') } ) }}></div>
+	<div {{ react_component('User/Signin/index', { title: title, csrf: csrf_token('signin'), redirectPath: path('project_index'), apiPath: path('api_user_signin') } ) }}></div>
 {% endblock %}

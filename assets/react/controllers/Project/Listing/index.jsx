@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
+import NewModal from "./NewModal/index.jsx";
 
-export default function ({ title, projects, newPath }) {
+export default function ({ title, projects, newProjectPath }) {
   const finalTitle = title + (projects.length > 0 ? " (" + projects.length + ")" : "");
 
   console.log("projects", projects);
@@ -26,9 +27,8 @@ export default function ({ title, projects, newPath }) {
                 <td>{project.id}</td>
                 <td>{project.name}</td>
                 <td>{project.url}</td>
-                <td>{project.statut ? "Oui" : "Non"}</td>
+                <td>{project.statut ? "Terminé" : "En cours"}</td>
                 <td>
-                  <a href="{{ path('project_show', {'id': project.id}) }}">Voir</a>
                   <a href="/" className="btn btn-primary btn-sm">
                     Voir
                   </a>
@@ -42,9 +42,11 @@ export default function ({ title, projects, newPath }) {
         </tbody>
       </table>
 
-      <a href={newPath} className="btn btn-primary">
+      <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createProjectModal">
         Créer un projet
-      </a>
+      </button>
+
+      <NewModal newProjectPath={newProjectPath} />
     </div>
   );
 }

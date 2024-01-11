@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 
-export default function ({ title, csrf, redirectPath }) {
+export default function ({ title, csrf, redirectPath, apiPath }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -15,7 +15,7 @@ export default function ({ title, csrf, redirectPath }) {
 
     const formData = new FormData(e.target);
 
-    fetch("/api/signin", {
+    fetch(apiPath, {
       method: "POST",
       body: formData,
     })
