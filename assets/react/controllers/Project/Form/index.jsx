@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import clsx from "clsx";
 
 export default function ({ closeRef, project, setFinalProjects, newProjectPath }) {
@@ -46,6 +47,7 @@ export default function ({ closeRef, project, setFinalProjects, newProjectPath }
       .then((res) => {
         if (res?.code === 200) {
           closeRef.current.click();
+          toast.success("Le projet a bien été " + (isEditing ? "modifié" : "créé") + ".");
 
           if (!isEditing) {
             setFinalProjects((finalProjects) => [...finalProjects, res?.project]);
@@ -70,6 +72,12 @@ export default function ({ closeRef, project, setFinalProjects, newProjectPath }
 
   return (
     <form onSubmit={submitForm} className="modal-form">
+      {error && (
+        <div className="alert alert-danger" role="alert">
+          {error}
+        </div>
+      )}
+
       <div className="form-group">
         <label htmlFor="name">Nom du projet</label>
         <input
