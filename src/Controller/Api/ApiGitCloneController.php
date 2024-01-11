@@ -140,7 +140,7 @@
                 $rapport->addJob($phpStanJob);
                 $rapport->addJob($phpVersionJob);
                 $rapport->setDate(new \DateTimeImmutable('now'));
-                $rapport->setContent("rapoort N°" . $rapport->getId());
+                $rapport->setContent("Rapport " . $rapport->getId());
                 $composerAuditJob->setRapport($rapport);
                 $phpStanJob->setRapport($rapport);
                 $phpVersionJob->setRapport($rapport);

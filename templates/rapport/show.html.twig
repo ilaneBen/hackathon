@@ -3,53 +3,22 @@
 {% block title %}Rapport{% endblock %}
 
 {% block body %}
-    <h1>Rapport</h1>
+    <h1 class="text-uppercase">{{  rapport.content }} {{ rapport.id }}</h1>
+<p> Le {{ rapport.date ? rapport.date|date('Y-m-d H:i:s') : '' }}</p>
 
-    <table class="table">
-        <tbody>
-        <tr>
-            <th>Id</th>
-            <td>{{ rapport.id }}</td>
-        </tr>
-        <tr>
-            <th>Date</th>
-            <td>{{ rapport.date ? rapport.date|date('Y-m-d H:i:s') : '' }}</td>
-        </tr>
-        <tr>
-            <th>Content</th>
-            <td>{{ rapport.content }}</td>
-        </tr>
-        </tbody>
-    </table>
 {% if rapport.job is not empty %}
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Nom</th>
-            <th>Résultat</th>
-            <th>Detail</th>
-        </tr>
-        </thead>
-        <tbody>
         {% for job in rapport.job %}
-            <tr>
-                <td>{{ job.name }}</td>
-                <td>{{ job.resultat ? 'Oui' : 'Non' }}</td>
-                <td>   {% for detailItem in job.detail %}
+            <ul style="list-style-type: none;">
+                <h2>Résultat {{ job.name }}</h2>
+                {% for detailItem in job.detail %}
+                    <li style="list-style-type: none;">
                         {{ detailItem }}
-                    {% endfor %}</td>
-            </tr>
-
+                    </li>
+                {% endfor %}
+            </ul>
         {% endfor %}
-        </tbody>
-    </table>
-
-
-
 {% else %}
     <p>Aucun job trouvé pour ce rapport.</p>
 {% endif %}
-
-
 {#    {{ include('rapport/_delete_form.html.twig') }}#}
 {% endblock %}
