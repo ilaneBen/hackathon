@@ -93,14 +93,14 @@ class Project
     }
 
     /**
-     * @return Collection<int, job>
+     * @return Collection<int, Job>
      */
     public function getJob(): Collection
     {
         return $this->job;
     }
 
-    public function addJob(job $job): static
+    public function addJob(Job $job): static
     {
         if (!$this->job->contains($job)) {
             $this->job->add($job);
@@ -110,7 +110,7 @@ class Project
         return $this;
     }
 
-    public function removeJob(job $job): static
+    public function removeJob(Job $job): static
     {
         if ($this->job->removeElement($job)) {
             // set the owning side to null (unless already changed)

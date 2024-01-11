@@ -146,12 +146,12 @@
                 $phpVersionJob->setRapport($rapport);
                 $entityManager->persist($rapport);
                 // Nettoyer le répertoire cloné une fois terminé
-                $filesystem = new Filesystem();
-                $filesystem->remove('repoClone');
+
 
                 // Sauvegarder les entités et renvoyer la réponse
                 $entityManager->flush();
-
+				$filesystem = new Filesystem();
+				$filesystem->remove('repoClone');
                 $message = "Analyse du dépôt Git réussi.";
                 return $this->render('project/show.html.twig', [
 					'project'=>$project,
