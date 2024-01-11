@@ -2,6 +2,7 @@
 
 namespace App\Serialize;
 
+use App\Entity\Rapport;
 use Symfony\Component\Routing\RouterInterface;
 
 class RapportSerializer
@@ -14,13 +15,20 @@ class RapportSerializer
     {
         $serializedRapports = [];
         foreach ($rapportArray as $rapport) {
-            $serializedRapports[] = [
-                'id' => $rapport->getId(),
-                'date' => $rapport->getDate()->format('d-m-Y H:i'),
-                // 'showUrl' => $this->router->generate('api_rapport_show', ['id' => $rapport->getId()]),
-            ];
+            $serializedRapports[] = $this->serializeOne($rapport);
         }
 
         return $serializedRapports;
+    }
+
+    public function serializeOne(Rapport $rapport): array
+    {
+        $serializedRapport = [
+            'id' => $rapport->getId(),
+            'date' => $rapport->getDate()->format('d-m-Y H:i'),
+            // 'showUrl' => $this->router->generate('api_rapport_show', ['id' => $rapport->getId()]),
+        ];
+        
+        return $serializedRapport;
     }
 }
