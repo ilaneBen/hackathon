@@ -31,11 +31,11 @@
         </tr>
         </thead>
         <tbody>
-        {% for job in rapport.job %}
+        {% for jobs in rapport.job %}
             <tr>
-                <td>{{ job.name }}</td>
-                <td>{{ job.resultat ? 'Oui' : 'Non' }}</td>
-                <td>   {% for detailItem in job.detail %}
+                <td>{{ jobs.name }}</td>
+                <td>{{ jobs.resultat ? 'Oui' : 'Non' }}</td>
+                <td>   {% for detailItem in jobs.detail %}
                         {{ detailItem }}
                     {% endfor %}</td>
             </tr>

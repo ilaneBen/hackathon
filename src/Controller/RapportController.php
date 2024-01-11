@@ -21,9 +21,24 @@ class RapportController extends AbstractController
     #[Route('/{id}', name: 'app_rapport_show', methods: ['GET'])]
 	public function show(Rapport $rapport): Response
 	{
-		// Get the HTML content from the template
-		$data = [
+
+
+$detail = [];
+        $jobs = $rapport->getJob();
+        $detailJob = null; // Initialisez la variable pour stocker le détail du travail
+
+        foreach ($jobs as $job) {
+            $detailJob = $job->getDetail();
+
+        }
+        $encodeDetail = json_encode($detailJob, false);
+
+        $decodeDetail = json_decode($encodeDetail, false);
+         $detail=$decodeDetail;
+
+        $data = [
 			'rapport' => $rapport,
+            'jobs' => $detail,
 		];
 		$html = $this->renderView('rapport/show.html.twig', $data);
 
