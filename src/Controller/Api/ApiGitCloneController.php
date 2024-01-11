@@ -145,13 +145,21 @@
                 $phpStanJob->setRapport($rapport);
                 $phpVersionJob->setRapport($rapport);
                 $entityManager->persist($rapport);
-                // Nettoyer le répertoire cloné une fois terminé
 
+
+                // Nettoyer le répertoire cloné une fois terminé
+                $filesystem = new Filesystem();
+                $cloneDirectory = realpath(__DIR__ . "/../../../public/repoClone");
+
+                // Verifier que le dossier repoClone existe bien avant de faire quoi que ce soit
+                if ($filesystem->exists($cloneDirectory)) {
+                    // Suppression récursive du dossier repoClone avec les full access
+                    $filesystem->chmod($cloneDirectory, 0777, 0000, true);
+                    $filesystem->remove($cloneDirectory);
+                }
 
                 // Sauvegarder les entités et renvoyer la réponse
                 $entityManager->flush();
-				$filesystem = new Filesystem();
-				$filesystem->remove('repoClone');
                 $message = "Analyse du dépôt Git réussi.";
                 return $this->render('project/show.html.twig', [
 					'project'=>$project,
