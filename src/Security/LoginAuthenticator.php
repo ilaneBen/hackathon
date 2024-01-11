@@ -45,30 +45,29 @@ class LoginAuthenticator extends AbstractAuthenticator
 
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
 
-        if ((!$email || !$password || !$type)) {
+        if (!$email || !$password || !$type) {
             throw new AuthenticationException('Identifiants manquants');
         }
 
         $user = $this->userRepository->findOneBy(['email' => $email]);
 
-        if ($type === 'signup') {
-            if(!$firstName || !$name){
+        if ('signup' === $type) {
+            if (!$firstName || !$name) {
                 throw new AuthenticationException('Identifiants manquants');
             }
-            if($user) {
+            if ($user) {
                 throw new AuthenticationException('L\'utilisateur existe déjà');
             }
-            
-        } else if ($type === 'signin') {
-            if(!$user) {
+        } elseif ('signin' === $type) {
+            if (!$user) {
                 throw new AuthenticationException('Identifiants invalides');
             }
         }
 
-        if ($type === 'signup' && !$user) {
+        if ('signup' === $type && !$user) {
             $inputBag = $request->request;
 
-            $user = new User;
+            $user = new User();
             $hashedPassword = $this->passwordHasher->hashPassword(
                 $user,
                 $password
@@ -99,10 +98,9 @@ class LoginAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-
         $data = [
             'code' => 403,
-            'message' => strtr($exception->getMessage(), $exception->getMessageData())
+            'message' => strtr($exception->getMessage(), $exception->getMessageData()),
         ];
 
         return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);

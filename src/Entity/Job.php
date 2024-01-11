@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\JobRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: JobRepository::class)]
@@ -17,9 +16,7 @@ class Job
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-
-
-    #[ORM\ManyToOne(inversedBy: 'Job')]
+    #[ORM\ManyToOne(inversedBy: 'job')]
     private ?Project $project = null;
 
     #[ORM\Column]
@@ -28,7 +25,7 @@ class Job
     #[ORM\Column]
     private array $detail = [];
 
-    #[ORM\ManyToOne(inversedBy: 'Job')]
+    #[ORM\ManyToOne(inversedBy: 'job')]
     private ?Rapport $rapport = null;
 
     public function getId(): ?int
@@ -47,8 +44,6 @@ class Job
 
         return $this;
     }
-
-
 
     public function getProject(): ?Project
     {
