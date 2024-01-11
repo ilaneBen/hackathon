@@ -30,8 +30,7 @@ class UserSerializer
             'name' => $user->getName(),
             'firstName' => $user->getFirstName(),
             'job' => $this->projectSerializer->serialize($user->getProject()->getValues()),
-            'showUrl' => '',
-            'editUrl' => '',
+            'editUrl' => $this->router->generate('api_user_edit'),
         ];
 
         return $serializedUser;
