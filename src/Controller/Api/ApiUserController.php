@@ -16,8 +16,8 @@ class ApiUserController extends AbstractController
     }
 
     #[Route('/signup', name: 'signup', methods: ['POST'])]
-    public function signUp(): Response 
+    public function signUp(): Response
     {
-        return $this->json(['code' => 200, 'message' => "User created and connected"]);
+        return $this->json(['code' => 200, 'message' => 'User created and connected']);
     }
 }
