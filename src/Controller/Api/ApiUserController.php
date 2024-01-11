@@ -34,7 +34,7 @@ class ApiUserController extends AbstractController
         ]);
     }
     
-    #[Route('/user/edit', name: 'edit', methods: ['GET', 'POST'])]
+    #[Route('/user/edit', name: 'edit', methods: ['PATCH'])]
 	public function edit (Request $request, EntityManagerInterface $entityManager): Response
 	{
 		// Vérifier si un utilisateur est connecté

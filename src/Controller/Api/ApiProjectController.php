@@ -92,7 +92,7 @@ class ApiProjectController extends AbstractController
 		]);
 	}
 
-	#[Route('/{id}', name: 'delete', methods: ['POST'])]
+	#[Route('/{id}', name: 'delete', methods: ['DELETE'])]
 	public function delete (Request $request, Project $project, EntityManagerInterface $entityManager): Response
 	{
 		// Vérifier si un utilisateur est connecté
