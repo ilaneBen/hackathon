@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 
-export default function ({ title, csrf, redirectPath }) {
+export default function ({ title, csrf, redirectPath, apiPath }) {
   const [firstName, setFirstName] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -17,7 +17,7 @@ export default function ({ title, csrf, redirectPath }) {
 
     const formData = new FormData(e.target);
 
-    fetch("/api/signup", {
+    fetch(apiPath, {
       method: "POST",
       body: formData,
     })
