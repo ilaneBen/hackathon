@@ -48,7 +48,7 @@ export default function ({ projects, editProjectPath }) {
   return (
     <div
       className="modal fade"
-      id="createProjectModal"
+      id="editProjectModal"
       tabindex="-1"
       aria-labelledby="exampleModalLabel"
       aria-hidden="true"
@@ -57,7 +57,7 @@ export default function ({ projects, editProjectPath }) {
         <div className="modal-content">
           <div className="modal-header">
             <h1 className="modal-title fs-5" id="exampleModalLabel">
-              Créer un projet
+              Modifier un projet
             </h1>
             <button
               type="button"
