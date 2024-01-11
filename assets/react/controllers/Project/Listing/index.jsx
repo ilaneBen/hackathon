@@ -1,15 +1,16 @@
-import React, { Fragment } from "react";
-import NewModal from "./NewModal/index.jsx";
-import EditModal from "./EditModal/index.jsx";
+import React, { Fragment, useState } from "react";
+import Modal from "../../Components/Modal/index.jsx";
+import Form from "../Form/index.jsx";
 
 export default function ({ title, projects, newProjectPath }) {
   const finalTitle = title + (projects.length > 0 ? " (" + projects.length + ")" : "");
-
-  console.log("projects", projects);
+  const [finalProjets, setFinalProjects] = useState(projects);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [projectToEdit, setProjectToEdit] = useState(null);
 
   const Spinner = () => (
-    <div class="spinner-border spinner-border-sm ms-2" role="status">
-      <span class="visually-hidden">Loading...</span>
+    <div className="spinner-border spinner-border-sm ms-2" role="status">
+      <span className="visually-hidden">Loading...</span>
     </div>
   );
 
@@ -29,13 +30,11 @@ export default function ({ title, projects, newProjectPath }) {
             </tr>
           </thead>
           <tbody>
-            {projects.map((project) => (
+            {finalProjets.map((project) => (
               <Fragment key={project.id}>
                 <tr>
                   <td>{project.id}</td>
-                  <td>
-                    <a href={project.showUrl}>{project.name}</a>
-                  </td>
+                  <td>{project.name}</td>
                   <td>
                     <a href={project.url} target="_blank" rel="noopener noreferrer">
                       {project.url}
@@ -52,17 +51,21 @@ export default function ({ title, projects, newProjectPath }) {
                     )}
                   </td>
                   <td className="actions-row">
+                    <a href={project.showUrl} className="btn btn-primary btn-sm">
+                      <i className="bi bi-eye-fill"></i>
+                    </a>
+
                     <button
                       type="button"
                       className="btn btn-secondary btn-sm"
                       data-bs-toggle="modal"
                       data-bs-target="#editProjectModal"
                     >
-                      Modifier
+                      <i className="bi bi-pencil-square"></i>
                     </button>
 
-                    <button type="button" className="btn btn-secondary btn-sm">
-                      Supprimer
+                    <button type="button" className="btn btn-danger btn-sm">
+                      <i className="bi bi-trash-fill"></i>
                     </button>
                   </td>
                 </tr>
@@ -76,8 +79,9 @@ export default function ({ title, projects, newProjectPath }) {
         Créer un projet
       </button>
 
-      <NewModal newProjectPath={newProjectPath} />
-      <EditModal />
+      <Modal title={projectToEdit ? "Modifier un projet" : "Créer un projet"}>
+        <Form project={projectToEdit} newProjectPath={newProjectPath} />
+      </Modal>
     </div>
   );
 }
