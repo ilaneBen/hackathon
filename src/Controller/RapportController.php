@@ -6,6 +6,8 @@ use App\Entity\Rapport;
 use App\Form\RapportType;
 use App\Repository\RapportRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,12 +19,37 @@ class RapportController extends AbstractController
 
 
     #[Route('/{id}', name: 'app_rapport_show', methods: ['GET'])]
-    public function show(Rapport $rapport): Response
-    {
-        return $this->render('rapport/show.html.twig', [
-            'rapport' => $rapport,
-        ]);
-    }
+	public function show(Rapport $rapport): Response
+	{
+		// Get the HTML content from the template
+		$data = [
+			'rapport' => $rapport,
+		];
+		$html = $this->renderView('rapport/show.html.twig', $data);
+
+		// Configure dompdf
+		$options = new Options();
+		$options->set('isHtml5ParserEnabled', true);
+		$options->set('isPhpEnabled', true);
+		$options->set('defaultFont', 'Arial');
+
+		$dompdf = new Dompdf($options);
+		$dompdf->loadHtml($html);
+
+		// (Optional) Set paper size and orientation
+		$dompdf->setPaper('A4', 'portrait');
+
+		// Render the HTML as PDF
+		$dompdf->render();
+
+		// Stream the generated PDF to the browser
+		$response = new Response($dompdf->output());
+		$response->headers->set('Content-Type', 'application/pdf');
+		$response->headers->set('Content-Disposition', 'inline; filename="rapport.pdf"');
+
+		return $response;
+	}
+
 
 
     #[Route('/{id}', name: 'app_rapport_delete', methods: ['POST'])]
