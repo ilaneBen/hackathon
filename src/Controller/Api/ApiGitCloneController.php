@@ -151,9 +151,9 @@
                 $filesystem = new Filesystem();
                 $cloneDirectory = realpath(__DIR__ . "/../../../public/repoClone");
 
-                // Ensure the directory exists before attempting to remove it
+                // Verifier que le dossier repoClone existe bien avant de faire quoi que ce soit
                 if ($filesystem->exists($cloneDirectory)) {
-                    // Recursive removal of the directory and its contents
+                    // Suppression récursive du dossier repoClone avec les full access
                     $filesystem->chmod($cloneDirectory, 0777, 0000, true);
                     $filesystem->remove($cloneDirectory);
                 }
