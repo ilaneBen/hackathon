@@ -1,13 +1,15 @@
-import React from "react";
+import React, { Fragment } from "react";
 
 export default function ({ title, projects, newPath }) {
   const finalTitle = title + (projects.length > 0 ? " (" + projects.length + ")" : "");
+
+  console.log("projects", projects);
 
   return (
     <div className="projects">
       <h1>{finalTitle}</h1>
 
-      <table class="table">
+      <table className="table">
         <thead>
           <tr>
             <th>ID</th>
@@ -19,7 +21,7 @@ export default function ({ title, projects, newPath }) {
         </thead>
         <tbody>
           {projects.map((project) => (
-            <>
+            <Fragment key={project.id}>
               <tr>
                 <td>{project.id}</td>
                 <td>{project.name}</td>
@@ -27,15 +29,15 @@ export default function ({ title, projects, newPath }) {
                 <td>{project.statut ? "Oui" : "Non"}</td>
                 <td>
                   <a href="{{ path('project_show', {'id': project.id}) }}">Voir</a>
-                  <a href="/" class="btn btn-primary btn-sm">
+                  <a href="/" className="btn btn-primary btn-sm">
                     Voir
                   </a>
-                  <button type="button" class="btn btn-secondary btn-sm">
+                  <button type="button" className="btn btn-secondary btn-sm">
                     Modifier
                   </button>
                 </td>
               </tr>
-            </>
+            </Fragment>
           ))}
         </tbody>
       </table>
