@@ -64,6 +64,13 @@ class ApiProjectController extends AbstractController
 			]);
 		}
 
+		if(!$project){
+			return $this->json([
+				'code' => 400,
+				'message' => "Ce projet n'existe pas",
+			]);
+		}
+
 		// Vérifier si l'utilisateur actuel est le propriétaire du projet
 		if ($user !== $project->getUser()) {
             return $this->json([
@@ -89,6 +96,7 @@ class ApiProjectController extends AbstractController
 		return $this->json([
 			'code' => 200, 
 			'message' => 'Le project a été modifié.',
+			'project' => $this->projectSerializer->serializeOne($project),
 		]);
 	}
 
@@ -100,6 +108,13 @@ class ApiProjectController extends AbstractController
 			return $this->json([
 				'code' => 403, 
 				'message' => "Il faut être connecté pour accéder à cette ressource",
+			]);
+		}
+
+		if(!$project){
+			return $this->json([
+				'code' => 400,
+				'message' => "Ce projet n'existe pas",
 			]);
 		}
 
