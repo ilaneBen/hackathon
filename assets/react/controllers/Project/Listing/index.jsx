@@ -1,18 +1,35 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useRef, useState } from "react";
 import Modal from "../../Components/Modal/index.jsx";
 import Form from "../Form/index.jsx";
+import Delete from "../Delete/index.jsx";
 
 export default function ({ title, projects, newProjectPath }) {
   const finalTitle = title + (projects.length > 0 ? " (" + projects.length + ")" : "");
   const [finalProjets, setFinalProjects] = useState(projects);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [projectToEdit, setProjectToEdit] = useState(null);
+  const [project, setProject] = useState(null);
+  const [isForm, setIsForm] = useState(false);
+  const closeRef = useRef();
 
   const Spinner = () => (
     <div className="spinner-border spinner-border-sm ms-2" role="status">
       <span className="visually-hidden">Loading...</span>
     </div>
   );
+
+  const toggleForm = (type, project = null) => {
+    setIsForm(true);
+
+    if (type === "edit" && project) {
+      setProject(project);
+    } else if (type === "new") {
+      setProject(null);
+    }
+  };
+
+  const handleDelete = (project) => {
+    setIsForm(false);
+    setProject(project);
+  };
 
   return (
     <div className="projects">
@@ -59,12 +76,13 @@ export default function ({ title, projects, newProjectPath }) {
                       type="button"
                       className="btn btn-secondary btn-sm"
                       data-bs-toggle="modal"
-                      data-bs-target="#editProjectModal"
+                      data-bs-target="#projectModal"
+                      onClick={() => toggleForm("edit", project)}
                     >
                       <i className="bi bi-pencil-square"></i>
                     </button>
 
-                    <button type="button" className="btn btn-danger btn-sm">
+                    <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDelete(project)}>
                       <i className="bi bi-trash-fill"></i>
                     </button>
                   </td>
@@ -75,12 +93,30 @@ export default function ({ title, projects, newProjectPath }) {
         </table>
       </div>
 
-      <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createProjectModal">
+      <button
+        type="button"
+        className="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#projectModal"
+        onClick={() => toggleForm("new")}
+      >
         Créer un projet
       </button>
 
-      <Modal title={projectToEdit ? "Modifier un projet" : "Créer un projet"}>
-        <Form project={projectToEdit} newProjectPath={newProjectPath} />
+      <Modal
+        closeRef={closeRef}
+        title={isForm ? (project ? "Modifier un projet" : "Créer un projet") : "Supprimer un projet"}
+      >
+        {isForm ? (
+          <Form
+            closeRef={closeRef}
+            project={project}
+            newProjectPath={newProjectPath}
+            setFinalProjects={setFinalProjects}
+          />
+        ) : (
+          <Delete closeRef={closeRef} project={project} />
+        )}
       </Modal>
     </div>
   );

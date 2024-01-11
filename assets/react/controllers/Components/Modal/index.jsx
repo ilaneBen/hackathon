@@ -1,8 +1,7 @@
-import React, { useRef } from "react";
+import React, { useRef, Children } from "react";
 
-export default function ({ title, children }) {
-  console.log("children:", children);
-  const closeRef = useRef();
+export default function ({ title, children, closeRef }) {
+  const element = Children.only(children);
 
   return (
     <div className="modal fade" id="projectModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -20,7 +19,7 @@ export default function ({ title, children }) {
               ref={closeRef}
             ></button>
           </div>
-          <div className="modal-body">{children}</div>
+          <div className="modal-body">{element}</div>
         </div>
       </div>
     </div>
