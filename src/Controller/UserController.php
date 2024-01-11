@@ -12,12 +12,20 @@ class UserController extends AbstractController
     #[Route('/signup', name: 'signup', methods: ['GET'])]
     public function signUp_view(): Response
     {
+        if($this->getuser()){
+            $this->redirectToRoute('home');
+        }
+
         return $this->render('user/signup.html.twig');
     }
 
     #[Route('/signin', name: 'signin', methods: ['GET'])]
     public function signIn_view(): Response
     {
+        if($this->getuser()){
+            $this->redirectToRoute('home');
+        }
+        
         return $this->render('user/signin.html.twig');
     }
 

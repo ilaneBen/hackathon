@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
 use App\Entity\Project;
-use App\Serialize\ProjectSerializer;
 use App\Form\ProjectType;
-use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -15,32 +13,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/project', name: 'project_')]
-class ProjectController extends AbstractController
+class ApiProjectController extends AbstractController
 {
-	public function __construct (
-		private Security $security, 
-		private ProjectSerializer $projectSerializer
-	) {}
-
-	#[Route('/', name: 'index', methods: ['GET'])]
-	public function index (ProjectRepository $projectRepository): Response
+	public function __construct (private Security $security)
 	{
-		$currentUser = $this->security->getUser();
-
-		if (!$currentUser) {
-			$this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
-			return $this->redirectToRoute('home');
-		}
-
-		$projects = $this->projectSerializer->serialize($projectRepository->findBy(['user' => $currentUser]));
-
-		return $this->render('project/index.html.twig', [
-			'projects' => $projects,
-		]);
 	}
 
-
-	#[Route('/new', name: 'new', methods: ['GET', 'POST'])]
+	#[Route('/new', name: 'new', methods: ['POST'])]
 	public function new (Request $request, EntityManagerInterface $entityManager): Response
 	{
 		$project = new Project();
