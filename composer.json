@@ -96,6 +96,7 @@
     },
     "require-dev": {
         "ekino/phpstan-banned-code": "^1.0",
+        "friendsofphp/php-cs-fixer": "^3.46",
         "phpmd/phpmd": "^2.15",
         "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^9.5",
