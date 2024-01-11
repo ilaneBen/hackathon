@@ -81,7 +81,7 @@
                 $detail = empty($composerAuditOutput) ? ['result' => 'Aucune faille'] : ['result' => $composerAuditOutput];
 
                 // Exécuter PHPStan
-                $phpStan = new Process(['../../vendor/bin/phpstan', 'analyse', 'src', 'tests']);
+                $phpStan = new Process(['../../vendor/bin/phpstan', 'analyse']);
                 $phpStan->setWorkingDirectory(realpath(__DIR__ . "/../../../public/repoClone"));
                 $phpStan->run();
                 $phpStanOutput = $phpStan->getOutput();
