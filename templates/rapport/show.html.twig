@@ -12,7 +12,7 @@
                 <h2>Résultat {{ job.name }}</h2>
                 {% for detailItem in job.detail %}
                     <li style="list-style-type: none;">
-                        {{ detailItem }}
+                        {{ detailItem|replace({'-': ' ', '?': ' '})|nl2br }}
                     </li>
                 {% endfor %}
             </ul>
