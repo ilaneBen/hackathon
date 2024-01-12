@@ -4,12 +4,14 @@ namespace App\Serialize;
 
 use App\Entity\Project;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class ProjectSerializer
 {
     public function __construct(
         private RouterInterface $router,
-        private RapportSerializer $rapportSerializer,
+        private RapportSerializer $rapportSerializer, 
+        private CsrfTokenManagerInterface $csrf
     ) {}
 
     public function serialize(array $projectArray = []): array
@@ -33,6 +35,7 @@ class ProjectSerializer
             'showUrl' => $this->router->generate('project_show', ['id' => $project->getId()]),
             'deleteUrl' => $this->router->generate('api_project_delete', ['id' => $project->getId()]),
             'editUrl' => $this->router->generate('api_project_edit', ['id' => $project->getId()]),
+            'csrf' => $this->csrf->refreshToken('delete'.$project->getId()),
         ];
 
         return $serializedProject;
