@@ -3,9 +3,10 @@ import React from "react";
 export default function ({ closeRef, project, csrf }) {
   const submitForm = (e) => {
     e.preventDefault();
+    const formData = new FormData(e.target);
 
     fetch(project.deleteUrl, {
-      body: { id: project.id },
+      body: formData,
       method: "DELETE",
     })
       .then((res) => res.json())

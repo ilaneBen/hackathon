@@ -8,8 +8,11 @@ export default function ({ title, projects, newProjectPath }) {
   const finalTitle = title + (projects.length > 0 ? " (" + projects.length + ")" : "");
   const [finalProjets, setFinalProjects] = useState(projects);
   const [project, setProject] = useState(null);
+  const [deleteCsrf, setDeleteCsrf] = useState("");
   const [isForm, setIsForm] = useState(false);
   const closeRef = useRef();
+
+  console.log("projects", projects);
 
   const Spinner = () => (
     <div className="spinner-border spinner-border-sm ms-2" role="status">
@@ -29,6 +32,7 @@ export default function ({ title, projects, newProjectPath }) {
 
   const handleDelete = (project) => {
     setIsForm(false);
+    setDeleteCsrf(project.deleteCsrf);
     setProject(project);
   };
 
@@ -125,7 +129,7 @@ export default function ({ title, projects, newProjectPath }) {
             setFinalProjects={setFinalProjects}
           />
         ) : (
-          <Delete closeRef={closeRef} project={project} />
+          <Delete closeRef={closeRef} project={project} csrf={deleteCsrf} />
         )}
       </Modal>
     </div>
