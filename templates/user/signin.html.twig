@@ -1,4 +1,4 @@
-{% extends "base.html.twig" %}
+{% extends "_other.html.twig" %}
 
 {% set title = "Se connecter" %}
 
@@ -6,6 +6,6 @@
 	{{title}}
 {% endblock %}
 
-{% block body %}
+{% block other_body %}
 	<div {{ react_component('User/Signin/index', { title: title, csrf: csrf_token('signin'), redirectPath: path('project_index'), apiPath: path('api_user_signin') } ) }}></div>
 {% endblock %}
