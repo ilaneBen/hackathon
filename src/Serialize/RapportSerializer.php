@@ -9,7 +9,8 @@ class RapportSerializer
 {
     public function __construct(
         private RouterInterface $router,
-    ) {}
+    ) {
+    }
 
     public function serialize(array $rapportArray = []): array
     {
@@ -26,11 +27,11 @@ class RapportSerializer
         $serializedRapport = [
             'id' => $rapport->getId(),
             'date' => $rapport->getDate()->format('d-m-Y H:i'),
-            'showUrl' => $this->router->generate('app_rapport_show', ['id'=>$rapport->getId()]),
-            'deleteProject' => $this->router->generate('app_rapport_delete', ['id'=>$rapport->getId()])
+            'showUrl' => $this->router->generate('app_rapport_show', ['id' => $rapport->getId()]),
+            'deleteProject' => $this->router->generate('app_rapport_delete', ['id' => $rapport->getId()]),
             // 'showUrl' => $this->router->generate('api_rapport_show', ['id' => $rapport->getId()]),
         ];
-        
+
         return $serializedRapport;
     }
 }

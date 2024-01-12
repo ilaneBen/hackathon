@@ -29,7 +29,7 @@ class UserSerializer
             'id' => $user->getId(),
             'email' => $user->getEmail(),
             'name' => $user->getName(),
-            'firstName' => $user->getFirstName()
+            'firstName' => $user->getFirstName(),
         ];
 
         return $serializedUser;

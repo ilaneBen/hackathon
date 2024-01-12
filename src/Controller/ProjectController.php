@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Project;
-use App\Serialize\ProjectSerializer;
 use App\Form\ProjectType;
 use App\Repository\ProjectRepository;
+use App\Serialize\ProjectSerializer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -16,21 +16,23 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/project', name: 'project_')]
 class ProjectController extends AbstractController
 {
-	public function __construct (
-		private ProjectSerializer $projectSerializer
-	) {}
+    public function __construct(
+        private ProjectSerializer $projectSerializer
+    ) {
+    }
 
     #[Route('/', name: 'index', methods: ['GET'])]
     public function index(ProjectRepository $projectRepository): Response
     {
         $currentUser = $this->getUser();
 
-		if (!$currentUser) {
-			$this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
-			return $this->redirectToRoute('home');
-		}
+        if (!$currentUser) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
 
-		$projects = $this->projectSerializer->serialize($projectRepository->findBy(['user' => $currentUser]));
+            return $this->redirectToRoute('home');
+        }
+
+        $projects = $this->projectSerializer->serialize($projectRepository->findBy(['user' => $currentUser]));
 
         return $this->render('project/index.html.twig', [
             'projects' => $projects,
@@ -70,11 +72,10 @@ class ProjectController extends AbstractController
             return $this->redirectToRoute('home'); // Remplacez 'home' par le nom de votre route d'accueil
         }
 
-		return $this->render('project/show.html.twig', [
-			'project' => $this->projectSerializer->serializeOne($project),
-
-		]);
-	}
+        return $this->render('project/show.html.twig', [
+            'project' => $this->projectSerializer->serializeOne($project),
+        ]);
+    }
 
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Project $project, EntityManagerInterface $entityManager): Response

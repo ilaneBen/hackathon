@@ -37,7 +37,7 @@ class ProjectSerializer
             'showUrl' => $this->router->generate('project_show', ['id' => $project->getId()]),
             'deleteUrl' => $this->router->generate('api_project_delete', ['id' => $project->getId()]),
             'editUrl' => $this->router->generate('api_project_edit', ['id' => $project->getId()]),
-            'deleteCsrf' => $this->csrf->refreshToken('delete' . $project->getId())->getValue(),
+            'deleteCsrf' => $this->csrf->refreshToken('delete'.$project->getId())->getValue(),
             'cloneUrl' => $this->router->generate('api_git_clone', ['project' => $project->getId()]),
         ];
 
