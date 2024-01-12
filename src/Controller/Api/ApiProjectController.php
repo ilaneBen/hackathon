@@ -29,8 +29,10 @@ class ApiProjectController extends AbstractController
 		}
 
 		$inputBag = $request->request;
+		$name = $inputBag->get('name');
+		$url = $inputBag->get('url');
 
-		if (!$inputBag->has('name') || !$inputBag->has('url')) {
+		if (!$name || !$url) {
 			return $this->json([
 				'code' => 403,
 				'message' => "Champs manquants",
@@ -39,8 +41,8 @@ class ApiProjectController extends AbstractController
 
 		$project = new Project();
 
-		$project->setName($inputBag->get('name'));
-		$project->setUrl($inputBag->get('url'));
+		$project->setName($name);
+		$project->setUrl($url);
 		$project->setStatut(false);
 		$project->setUser($user);
 
@@ -82,15 +84,18 @@ class ApiProjectController extends AbstractController
 
 		$inputBag = $request->request;
 
-		if (!$inputBag->has('name') || !$inputBag->has('url')) {
+		$name = $inputBag->get('name');
+		$url = $inputBag->get('url');
+
+		if (!$name || !$url) {
 			return $this->json([
 				'code' => 403,
 				'message' => "Champs manquants",
 			]);
 		}
 
-		$project->setName($inputBag->get('name'));
-		$project->setUrl($inputBag->get('url'));
+		$project->setName($name);
+		$project->setUrl($url);
 
 		$entityManager->flush();
 

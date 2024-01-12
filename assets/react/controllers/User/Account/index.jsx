@@ -18,6 +18,12 @@ export default function ({ title, user, editApiPath }) {
 
     const formData = new FormData(e.target);
 
+    if (!firstName || !name || !email) {
+      setError("Veuillez remplir tous les champs obligatoires.");
+      setIsLoading(false);
+      return;
+    }
+
     fetch(editApiPath, {
       method: "POST",
       body: formData,
