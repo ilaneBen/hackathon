@@ -27,10 +27,10 @@ class Project
     #[ORM\ManyToOne(inversedBy: 'project')]
     private ?User $user = null;
 
-    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Job::class)]
+    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Job::class, cascade: ['persist', 'remove'])]
     private Collection $job;
 
-    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Rapport::class)]
+    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Rapport::class, cascade: ['persist', 'remove'])]
     private Collection $rapport;
 
     public function __construct()
