@@ -19,31 +19,6 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/git', name: 'git_')]
 class ApiGitCloneController extends AbstractController
 {
-    private function getPhpVersionFromComposerJson(): ?string
-    {
-        // Assuming the path to the composer.json file
-        $composerJsonPath = realpath(__DIR__.'/../../../public/repoClone/composer.json');
-
-        // Read the contents of composer.json
-        $composerJsonContents = file_get_contents($composerJsonPath);
-
-        if (false === $composerJsonContents) {
-            // Handle the case when reading fails
-            return null;
-        }
-
-        // Decode the JSON content
-        $composerData = json_decode($composerJsonContents, true);
-
-        if (JSON_ERROR_NONE !== json_last_error()) {
-            // Handle JSON decoding error
-            return null;
-        }
-
-        // Retrieve the PHP version from the "require" section
-        return $composerData['require']['php'] ?? null;
-    }
-
     #[Route('/clone/{project}', name: 'clone')]
     public function gitClone(Project $project, Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -191,32 +166,29 @@ class ApiGitCloneController extends AbstractController
         }
     }
 
-    private function executeComposerAudit(): string
+    private function getPhpVersionFromComposerJson(): ?string
     {
-        $composerAuditCommand = 'composer audit --locked --format=json';
+        // Assuming the path to the composer.json file
+        $composerJsonPath = realpath(__DIR__.'/../../../public/repoClone/composer.json');
 
-        // Créer un processus pour exécuter la commande Composer Audit dans le répertoire cloné
-        $process = Process::fromShellCommandline($composerAuditCommand);
+        // Read the contents of composer.json
+        $composerJsonContents = file_get_contents($composerJsonPath);
 
-        try {
-            // Exécuter la commande Composer Audit
-            $process->mustRun();
-
-            // Récupérer la sortie de la commande
-            return $process->getOutput();
-        } catch (ProcessFailedException $exception) {
-            // En cas d'échec de Composer Audit, retourner un message d'erreur
-            return $exception->getMessage();
+        if (false === $composerJsonContents) {
+            // Handle the case when reading fails
+            return null;
         }
-    }
 
-    private function isValidGitUrl($url)
-    {
-        // Expression régulière pour valider l'URL Git
-        $regex = '/^(github|https?|ssh):\/\/[^\s@]+(@|:\/\/)([^\/:]+)[:\/]Leslie\/([^\/:]+)\/(.+).git$/i';
+        // Decode the JSON content
+        $composerData = json_decode($composerJsonContents, true);
 
-        // Vérification avec la regex
-        return preg_match($regex, $url);
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            // Handle JSON decoding error
+            return null;
+        }
+
+        // Retrieve the PHP version from the "require" section
+        return $composerData['require']['php'] ?? null;
     }
 
     public function checkAuditOutput($composerAuditOutput)
@@ -244,7 +216,14 @@ class ApiGitCloneController extends AbstractController
             $mail->isHTML(true);
             $mail->Subject = "Rapport d'analyse codeScan";
             $mail->Body = "Bonjour, voici le rapport d'analyse de projet ".$project->getName().' réalisé le '.
-                $rapport->getDate()->format('d-m-Y').' à '.$rapport->getDate()->format('H:i:s').'<br>';
+                $rapport->getDate()->format('d-m-Y').' à '.$rapport->getDate()->format('H:i:s').'<br><br>';
+            $jobs = $rapport->getJob()->getValues();
+            foreach ($jobs as $job) {
+                $jobName = $job->getName();
+                $jobResult = $job->isResultat() ? 'Aucun défaut trouvé.' : 'Plusieurs défauts trouvés. Invitez à lire le rapport d\'audit.';
+
+                $mail->Body .= " $jobName <br>Résultat : $jobResult <br><br>";
+            }
             $mail->Body .= "Les résultats de l'analyse sont disponibles à l'adresse : <a href='".$_ENV['SITE_BASE_URL'].'/rapport/'.$rapport->getId()."'>lien vers le rapport</a>";
             $mail->send();
             echo 'Le message a été envoyé';
