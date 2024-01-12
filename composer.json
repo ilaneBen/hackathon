@@ -13,6 +13,7 @@
         "dompdf/dompdf": "^2.0",
         "gitonomy/gitlib": "^1.4",
         "phpdocumentor/reflection-docblock": "^5.3",
+        "phpmailer/phpmailer": "^6.9",
         "phpstan/phpdoc-parser": "^1.25",
         "symfony/asset": "6.4.*",
         "symfony/console": "6.4.*",

@@ -6,10 +6,13 @@ use App\Entity\Job;
 use App\Entity\Project;
 use App\Entity\Rapport;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use PHPMailer\PHPMailer\PHPMailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,6 +20,8 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/git', name: 'git_')]
 class ApiGitCloneController extends AbstractController
 {
+
+
     private function getPhpVersionFromComposerJson(): ?string
     {
         // Assuming the path to the composer.json file
@@ -45,6 +50,9 @@ class ApiGitCloneController extends AbstractController
     #[Route('/clone/{project}', name: 'clone')]
     public function gitClone(Project $project, Request $request, EntityManagerInterface $entityManager): Response
     {
+        //Variable pour localHost
+        $localHost = 'localhost';
+
         // Récupérer l'URL du dépôt Git depuis la requête
         $repositoryUrl = $project->getUrl();
 
@@ -156,6 +164,10 @@ class ApiGitCloneController extends AbstractController
 
             // Sauvegarder les entités et renvoyer la réponse
             $entityManager->flush();
+
+            // Email sender !!! APRES LE FLUSH SINON IMPOSSIBLE DE RECUPERER ID RAPPORT !!!
+            $this->sendEmail($project, $rapport);
+
             $message = 'Analyse du dépôt Git réussi.';
 
             return $this->render('project/show.html.twig', [
@@ -165,6 +177,9 @@ class ApiGitCloneController extends AbstractController
         } catch (ProcessFailedException $exception) {
             // Gérer les erreurs
             return new Response($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (TransportExceptionInterface $e) {
+            // Gérer les erreurs
+            return new Response($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -202,6 +217,32 @@ class ApiGitCloneController extends AbstractController
             return true;
         } else {
             return false;
+        }
+    }
+
+
+    private function sendEmail(Project $project, Rapport $rapport)
+    {
+        try {
+            $mail = new PHPMailer(true);
+            $mail->isSMTP();
+            $mail->Host       = $this->getParameter('mail_host');
+            $mail->SMTPAuth   = true;
+            $mail->Username   = '';
+            $mail->Password   = '';
+            $mail->Port       = $this->getParameter('mail_port');
+
+            $mail->setFrom("codeScan@no-reply.fr", 'CodeScan-No-Reply');
+            $mail->addAddress($project->getUser()->getEmail(), 'Rapport d\'analyse');
+            $mail->isHTML(true);
+            $mail->Subject = "Rapport d'analyse codeScan";
+            $mail->Body = "Bonjour, voici le rapport d'analyse de projet ".$project->getName()." réalisé le ".
+                $rapport->getDate()->format('d-m-Y')." à ".$rapport->getDate()->format("H:i:s")."<br>";
+            $mail->Body .= "Les résultats de l'analyse sont disponibles à l'adresse : <a href='".$_ENV['SITE_BASE_URL']."/rapport/".$rapport->getId()."'>lien vers le rapport</a>";
+            $mail->send();
+            echo 'Le message a été envoyé';
+        } catch (Exception $e) {
+            echo "Le message n'a pas pu être envoyé. Erreur du mailer : {$mail->ErrorInfo}";
         }
     }
     // Vérification pour s'assurer que $boolPhp est un booléen
