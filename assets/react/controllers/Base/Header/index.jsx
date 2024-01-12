@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function ({ isLogged, homePath, signinPath, signupPath, projectsPath, signoutPath }) {
+export default function ({ isLogged, homePath, signinPath, signupPath, projectsPath, myAccountPath, signoutPath }) {
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container">
@@ -26,11 +26,18 @@ export default function ({ isLogged, homePath, signinPath, signupPath, projectsP
               </a>
             </li>
             {isLogged && (
-              <li className="nav-item">
-                <a className="nav-link" href={projectsPath}>
-                  Mes projets
-                </a>
-              </li>
+              <>
+                <li className="nav-item">
+                  <a className="nav-link" href={projectsPath}>
+                    Mes projets
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href={myAccountPath}>
+                    Mon compte
+                  </a>
+                </li>
+              </>
             )}
           </ul>
 
