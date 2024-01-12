@@ -13,7 +13,7 @@ export default function ({ title, projects, newProjectPath }) {
 
   const Spinner = () => (
     <div className="spinner-border spinner-border-sm ms-2" role="status">
-      <span className="visually-hidden">Loading...</span>
+      <span className="visually-hidden">Chargement...</span>
     </div>
   );
 
@@ -85,7 +85,13 @@ export default function ({ title, projects, newProjectPath }) {
                       <i className="bi bi-pencil-square"></i>
                     </button>
 
-                    <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDelete(project)}>
+                    <button
+                      type="button"
+                      className="btn btn-danger btn-sm"
+                      data-bs-toggle="modal"
+                      data-bs-target="#projectModal"
+                      onClick={() => handleDelete(project)}
+                    >
                       <i className="bi bi-trash-fill"></i>
                     </button>
                   </td>
@@ -115,6 +121,7 @@ export default function ({ title, projects, newProjectPath }) {
             closeRef={closeRef}
             project={project}
             newProjectPath={newProjectPath}
+            finalProjects={finalProjets}
             setFinalProjects={setFinalProjects}
           />
         ) : (

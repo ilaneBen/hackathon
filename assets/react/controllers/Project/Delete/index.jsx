@@ -1,12 +1,12 @@
 import React from "react";
 
-export default function ({ closeRef, project }) {
-  console.log(project);
+export default function ({ closeRef, project, csrf }) {
+  const submitForm = (e) => {
+    e.preventDefault();
 
-  const handleDelete = () => {
     fetch(project.deleteUrl, {
       body: { id: project.id },
-      method: "POST",
+      method: "DELETE",
     })
       .then((res) => res.json())
       .then((res) => {
@@ -17,5 +17,17 @@ export default function ({ closeRef, project }) {
       });
   };
 
-  return <button onClick={handleDelete} className="btn btn-danger"></button>;
+  return (
+    <form onSubmit={submitForm}>
+      <p>
+        Attention, vous êtes sur le point de supprimer le projet <strong>{project?.name}</strong>.
+      </p>
+
+      <input type="hidden" name="csrf" value={csrf} />
+
+      <button type="submit" className="btn btn-danger">
+        Supprimer le projet
+      </button>
+    </form>
+  );
 }

@@ -1,4 +1,4 @@
-import React, { useRef, Children } from "react";
+import React, { Children } from "react";
 
 export default function ({ title, children, closeRef }) {
   const element = Children.only(children);

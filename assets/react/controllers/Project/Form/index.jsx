@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import clsx from "clsx";
 
-export default function ({ closeRef, project, setFinalProjects, newProjectPath }) {
+export default function ({ closeRef, project, finalProjects, setFinalProjects, newProjectPath }) {
   const isEditing = !!project;
 
   const [name, setName] = useState("");
@@ -46,17 +46,17 @@ export default function ({ closeRef, project, setFinalProjects, newProjectPath }
       .then((res) => res.json())
       .then((res) => {
         if (res?.code === 200) {
+          setError("");
           closeRef.current.click();
           toast.success("Le projet a bien été " + (isEditing ? "modifié" : "créé") + ".");
 
           if (!isEditing) {
             setFinalProjects((finalProjects) => [...finalProjects, res?.project]);
           } else {
-            setFinalProjects((finalProjects) => {
-              const index = finalProjects.findIndex((project) => project.id === res?.project.id);
-              finalProjects[index] = res?.project;
-              return finalProjects;
-            });
+            const finalProjectsCopy = [...finalProjects];
+            const index = finalProjectsCopy.findIndex((project) => project.id === res?.project.id);
+            finalProjectsCopy[index] = res?.project;
+            setFinalProjects(finalProjectsCopy);
           }
 
           // Reset form.

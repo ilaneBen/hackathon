@@ -13,58 +13,59 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/project', name: 'project_')]
 class ApiProjectController extends AbstractController
 {
-	public function __construct (
-        private ProjectSerializer $projectSerializer
-    ) {}
+	public function __construct(
+		private ProjectSerializer $projectSerializer
+	) {
+	}
 
 	#[Route('/new', name: 'new', methods: ['POST'])]
-	public function new (Request $request, EntityManagerInterface $entityManager): Response
+	public function new(Request $request, EntityManagerInterface $entityManager): Response
 	{
-        if(!$user = $this->getUser()){
-            return $this->json([
-				'code' => 403, 
+		if (!$user = $this->getUser()) {
+			return $this->json([
+				'code' => 403,
 				'message' => "Il faut être connecté pour accéder à cette ressource",
 			]);
-        }
+		}
 
-        $inputBag = $request->request;
+		$inputBag = $request->request;
 
 		if (!$inputBag->has('name') || !$inputBag->has('url')) {
-            return $this->json([
-				'code' => 403, 
+			return $this->json([
+				'code' => 403,
 				'message' => "Champs manquants",
 			]);
-        }
+		}
 
 		$project = new Project();
 
-        $project->setName($inputBag->get('name'));
-        $project->setUrl($inputBag->get('url'));
-        $project->setStatut(false);
-        $project->setUser($user);
+		$project->setName($inputBag->get('name'));
+		$project->setUrl($inputBag->get('url'));
+		$project->setStatut(false);
+		$project->setUser($user);
 
-        $entityManager->persist($project);
-        $entityManager->flush();
+		$entityManager->persist($project);
+		$entityManager->flush();
 
 		return $this->json([
-			'code' => 200, 
-			'message' => 'Le project a été créé.', 
+			'code' => 200,
+			'message' => 'Le projet a été créé.',
 			'project' => $this->projectSerializer->serializeOne($project),
 		]);
 	}
 
 	#[Route('/{id}/edit', name: 'edit', methods: ['POST'])]
-	public function edit (Request $request, Project $project, EntityManagerInterface $entityManager): Response
+	public function edit(Request $request, Project $project, EntityManagerInterface $entityManager): Response
 	{
 		// Vérifier si un utilisateur est connecté
 		if (!$user = $this->getUser()) {
 			return $this->json([
-				'code' => 403, 
+				'code' => 403,
 				'message' => "Il faut être connecté pour accéder à cette ressource",
 			]);
 		}
 
-		if(!$project){
+		if (!$project) {
 			return $this->json([
 				'code' => 400,
 				'message' => "Ce projet n'existe pas",
@@ -73,45 +74,45 @@ class ApiProjectController extends AbstractController
 
 		// Vérifier si l'utilisateur actuel est le propriétaire du projet
 		if ($user !== $project->getUser()) {
-            return $this->json([
+			return $this->json([
 				'code' => 403,
 				'message' => "Vous n'êtes pas le propriétaire du projet",
 			]);
-        }
+		}
 
-        $inputBag = $request->request;
+		$inputBag = $request->request;
 
 		if (!$inputBag->has('name') || !$inputBag->has('url')) {
-            return $this->json([
-				'code' => 403, 
+			return $this->json([
+				'code' => 403,
 				'message' => "Champs manquants",
 			]);
-        }
+		}
 
-        $project->setName($inputBag->get('name'));
-        $project->setUrl($inputBag->get('url'));
+		$project->setName($inputBag->get('name'));
+		$project->setUrl($inputBag->get('url'));
 
-        $entityManager->flush();
+		$entityManager->flush();
 
 		return $this->json([
-			'code' => 200, 
-			'message' => 'Le project a été modifié.',
+			'code' => 200,
+			'message' => 'Le projet a été modifié.',
 			'project' => $this->projectSerializer->serializeOne($project),
 		]);
 	}
 
 	#[Route('/{id}', name: 'delete', methods: ['DELETE'])]
-	public function delete (Request $request, Project $project, EntityManagerInterface $entityManager): Response
+	public function delete(Request $request, Project $project, EntityManagerInterface $entityManager): Response
 	{
 		// Vérifier si un utilisateur est connecté
 		if (!$user = $this->getUser()) {
 			return $this->json([
-				'code' => 403, 
+				'code' => 403,
 				'message' => "Il faut être connecté pour accéder à cette ressource",
 			]);
 		}
 
-		if(!$project){
+		if (!$project) {
 			return $this->json([
 				'code' => 400,
 				'message' => "Ce projet n'existe pas",
@@ -120,21 +121,21 @@ class ApiProjectController extends AbstractController
 
 		// Vérifier si l'utilisateur actuel est le propriétaire du projet
 		if ($user !== $project->getUser()) {
-            return $this->json([
-				'code' => 403, 
+			return $this->json([
+				'code' => 403,
 				'message' => "Vous n'êtes pas le propriétaire du projet",
 			]);
-        }
+		}
 
-        $inputBag = $request->request;
+		$inputBag = $request->request;
 
 		// Vérifier si l'utilisateur actuel est le propriétaire du projet
 		if (!$inputBag->has('csrf')) {
-            return $this->json([
-				'code' => 403, 
+			return $this->json([
+				'code' => 403,
 				'message' => "Token manquant",
 			]);
-        }
+		}
 
 		if ($this->isCsrfTokenValid('delete' . $project->getId(), $inputBag->get('csrf'))) {
 			$entityManager->remove($project);
@@ -142,8 +143,8 @@ class ApiProjectController extends AbstractController
 		}
 
 		return $this->json([
-			'code' => 200, 
-			'message' => 'Le project a été supprimé.',
+			'code' => 200,
+			'message' => 'Le projet a été supprimé.',
 		]);
 	}
 }
