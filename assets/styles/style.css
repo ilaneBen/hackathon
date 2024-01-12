@@ -66,6 +66,10 @@
     background: #5e41de4d;
 }
 
+.button .svg-icon {
+    color: #5c5c5c;
+}
+
 .button:hover .svg-icon {
     animation: spin 2s linear infinite;
 }
@@ -98,13 +102,14 @@
 }
 
 .svgIcon {
-    width: 12px;
+    width: fit-content;
     transition-duration: .3s;
+    color: white;
 }
 
-.svgIcon path {
+/* .svgIcon path {
     fill: white;
-}
+} */
 
 .button-delete:hover {
     width: 120px;
@@ -115,7 +120,8 @@
 }
 
 .button-delete:hover .svgIcon {
-    width: 50px;
+    margin-top: -25px;
+    font-size: 50px;
     transition-duration: .3s;
     transform: translateY(60%);
 }
