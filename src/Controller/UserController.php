@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Serialize\UserSerializer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -9,6 +10,11 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/', 'user_')]
 class UserController extends AbstractController
 {
+    public function __construct(
+        private UserSerializer $userSerializer
+    ) {
+    }
+
     #[Route('/signup', name: 'signup', methods: ['GET'])]
     public function signUp_view(): Response
     {
@@ -36,7 +42,11 @@ class UserController extends AbstractController
             $this->redirectToRoute('signin');
         }
 
-        return $this->render('user/account.html.twig');
+        $user = $this->userSerializer->serializeOne($this->getUser());
+
+        return $this->render('user/account.html.twig', [
+            'user' => $user,
+        ]);
     }
 
     #[Route('/signout', name: 'signout', methods: ['GET'])]

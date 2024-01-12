@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import clsx from "clsx";
+import toast, { Toaster } from "react-hot-toast";
 
-export default function ({ title, editApiPath }) {
-  const [firstName, setFirstName] = useState("");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+export default function ({ title, user, editApiPath }) {
+  const [firstName, setFirstName] = useState(user.firstName);
+  const [name, setName] = useState(user.name);
+  const [email, setEmail] = useState(user.email);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +26,8 @@ export default function ({ title, editApiPath }) {
       .then((res) => {
         // If success, redirect the page.
         if (res?.code === 200) {
-          window.location.href = redirectPath;
+          toast.success(res?.message);
+          setPassword("");
         } else {
           setError(res?.message);
         }
@@ -37,6 +39,8 @@ export default function ({ title, editApiPath }) {
   return (
     <form onSubmit={onFormSubmit} className="row user-form">
       <h1>{title}</h1>
+
+      <Toaster />
 
       {error && (
         <div className="alert alert-danger alert-dismissible fade show" role="alert">
@@ -96,7 +100,7 @@ export default function ({ title, editApiPath }) {
 
       <div className="form-group col-12">
         <button type="submit" className={clsx("btn btn-primary btn-lg", isLoading && "disabled")}>
-          {isLoading ? "Création du compte..." : "S'inscrire"}
+          {isLoading ? "Modification en cours..." : "Modifier"}
         </button>
       </div>
     </form>

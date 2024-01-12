@@ -10,7 +10,8 @@ class UserSerializer
     public function __construct(
         private RouterInterface $router,
         private ProjectSerializer $projectSerializer,
-    ) {}
+    ) {
+    }
 
     public function serialize(array $userArray = []): array
     {
@@ -28,9 +29,7 @@ class UserSerializer
             'id' => $user->getId(),
             'email' => $user->getEmail(),
             'name' => $user->getName(),
-            'firstName' => $user->getFirstName(),
-            'job' => $this->projectSerializer->serialize($user->getProject()->getValues()),
-            'editUrl' => $this->router->generate('api_user_edit'),
+            'firstName' => $user->getFirstName()
         ];
 
         return $serializedUser;

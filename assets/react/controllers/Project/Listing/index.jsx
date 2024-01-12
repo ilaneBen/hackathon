@@ -12,8 +12,6 @@ export default function ({ title, projects, newProjectPath }) {
   const [isForm, setIsForm] = useState(false);
   const closeRef = useRef();
 
-  console.log("projects", projects);
-
   const Spinner = () => (
     <div className="spinner-border spinner-border-sm ms-2" role="status">
       <span className="visually-hidden">Chargement...</span>

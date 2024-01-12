@@ -14,13 +14,14 @@ class ApiUserController extends AbstractController
 {
     public function __construct(
         private UserPasswordHasherInterface $passwordHasher
-    ) {}
+    ) {
+    }
 
     #[Route('/signin', name: 'signin', methods: ['POST'])]
     public function signIn(): Response
     {
         return $this->json([
-            'code' => 200, 
+            'code' => 200,
             'message' => 'Connected',
         ]);
     }
@@ -29,27 +30,27 @@ class ApiUserController extends AbstractController
     public function signUp(): Response
     {
         return $this->json([
-            'code' => 200, 
+            'code' => 200,
             'message' => "User created and connected",
         ]);
     }
-    
-    #[Route('/user/edit', name: 'edit', methods: ['PATCH'])]
-	public function edit (Request $request, EntityManagerInterface $entityManager): Response
-	{
-		// Vérifier si un utilisateur est connecté
-		if (!$user = $this->getUser()) {
-			return $this->json([
-                'code' => 403, 
+
+    #[Route('/user/edit', name: 'edit', methods: ['POST'])]
+    public function edit(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // Vérifier si un utilisateur est connecté
+        if (!$user = $this->getUser()) {
+            return $this->json([
+                'code' => 403,
                 'message' => "Il faut être connecté pour accéder à cette ressource",
             ]);
-		}
+        }
 
         $inputBag = $request->request;
 
-		if (!$inputBag->has('email') || !$inputBag->has('name') || !$inputBag->has('firstName')) {
+        if (!$inputBag->has('email') || !$inputBag->has('name') || !$inputBag->has('firstName')) {
             return $this->json([
-                'code' => 403, 
+                'code' => 403,
                 'message' => "Champs manquants",
             ]);
         }
@@ -69,9 +70,9 @@ class ApiUserController extends AbstractController
 
         $entityManager->flush();
 
-		return $$this->json([
-            'code' => 200, 
-            'message' => 'Le project a été modifié.',
+        return $this->json([
+            'code' => 200,
+            'message' => "L'utilisateur a bien été modifié",
         ]);
-	}
+    }
 }

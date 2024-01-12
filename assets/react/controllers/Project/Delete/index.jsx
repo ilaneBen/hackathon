@@ -29,7 +29,7 @@ export default function ({ closeRef, project, csrf, setFinalProjects }) {
 
       <input type="hidden" name="deleteCsrf" value={csrf} />
 
-      <div class="text-center">
+      <div className="text-center">
         <button type="submit" className="btn btn-danger">
           Supprimer le projet
         </button>
