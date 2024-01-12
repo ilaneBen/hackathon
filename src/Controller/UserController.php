@@ -18,8 +18,8 @@ class UserController extends AbstractController
     #[Route('/signup', name: 'signup', methods: ['GET'])]
     public function signUp_view(): Response
     {
-        if ($this->getuser()) {
-            $this->redirectToRoute('home');
+        if ($this->getUser()) {
+            return $this->redirectToRoute('home');
         }
 
         return $this->render('user/signup.html.twig');
@@ -28,8 +28,8 @@ class UserController extends AbstractController
     #[Route('/signin', name: 'signin', methods: ['GET'])]
     public function signIn_view(): Response
     {
-        if ($this->getuser()) {
-            $this->redirectToRoute('home');
+        if ($this->getUser()) {
+            return $this->redirectToRoute('home');
         }
 
         return $this->render('user/signin.html.twig');
@@ -38,8 +38,8 @@ class UserController extends AbstractController
     #[Route('/account', name: 'account', methods: ['GET'])]
     public function myAccount_view(): Response
     {
-        if (!$this->getuser()) {
-            $this->redirectToRoute('signin');
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('user_signin');
         }
 
         $user = $this->userSerializer->serializeOne($this->getUser());
