@@ -36,7 +36,18 @@ export default function ({ title, projects, newProjectPath }) {
 
   return (
     <div className="projects">
-      <h1>{finalTitle}</h1>
+      <div className="d-flex justify-content-between mb-4">
+        <h1>{finalTitle}</h1>
+        <button
+          type="button"
+          className="btn btn-primary h-100 align-self-center"
+          data-bs-toggle="modal"
+          data-bs-target="#projectModal"
+          onClick={() => toggleForm("new")}
+        >
+          Créer un projet
+        </button>
+      </div>
 
       <Toaster />
 
@@ -103,16 +114,6 @@ export default function ({ title, projects, newProjectPath }) {
           </tbody>
         </table>
       </div>
-
-      <button
-        type="button"
-        className="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#projectModal"
-        onClick={() => toggleForm("new")}
-      >
-        Créer un projet
-      </button>
 
       <Modal
         closeRef={closeRef}
