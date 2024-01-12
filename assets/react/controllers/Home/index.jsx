@@ -30,8 +30,8 @@ export default function () {
                     Notre application offre une solution conviviale pour réaliser des audits de sécurité sur votre code source. Découvrez ci-dessous les fonctionnalités clés de notre service :
                 </p>
                 <div className="d-flex flex-wrap justify-content-center">
-                        <div className="card m-5" style={{width: '28rem'}}>
-                            <img src="/img/git-clone-cb3bc0407b00.png" className="card-img-top mb-3" style={{width:"445px", height:"445px"}} alt="..."/>
+                        <div className="card m-5" style={{width: '28rem',minHeight: "45rem"}}>
+                            <img src="/img/git-clone-cb3bc0407b00.png" className="card-img-top mb-3 object-fit-cover" style={{width:"445px", height:"445px"}} alt="..."/>
                             <div className="card-body">
                                 <h5 className="card-title">1. Clonage Git Simplifié</h5>
                                 <p className="card-text">
@@ -41,8 +41,8 @@ export default function () {
                                 </p>
                             </div>
                         </div>
-                        <div className="card m-5" style={{width: '28rem'}}>
-                            <img src="/img/composer.svg" className="card-img-top mb-3" style={{width:"445px", height:"445px"}} alt="..."/>
+                        <div className="card m-5" style={{width: '28rem',minHeight: "45rem"}}>
+                            <img src="/img/composer.svg" className="card-img-top mb-3 object-fit-cover" style={{width:"445px", height:"445px"}} alt="..."/>
                             <div className="card-body">
                                 <h5 className="card-title">2. Audit Composer Automatique</h5>
                                 <p className="card-text">
@@ -52,8 +52,8 @@ export default function () {
                                 </p>
                             </div>
                         </div>
-                        <div className="card m-5" style={{width: '28rem'}}>
-                            <img src="/img/php.png" className="card-img-top mb-3" style={{width:"445px", height:"445px"}} alt="..."/>
+                        <div className="card m-5" style={{width: '28rem',minHeight: "45rem"}}>
+                            <img src="/img/php.png" className="card-img-top mb-3 object-fit-cover" style={{width:"445px", height:"445px"}} alt="..."/>
                             <div className="card-body">
                                 <h5 className="card-title">3. Analyse PHPStan et PHP CS</h5>
                                 <p className="card-text">
@@ -63,8 +63,8 @@ export default function () {
                                 </p>
                             </div>
                         </div>
-                        <div className="card m-5" style={{width: '28rem'}}>
-                            <img src="/img/Centralisation-des-donnees.jpg" className="card-img-top mb-3" style={{width:"445px", height:"445px"}} alt="..."/>
+                        <div className="card m-5" style={{width: '28rem',minHeight: "45rem"}}>
+                            <img src="/img/Centralisation-des-donnees.jpg" className="card-img-top mb-3 object-fit-cover" style={{width:"445px", height:"445px"}} alt="..."/>
                             <div className="card-body">
                                 <h5 className="card-title">4. Résultats Centralisés</h5>
                                 <p className="card-text">
@@ -74,8 +74,8 @@ export default function () {
                                 </p>
                             </div>
                         </div>
-                        <div className="card m-5" style={{width: '28rem'}}>
-                            <img src="/img/security.jpg" className="card-img-top mb-3" style={{width:"445px", height:"445px"}} alt="..."/>
+                        <div className="card m-5" style={{width: '28rem',minHeight: "45rem"}}>
+                            <img src="/img/security.jpg" className="card-img-top mb-3 object-fit-cover" style={{width:"445px", height:"445px"}} alt="..."/>
                             <div className="card-body">
                                 <h5 className="card-title">5. Protection de la Vie Privée</h5>
                                 <p className="card-text">
@@ -85,8 +85,8 @@ export default function () {
                                 </p>
                             </div>
                         </div>
-                        <div className="card m-5" style={{width: '28rem'}}>
-                            <img src="/img/points-interrogation.avif" className="card-img-top mb-3" style={{width:"445px", height:"445px"}} alt="..."/>
+                        <div className="card m-5" style={{width: '28rem',minHeight: "45rem"}}>
+                            <img src="/img/points-interrogation.avif" className="card-img-top mb-3 object-fit-cover " style={{width:"445px", height:"445px"}} alt="..."/>
                             <div className="card-body">
                                 <h5 className="card-title">6. Comment Utiliser l'Application</h5>
                                 <p className="card-text">
