@@ -173,7 +173,7 @@ class ApiGitCloneController extends AbstractController
             $entityManager->flush();
 
             // Email sender !!! APRES LE FLUSH SINON IMPOSSIBLE DE RECUPERER ID RAPPORT !!!
-            $this->sendEmail($project, $rapport);
+            // $this->sendEmail($project, $rapport);
 
             return $this->json([
                 'code' => 200,

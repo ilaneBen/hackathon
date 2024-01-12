@@ -59,13 +59,11 @@ const ProjectDetails = ({ project, }) => {
                 <p>Aucun rapport disponible pour ce projet.</p>
             )}
             <div className="mb-2 d-flex">
-            <a className="button-repport" href="/project_index">Retour à la liste</a>
+            <a className="button-repport" href={project.indexUrl}>Retour à la liste</a>
 
-            <a className="button-repport" href={`/project_edit/${project.id}`}>Modifier</a>
+            {/* <a className="button-repport" href={project.editUrl}>Modifier</a> */}
 
-            {project.url && (
-                <a className="button-repport" href={`/api_git_clone/${project.id}`}>Lancer le Test</a>
-            )}
+            <a className="button-repport" href={project.cloneUrl}>Lancer le Test</a>
 
             </div>
         </div>
