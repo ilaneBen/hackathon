@@ -101,7 +101,7 @@ class ApiProjectController extends AbstractController
 		]);
 	}
 
-	#[Route('/{id}', name: 'delete', methods: ['DELETE'])]
+	#[Route('/{id}', name: 'delete', methods: ['POST'])]
 	public function delete(Request $request, Project $project, EntityManagerInterface $entityManager): Response
 	{
 		// Vérifier si un utilisateur est connecté
@@ -129,15 +129,15 @@ class ApiProjectController extends AbstractController
 
 		$inputBag = $request->request;
 
-		// Vérifier si l'utilisateur actuel est le propriétaire du projet
-		if (!$inputBag->has('csrf')) {
+		// Vérifier si le token CSRF est valide
+		if (!$inputBag->has('deleteCsrf')) {
 			return $this->json([
 				'code' => 403,
 				'message' => "Token manquant",
 			]);
 		}
 
-		if ($this->isCsrfTokenValid('delete' . $project->getId(), $inputBag->get('csrf'))) {
+		if ($this->isCsrfTokenValid('delete' . $project->getId(), $inputBag->get('deleteCsrf'))) {
 			$entityManager->remove($project);
 			$entityManager->flush();
 		}
