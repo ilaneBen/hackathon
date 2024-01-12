@@ -2,7 +2,6 @@ import { registerReactControllerComponents } from "@symfony/ux-react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import "react-bootstrap/dist/react-bootstrap.min.js";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "./bootstrap.js";
 /*
