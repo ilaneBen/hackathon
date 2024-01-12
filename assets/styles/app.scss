@@ -11,6 +11,7 @@ body {
 
 .container.base {
   margin-top: 100px;
+  margin-bottom: 10px;
 
   &:has(.user-form) {
     display: flex;
