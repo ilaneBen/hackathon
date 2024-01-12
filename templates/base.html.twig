@@ -23,10 +23,12 @@
       		signinPath: path('user_signin'),
 			signupPath: path('user_signup'),
 			projectsPath: path('project_index'),
+			myAccountPath: path('user_account'),
 			signoutPath: path('user_signout'),
     	} ) }}></div>
 
-		<div class="container base"> {% block body %}{% endblock %}
-			</div>
+		{% block body %}{% endblock %}
+		{% include 'footer.html.twig' %}
+
 		</body>
 	</html>

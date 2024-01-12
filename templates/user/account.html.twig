@@ -1,0 +1,11 @@
+{% extends "_other.html.twig" %}
+
+{% set title = "Mon compte" %}
+
+{% block title %}
+	{{title}}
+{% endblock %}
+
+{% block other_body %}
+	<div {{ react_component('User/Account/index', { title: title, user: user, editApiPath: path('api_user_edit') } ) }}></div>
+{% endblock %}

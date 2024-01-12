@@ -29,8 +29,10 @@ class ApiProjectController extends AbstractController
 		}
 
 		$inputBag = $request->request;
+		$name = $inputBag->get('name');
+		$url = $inputBag->get('url');
 
-		if (!$inputBag->has('name') || !$inputBag->has('url')) {
+		if (!$name || !$url) {
 			return $this->json([
 				'code' => 403,
 				'message' => "Champs manquants",
@@ -39,8 +41,8 @@ class ApiProjectController extends AbstractController
 
 		$project = new Project();
 
-		$project->setName($inputBag->get('name'));
-		$project->setUrl($inputBag->get('url'));
+		$project->setName($name);
+		$project->setUrl($url);
 		$project->setStatut(false);
 		$project->setUser($user);
 
@@ -82,15 +84,18 @@ class ApiProjectController extends AbstractController
 
 		$inputBag = $request->request;
 
-		if (!$inputBag->has('name') || !$inputBag->has('url')) {
+		$name = $inputBag->get('name');
+		$url = $inputBag->get('url');
+
+		if (!$name || !$url) {
 			return $this->json([
 				'code' => 403,
 				'message' => "Champs manquants",
 			]);
 		}
 
-		$project->setName($inputBag->get('name'));
-		$project->setUrl($inputBag->get('url'));
+		$project->setName($name);
+		$project->setUrl($url);
 
 		$entityManager->flush();
 
@@ -101,7 +106,7 @@ class ApiProjectController extends AbstractController
 		]);
 	}
 
-	#[Route('/{id}', name: 'delete', methods: ['DELETE'])]
+	#[Route('/{id}', name: 'delete', methods: ['POST'])]
 	public function delete(Request $request, Project $project, EntityManagerInterface $entityManager): Response
 	{
 		// Vérifier si un utilisateur est connecté
@@ -129,15 +134,15 @@ class ApiProjectController extends AbstractController
 
 		$inputBag = $request->request;
 
-		// Vérifier si l'utilisateur actuel est le propriétaire du projet
-		if (!$inputBag->has('csrf')) {
+		// Vérifier si le token CSRF est valide
+		if (!$inputBag->has('deleteCsrf')) {
 			return $this->json([
 				'code' => 403,
 				'message' => "Token manquant",
 			]);
 		}
 
-		if ($this->isCsrfTokenValid('delete' . $project->getId(), $inputBag->get('csrf'))) {
+		if ($this->isCsrfTokenValid('delete' . $project->getId(), $inputBag->get('deleteCsrf'))) {
 			$entityManager->remove($project);
 			$entityManager->flush();
 		}

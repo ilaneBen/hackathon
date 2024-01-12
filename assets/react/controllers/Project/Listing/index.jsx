@@ -12,8 +12,6 @@ export default function ({ title, projects, newProjectPath }) {
   const [isForm, setIsForm] = useState(false);
   const closeRef = useRef();
 
-  console.log("projects", projects);
-
   const Spinner = () => (
     <div className="spinner-border spinner-border-sm ms-2" role="status">
       <span className="visually-hidden">Chargement...</span>
@@ -129,7 +127,7 @@ export default function ({ title, projects, newProjectPath }) {
             setFinalProjects={setFinalProjects}
           />
         ) : (
-          <Delete closeRef={closeRef} project={project} csrf={deleteCsrf} />
+          <Delete closeRef={closeRef} project={project} csrf={deleteCsrf} setFinalProjects={setFinalProjects} />
         )}
       </Modal>
     </div>
