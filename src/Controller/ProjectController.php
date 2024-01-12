@@ -70,13 +70,11 @@ class ProjectController extends AbstractController
             return $this->redirectToRoute('home'); // Remplacez 'home' par le nom de votre route d'accueil
         }
 
-        $message = '';
+		return $this->render('project/show.html.twig', [
+			'project' => $this->projectSerializer->serializeOne($project),
 
-        return $this->render('project/show.html.twig', [
-            'project' => $project,
-            'message' => $message,
-        ]);
-    }
+		]);
+	}
 
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Project $project, EntityManagerInterface $entityManager): Response

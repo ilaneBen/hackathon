@@ -1,54 +1,7 @@
+{# show.html.twig #}
+
 {% extends 'base.html.twig' %}
 
-{% block title %}Project{% endblock %}
-
 {% block body %}
-    <h1>Project {{ project.name }}</h1>
-    <h2 class="bg-success">  {{ message }}</h2>
-    <table class="table">
-        <tbody>
-        <tr>
-            <th>Url</th>
-            <td>{{ project.url }}</td>
-        </tr>
-        <tr>
-            <th>Statut</th>
-            <td>{{ project.statut ? 'Yes' : 'No' }}</td>
-        </tr>
-        </tbody>
-    </table>
-
-
-    {% if project.rapport is not empty %}
-        <h2>Project Reports</h2>
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Report ID</th>
-                <th>Details</th>
-                <th>Voir</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for report in project.rapport %}
-                <tr>
-                    <td>{{ report.id }}</td>
-                    <td>{{ report.content }}</td>
-                    <td><a href="/rapport/{{ report.id }}">Voir rapport</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>No reports available for this project.</p>
-    {% endif %}
-
-
-    <a href="{{ path('project_index') }}">back to list</a>
-
-    <a href="{{ path('project_edit', {'id': project.id}) }}">edit</a>
-    {% if project.url %}
-        <a href="{{ path('api_git_clone', {"project": project.id }) }}">Clone Repository</a>
-    {% endif %}
-    {{ include('project/_delete_form.html.twig') }}
+    <div {{ react_component('Project/Single/index', {project: project}) }}></div>
 {% endblock %}
