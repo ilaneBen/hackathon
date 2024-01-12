@@ -56,10 +56,17 @@ class ApiGitCloneController extends AbstractController
         // Récupérer l'URL du dépôt Git depuis la requête
         $repositoryUrl = $project->getUrl();
 
-        // Vérifier si une URL de dépôt a été fournie
-        if (!$repositoryUrl) {
-            return new Response('Aucune URL de dépôt spécifiée.', Response::HTTP_BAD_REQUEST);
-        }
+            // Récupérer l'URL du dépôt Git depuis la requête
+            $repositoryUrl = $project->getUrl();
+
+            // Vérifier si une URL de dépôt a été fournie
+            if (!$repositoryUrl) {
+//                return new Response('Aucune URL de dépôt spécifiée.', Response::HTTP_BAD_REQUEST);
+                return $this->json([
+                    'code' => 500,
+                    'message' => "Aucun dépôt sélectionné",
+                ]);
+            }
 
         // Chemin relatif du répertoire de destination
         $destination = realpath(__DIR__.'/../../../public/repoClone'); // Utiliser un chemin relatif par rapport à la racine du projet
@@ -166,20 +173,24 @@ class ApiGitCloneController extends AbstractController
             $entityManager->flush();
 
             // Email sender !!! APRES LE FLUSH SINON IMPOSSIBLE DE RECUPERER ID RAPPORT !!!
-            $this->sendEmail($project, $rapport);
+            // $this->sendEmail($project, $rapport);
 
-            $message = 'Analyse du dépôt Git réussi.';
-
-            return $this->render('project/show.html.twig', [
-                'project' => $project,
-                'message' => $message,
+            return $this->json([
+                'code' => 200,
+                'message' => 'Analyse du dépôt Git réussi.',
             ]);
         } catch (ProcessFailedException $exception) {
             // Gérer les erreurs
-            return new Response($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->json([
+                'code' => 500,
+                'message' => $exception->getMessage(),
+            ]);
         } catch (TransportExceptionInterface $e) {
             // Gérer les erreurs
-            return new Response($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->json([
+                'code' => 500,
+                'message' => $e->getMessage(),
+            ]);
         }
     }
 

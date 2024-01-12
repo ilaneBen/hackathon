@@ -3,6 +3,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import "bootstrap/dist/js/bootstrap.min.js";
+import "./styles/style.css";
+
 import "./bootstrap.js";
 /*
  * Welcome to your app's main JavaScript file!
