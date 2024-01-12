@@ -48,16 +48,20 @@ class ApiUserController extends AbstractController
 
         $inputBag = $request->request;
 
-        if (!$inputBag->has('email') || !$inputBag->has('name') || !$inputBag->has('firstName')) {
+        $email = $inputBag->get('email');
+        $name = $inputBag->get('name');
+        $firstName = $inputBag->get('firstName');
+
+        if (!$email || !$name || !$firstName) {
             return $this->json([
                 'code' => 403,
                 'message' => "Champs manquants",
             ]);
         }
 
-        $user->setName($inputBag->get('name'));
-        $user->setFirstName($inputBag->get('firstName'));
-        $user->setEmail($inputBag->get('email'));
+        $user->setName($name);
+        $user->setFirstName($firstName);
+        $user->setEmail($email);
 
         if ($inputBag->has('password') && strlen($inputBag->get('password'))) {
             $hashedPassword = $this->passwordHasher->hashPassword(

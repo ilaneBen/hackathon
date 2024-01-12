@@ -19,7 +19,7 @@ class UserController extends AbstractController
     public function signUp_view(): Response
     {
         if ($this->getuser()) {
-            $this->redirectToRoute('home');
+            return $this->redirectToRoute('home');
         }
 
         return $this->render('user/signup.html.twig');
@@ -29,7 +29,7 @@ class UserController extends AbstractController
     public function signIn_view(): Response
     {
         if ($this->getuser()) {
-            $this->redirectToRoute('home');
+            return $this->redirectToRoute('home');
         }
 
         return $this->render('user/signin.html.twig');
@@ -39,7 +39,7 @@ class UserController extends AbstractController
     public function myAccount_view(): Response
     {
         if (!$this->getuser()) {
-            $this->redirectToRoute('signin');
+            return $this->redirectToRoute('user_signin');
         }
 
         $user = $this->userSerializer->serializeOne($this->getUser());
