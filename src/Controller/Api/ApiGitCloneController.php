@@ -6,7 +6,6 @@ use App\Entity\Job;
 use App\Entity\Project;
 use App\Entity\Rapport;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
@@ -20,8 +19,6 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/git', name: 'git_')]
 class ApiGitCloneController extends AbstractController
 {
-
-
     private function getPhpVersionFromComposerJson(): ?string
     {
         // Assuming the path to the composer.json file
@@ -50,23 +47,23 @@ class ApiGitCloneController extends AbstractController
     #[Route('/clone/{project}', name: 'clone')]
     public function gitClone(Project $project, Request $request, EntityManagerInterface $entityManager): Response
     {
-        //Variable pour localHost
+        // Variable pour localHost
         $localHost = 'localhost';
 
         // Récupérer l'URL du dépôt Git depuis la requête
         $repositoryUrl = $project->getUrl();
 
-            // Récupérer l'URL du dépôt Git depuis la requête
-            $repositoryUrl = $project->getUrl();
+        // Récupérer l'URL du dépôt Git depuis la requête
+        $repositoryUrl = $project->getUrl();
 
-            // Vérifier si une URL de dépôt a été fournie
-            if (!$repositoryUrl) {
-//                return new Response('Aucune URL de dépôt spécifiée.', Response::HTTP_BAD_REQUEST);
-                return $this->json([
-                    'code' => 500,
-                    'message' => "Aucun dépôt sélectionné",
-                ]);
-            }
+        // Vérifier si une URL de dépôt a été fournie
+        if (!$repositoryUrl) {
+            //                return new Response('Aucune URL de dépôt spécifiée.', Response::HTTP_BAD_REQUEST);
+            return $this->json([
+                'code' => 500,
+                'message' => 'Aucun dépôt sélectionné',
+            ]);
+        }
 
         // Chemin relatif du répertoire de destination
         $destination = realpath(__DIR__.'/../../../public/repoClone'); // Utiliser un chemin relatif par rapport à la racine du projet
@@ -173,7 +170,7 @@ class ApiGitCloneController extends AbstractController
             $entityManager->flush();
 
             // Email sender !!! APRES LE FLUSH SINON IMPOSSIBLE DE RECUPERER ID RAPPORT !!!
-            // $this->sendEmail($project, $rapport);
+            $this->sendEmail($project, $rapport);
 
             return $this->json([
                 'code' => 200,
@@ -231,28 +228,27 @@ class ApiGitCloneController extends AbstractController
         }
     }
 
-
     private function sendEmail(Project $project, Rapport $rapport)
     {
         try {
             $mail = new PHPMailer(true);
             $mail->isSMTP();
-            $mail->Host       = $this->getParameter('mail_host');
-            $mail->SMTPAuth   = true;
-            $mail->Username   = '';
-            $mail->Password   = '';
-            $mail->Port       = $this->getParameter('mail_port');
+            $mail->Host = $this->getParameter('mail_host');
+            $mail->SMTPAuth = true;
+            $mail->Username = '';
+            $mail->Password = '';
+            $mail->Port = $this->getParameter('mail_port');
 
-            $mail->setFrom("codeScan@no-reply.fr", 'CodeScan-No-Reply');
+            $mail->setFrom('codeScan@no-reply.fr', 'CodeScan-No-Reply');
             $mail->addAddress($project->getUser()->getEmail(), 'Rapport d\'analyse');
             $mail->isHTML(true);
             $mail->Subject = "Rapport d'analyse codeScan";
-            $mail->Body = "Bonjour, voici le rapport d'analyse de projet ".$project->getName()." réalisé le ".
-                $rapport->getDate()->format('d-m-Y')." à ".$rapport->getDate()->format("H:i:s")."<br>";
-            $mail->Body .= "Les résultats de l'analyse sont disponibles à l'adresse : <a href='".$_ENV['SITE_BASE_URL']."/rapport/".$rapport->getId()."'>lien vers le rapport</a>";
+            $mail->Body = "Bonjour, voici le rapport d'analyse de projet ".$project->getName().' réalisé le '.
+                $rapport->getDate()->format('d-m-Y').' à '.$rapport->getDate()->format('H:i:s').'<br>';
+            $mail->Body .= "Les résultats de l'analyse sont disponibles à l'adresse : <a href='".$_ENV['SITE_BASE_URL'].'/rapport/'.$rapport->getId()."'>lien vers le rapport</a>";
             $mail->send();
             echo 'Le message a été envoyé';
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             echo "Le message n'a pas pu être envoyé. Erreur du mailer : {$mail->ErrorInfo}";
         }
     }
