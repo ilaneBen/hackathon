@@ -27,7 +27,8 @@
 			signoutPath: path('user_signout'),
     	} ) }}></div>
 
-		 {% block body %}{% endblock %}
-			</div>
+		{% block body %}{% endblock %}
+		{% include 'footer.html.twig' %}
+
 		</body>
 	</html>
