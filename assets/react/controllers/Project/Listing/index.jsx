@@ -129,7 +129,7 @@ export default function ({ title, projects, newProjectPath }) {
             setFinalProjects={setFinalProjects}
           />
         ) : (
-          <Delete closeRef={closeRef} project={project} csrf={deleteCsrf} />
+          <Delete closeRef={closeRef} project={project} csrf={deleteCsrf} setFinalProjects={setFinalProjects} />
         )}
       </Modal>
     </div>
