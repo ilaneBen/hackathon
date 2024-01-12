@@ -18,7 +18,7 @@ class UserController extends AbstractController
     #[Route('/signup', name: 'signup', methods: ['GET'])]
     public function signUp_view(): Response
     {
-        if ($this->getuser()) {
+        if ($this->getUser()) {
             return $this->redirectToRoute('home');
         }
 
@@ -28,7 +28,7 @@ class UserController extends AbstractController
     #[Route('/signin', name: 'signin', methods: ['GET'])]
     public function signIn_view(): Response
     {
-        if ($this->getuser()) {
+        if ($this->getUser()) {
             return $this->redirectToRoute('home');
         }
 
@@ -38,7 +38,7 @@ class UserController extends AbstractController
     #[Route('/account', name: 'account', methods: ['GET'])]
     public function myAccount_view(): Response
     {
-        if (!$this->getuser()) {
+        if (!$this->getUser()) {
             return $this->redirectToRoute('user_signin');
         }
 
