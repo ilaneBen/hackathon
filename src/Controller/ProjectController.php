@@ -71,11 +71,9 @@ class ProjectController extends AbstractController
 			return $this->redirectToRoute('home'); // Remplacez 'home' par le nom de votre route d'accueil
 		}
 
-		$message = "";
-
 		return $this->render('project/show.html.twig', [
-			'project' => $project,
-			'message' => $message,
+			'project' => $this->projectSerializer->serializeOne($project),
+
 		]);
 	}
 

@@ -27,6 +27,11 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+<<<<<<< Updated upstream
+=======
+        "axios": "^1.6.5",
+        "bootstrap-icons": "^1.11.3",
+>>>>>>> Stashed changes
         "clsx": "^2.1.0",
         "sass": "^1.69.7",
         "sass-loader": "^13.3.3"

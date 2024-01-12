@@ -52,7 +52,11 @@
 
             // Vérifier si une URL de dépôt a été fournie
             if (!$repositoryUrl) {
-                return new Response('Aucune URL de dépôt spécifiée.', Response::HTTP_BAD_REQUEST);
+//                return new Response('Aucune URL de dépôt spécifiée.', Response::HTTP_BAD_REQUEST);
+                return $this->json([
+                    'code' => 500,
+                    'message' => "Aucun dépôt sélectionné",
+                ]);
             }
 
             // Chemin relatif du répertoire de destination
@@ -153,13 +157,21 @@
 				$filesystem = new Filesystem();
 				$filesystem->remove('repoClone');
                 $message = "Analyse du dépôt Git réussi.";
-                return $this->render('project/show.html.twig', [
-					'project'=>$project,
+//                return $this->render('project/show.html.twig', [
+//					'project'=>$project,
+//                    'message' => $message,
+//                ]);
+                return $this->json([
+                    'code' => 200,
                     'message' => $message,
                 ]);
             } catch (ProcessFailedException $exception) {
                 // Gérer les erreurs
-                return new Response($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+//                return new Response($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+                return $this->json([
+                    'code' => 500,
+                    'message' => "Timeout",
+                ]);
             }
         }
 
