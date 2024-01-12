@@ -17,7 +17,7 @@ class RapportController extends AbstractController
     #[Route('/{id}', name: 'app_rapport_show', methods: ['GET'])]
     public function show(Rapport $rapport): Response
     {
-        // Get the HTML content from the template
+        // Configuration de Dompdf avec le HTML
         $data = [
             'rapport' => $rapport,
         ];
