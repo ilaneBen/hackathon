@@ -5,10 +5,13 @@
 namespace App\Controller\Api;
 
 use App\Entity\Project;
-use App\Service\CodeAnalysisService;
 use App\Service\ComposerAnalysisService;
 use App\Service\EmailService;
 use App\Service\GitCloningService;
+use App\Service\JobService;
+use App\Service\PhpCsAnalysisService;
+use App\Service\PhpStanAnalysisService;
+use App\Service\PhpVersionService;
 use App\Service\RapportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,7 +31,10 @@ class ApiGitCloneController extends AbstractController
         EntityManagerInterface $entityManager,
         GitCloningService $gitCloningService,
         ComposerAnalysisService $composerAnalysisService,
-        CodeAnalysisService $codeAnalysisService,
+        PhpCsAnalysisService $phpCsAnalysisService,
+        PhpStanAnalysisService $phpStanAnalysisService,
+        PhpVersionService $phpVersionService,
+        JobService $jobService,
         RapportService $rapportService,
         EmailService $emailService
     ): Response {
@@ -57,22 +63,22 @@ class ApiGitCloneController extends AbstractController
         }
         try {
             // Exécuter PHPStan
-            $phpStanProcess = $codeAnalysisService->runPhpStanAnalysis($destination);
+            $phpStanProcess = $phpStanAnalysisService->runPhpStanAnalysis($destination);
             $phpStanOutput = $phpStanProcess->getOutput();
             // Exécuter la commande Composer Audit
             $composerAuditProcess = $composerAnalysisService->runComposerAudit($destination);
             $composerAuditOutput = $composerAuditProcess->getOutput();
             // Get the PHP version from composer.json
-            $phpVersion = $rapportService->getPhpVersionFromComposerJson($destination);
+            $phpVersion = $phpVersionService->getPhpVersionFromComposerJson($destination);
             // Exécuter PHP MD
-            $phpCsProcess = $codeAnalysisService->runPhpCsAnalysis($destination);
+            $phpCsProcess = $phpCsAnalysisService->runPhpCsAnalysis($destination);
             $phpCsOutput = $phpCsProcess->getOutput();
             // Créer les jobs et le rapport
             $jobs = [];
-            $jobs[] = $rapportService->createJob($project, 'Composer Audit', $composerAuditOutput);
-            $jobs[] = $rapportService->createJob($project, 'PHP STAN', $phpStanOutput);
-            $jobs[] = $rapportService->createJob($project, 'PHP Version', $phpVersion);
-            $jobs[] = $rapportService->createJob($project, 'PHP Cs', $phpCsOutput);
+            $jobs[] = $jobService->createJob($project, 'Composer Audit', $composerAuditOutput);
+            $jobs[] = $jobService->createJob($project, 'PHP STAN', $phpStanOutput);
+            $jobs[] = $jobService->createJob($project, 'PHP Version', $phpVersion);
+            $jobs[] = $jobService->createJob($project, 'PHP Cs', $phpCsOutput);
 
             $rapport = $rapportService->createRapport($project, $jobs);
 

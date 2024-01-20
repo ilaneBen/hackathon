@@ -18,6 +18,14 @@ class EmailService
     private $mailHost = self::MAIL_HOST;
     private $mailPort = self::MAIL_PORT;
 
+    /**
+     * Envoie un email contenant le rapport d'analyse à l'utilisateur associé au projet.
+     *
+     * @param Project $project le projet dont le rapport d'analyse sera envoyé
+     * @param Rapport $rapport le rapport d'analyse à envoyer
+     *
+     * @return string un message indiquant si l'envoi a réussi ou s'il y a eu une erreur
+     */
     public function sendEmail(Project $project, Rapport $rapport)
     {
         try {
