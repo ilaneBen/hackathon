@@ -1,16 +1,28 @@
-import React, { Fragment, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import Modal from "../../Components/Modal/index.jsx";
 import Form from "../Form/index.jsx";
 import Delete from "../Delete/index.jsx";
 
-export default function ({ title, projects, newProjectPath }) {
-  const finalTitle = title + (projects.length > 0 ? " (" + projects.length + ")" : "");
-  const [finalProjets, setFinalProjects] = useState(projects);
+export default function ({ title, projectsUrl, newProjectPath }) {
+  const [finalProjets, setFinalProjects] = useState([]);
+  const finalTitle = title + (finalProjets.length > 0 ? " (" + finalProjets.length + ")" : "");
   const [project, setProject] = useState(null);
   const [deleteCsrf, setDeleteCsrf] = useState("");
   const [isForm, setIsForm] = useState(false);
   const closeRef = useRef();
+
+  useEffect(() => {
+    fetch(projectsUrl, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res?.code === 200) {
+          setFinalProjects(res.projects);
+        }
+      });
+  }, []);
 
   const Spinner = () => (
     <div className="spinner-border spinner-border-sm ms-2" role="status">

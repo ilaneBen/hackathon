@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\Project;
+use App\Repository\ProjectRepository;
 use App\Serialize\ProjectSerializer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,8 +15,24 @@ use Symfony\Component\Routing\Annotation\Route;
 class ApiProjectController extends AbstractController
 {
     public function __construct(
-        private ProjectSerializer $projectSerializer
+        private ProjectSerializer $projectSerializer,
     ) {
+    }
+
+    #[Route('/', name: 'index', methods: ['GET'])]
+    public function index(ProjectRepository $projectRepository): Response
+    {
+        if (!$user = $this->getUser()) {
+            return $this->json([
+                'code' => 403,
+                'message' => 'Il faut être connecté pour accéder à cette ressource',
+            ]);
+        }
+
+        return $this->json([
+            'code' => 200,
+            'projects' => $this->projectSerializer->serialize($projectRepository->findBy(['user' => $user])),
+        ]);
     }
 
     #[Route('/new', name: 'new', methods: ['POST'])]

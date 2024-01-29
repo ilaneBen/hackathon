@@ -22,7 +22,7 @@ class ProjectController extends AbstractController
     ) {}
 
     #[Route('/', name: 'index', methods: ['GET'])]
-    public function index(ProjectRepository $projectRepository): Response
+    public function index(): Response
     {
         $currentUser = $this->getUser();
 
@@ -32,11 +32,7 @@ class ProjectController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        $projects = $this->projectSerializer->serialize($projectRepository->findBy(['user' => $currentUser]));
-
-        return $this->render('project/index.html.twig', [
-            'projects' => $projects,
-        ]);
+        return $this->render('project/index.html.twig', []);
     }
 
     #[Route('/new', name: 'new', methods: ['GET', 'POST'])]

@@ -7,5 +7,5 @@
 {% endblock %}
 
 {% block other_body %}
-	<div {{ react_component('Project/Listing/index', { title: title, projects: projects, newProjectPath: path('api_project_new') } ) }}></div>
+	<div {{ react_component('Project/Listing/index', { title: title, projectsUrl: path('api_project_index'), newProjectPath: path('api_project_new') } ) }}></div>
 {% endblock %}
