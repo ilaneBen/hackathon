@@ -15,6 +15,13 @@ class ProjectSerializer
     ) {
     }
 
+    /**
+     * Sérialise un tableau de projets en un tableau associatif pour l'affichage ou l'envoi en tant que réponse API.
+     *
+     * @param array $projectArray le tableau de projets à sérialiser
+     *
+     * @return array le tableau associatif représentant les projets sérialisés
+     */
     public function serialize(array $projectArray = []): array
     {
         $serializedProjects = [];
@@ -25,6 +32,13 @@ class ProjectSerializer
         return $serializedProjects;
     }
 
+    /**
+     * Sérialise un projet en un tableau associatif pour l'affichage ou l'envoi en tant que réponse API.
+     *
+     * @param Project $project le projet à sérialiser
+     *
+     * @return array le tableau associatif représentant le projet sérialisé
+     */
     public function serializeOne(Project $project): array
     {
         $serializedProject = [
@@ -37,7 +51,7 @@ class ProjectSerializer
             'showUrl' => $this->router->generate('project_show', ['id' => $project->getId()]),
             'deleteUrl' => $this->router->generate('api_project_delete', ['id' => $project->getId()]),
             'editUrl' => $this->router->generate('api_project_edit', ['id' => $project->getId()]),
-            'deleteCsrf' => $this->csrf->refreshToken('delete' . $project->getId())->getValue(),
+            'deleteCsrf' => $this->csrf->refreshToken('delete'.$project->getId())->getValue(),
             'cloneUrl' => $this->router->generate('api_git_clone', ['project' => $project->getId()]),
         ];
 

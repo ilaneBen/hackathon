@@ -13,6 +13,13 @@ class UserSerializer
     ) {
     }
 
+    /**
+     * Sérialise un tableau d'utilisateurs en un tableau associatif pour l'affichage ou l'envoi en tant que réponse API.
+     *
+     * @param array $userArray le tableau d'utilisateurs à sérialiser
+     *
+     * @return array le tableau associatif représentant les utilisateurs sérialisés
+     */
     public function serialize(array $userArray = []): array
     {
         $serializedUsers = [];
@@ -23,13 +30,20 @@ class UserSerializer
         return $serializedUsers;
     }
 
+    /**
+     * Sérialise un utilisateur en un tableau associatif pour l'affichage ou l'envoi en tant que réponse API.
+     *
+     * @param user $user L'utilisateur à sérialiser
+     *
+     * @return array le tableau associatif représentant l'utilisateur sérialisé
+     */
     public function serializeOne(User $user): array
     {
         $serializedUser = [
             'id' => $user->getId(),
             'email' => $user->getEmail(),
             'name' => $user->getName(),
-            'firstName' => $user->getFirstName()
+            'firstName' => $user->getFirstName(),
         ];
 
         return $serializedUser;

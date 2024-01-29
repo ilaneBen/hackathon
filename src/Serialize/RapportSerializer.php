@@ -16,6 +16,13 @@ class RapportSerializer
 
     ) {}
 
+    /**
+     * Sérialise un tableau de rapports en un tableau associatif pour l'affichage ou l'envoi en tant que réponse API.
+     *
+     * @param array $rapportArray le tableau de rapports à sérialiser
+     *
+     * @return array le tableau associatif représentant les rapports sérialisés
+     */
     public function serialize(array $rapportArray = []): array
     {
         $serializedRapports = [];
@@ -26,6 +33,13 @@ class RapportSerializer
         return $serializedRapports;
     }
 
+    /**
+     * Sérialise un rapport en un tableau associatif pour l'affichage ou l'envoi en tant que réponse API.
+     *
+     * @param Rapport $rapport le rapport à sérialiser
+     *
+     * @return array le tableau associatif représentant le rapport sérialisé
+     */
     public function serializeOne(Rapport $rapport): array
     {
         $serializedRapport = [
@@ -37,7 +51,7 @@ class RapportSerializer
 
             // 'showUrl' => $this->router->generate('api_rapport_show', ['id' => $rapport->getId()]),
         ];
-        
+
         return $serializedRapport;
     }
 }

@@ -31,7 +31,7 @@ class ApiUserController extends AbstractController
     {
         return $this->json([
             'code' => 200,
-            'message' => "User created and connected",
+            'message' => 'User created and connected',
         ]);
     }
 
@@ -42,7 +42,7 @@ class ApiUserController extends AbstractController
         if (!$user = $this->getUser()) {
             return $this->json([
                 'code' => 403,
-                'message' => "Il faut être connecté pour accéder à cette ressource",
+                'message' => 'Il faut être connecté pour accéder à cette ressource',
             ]);
         }
 
@@ -55,7 +55,7 @@ class ApiUserController extends AbstractController
         if (!$email || !$name || !$firstName) {
             return $this->json([
                 'code' => 403,
-                'message' => "Champs manquants",
+                'message' => 'Champs manquants',
             ]);
         }
 
