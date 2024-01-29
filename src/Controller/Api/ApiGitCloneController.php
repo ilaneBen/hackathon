@@ -11,6 +11,7 @@ use App\Service\PhpCsAnalysisService;
 use App\Service\PhpStanAnalysisService;
 use App\Service\PhpVersionService;
 use App\Service\RapportService;
+use App\Service\ResultToArray;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,6 +31,7 @@ class ApiGitCloneController extends AbstractController
         private JobService $jobService,
         private RapportService $rapportService,
         private EmailService $emailService,
+        private ResultToArray $resultToArray,
         private EntityManagerInterface $entityManager
     ) {
     }
@@ -64,14 +66,17 @@ class ApiGitCloneController extends AbstractController
             $composerAuditProcess = $this->composerAnalysisService->runComposerAudit($destination);
             // Get the PHP version from composer.json
             $phpVersion = $this->phpVersionService->getPhpVersionFromComposerJson($destination);
-            // Exécuter PHP MD
+
+            // Exécuter PHPCS
             $phpCsProcess = $this->phpCsAnalysisService->runPhpCsAnalysis($destination);
+            // Creer un tableau avec le résultat PHPCS
+
             // Créer les jobs et le rapport
             $jobs = [];
-            $jobs[] = $this->jobService->createJob($project, 'Composer Audit', $composerAuditProcess->getOutput());
-            $jobs[] = $this->jobService->createJob($project, 'PHP STAN', $phpStanProcess->getOutput());
+            $jobs[] = $this->jobService->createJob($project, 'Composer Audit', $this->resultToArray->resultToarray($composerAuditProcess));
+            $jobs[] = $this->jobService->createJob($project, 'PHP STAN', $this->resultToArray->resultToarray($phpStanProcess));
             $jobs[] = $this->jobService->createJob($project, 'PHP Version', $phpVersion);
-            $jobs[] = $this->jobService->createJob($project, 'PHP Cs', $phpCsProcess->getOutput());
+            $jobs[] = $this->jobService->createJob($project, 'PHP Cs', $this->resultToArray->resultToarray($phpCsProcess));
             $rapport = $this->rapportService->createRapport($project, $jobs);
             // Nettoyer le répertoire cloné une fois terminé
             $this->gitCloningService->cleanCloneDirectory($destination);
