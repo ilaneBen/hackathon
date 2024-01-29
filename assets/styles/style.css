@@ -1,5 +1,5 @@
 .button-repport {
-    background-color: floralwhite;
+    background-color: #ff2539;
     margin:0.45%;
     width: auto;
     height: 2.3rem;
@@ -12,10 +12,10 @@
     --bs-btn-padding-x: 0.75rem;
     overflow: hidden;
     text-decoration: none;
-    color: black;
+    color: #ffffff;
     z-index: 1;
-    box-shadow: 6px 6px 12px #6f6f6f,
-    -6px -6px 12px #cccccc;
+    /*box-shadow: 6px 6px 12px #6f6f6f,*/
+    /*-6px -6px 12px #cccccc;*/
 }
 
 .button-repport::before {
@@ -39,6 +39,48 @@
 .button-repport:hover {
     color:white;
 }
+
+.button-repport2 {
+    background-color: #28a745;
+    margin:0.45%;
+    width: auto;
+    height: 2.3rem;
+    border-radius: 5px;
+    font-size: 15px;
+    font-family: inherit;
+    border: none;
+    position: relative;
+    padding: 0.6%;
+    --bs-btn-padding-x: 0.75rem;
+    overflow: hidden;
+    text-decoration: none;
+    color: #ffffff;
+    z-index: 1;
+    /*box-shadow: 6px 6px 12px #6f6f6f,*/
+    /*-6px -6px 12px #cccccc;*/
+}
+
+.button-repport2::before {
+    content: '';
+    width: 0;
+    vertical-align: center;
+    height: 3em!important;
+    border-radius: 5px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-image: linear-gradient(to right, #2a0fd8 0%, #8e23ff 100%);
+    transition: .5s ease;
+    display: block;
+    z-index: -1;
+}
+
+.button-repport2:hover::before {
+    width: 9em;
+}
+.button-repport2:hover {
+    color:white;
+}
 .button {
     display: flex;
     justify-content: center;
@@ -46,9 +88,10 @@
     padding: 6px 12px;
     gap: 8px;
     text-decoration: none;
-    width: 45%;
+    width: auto;
+    height: fit-content;
     border: none;
-    background: rgba(45, 0, 255, 0.2);
+    background: #0074D9;
     border-radius: 20px;
     cursor: pointer;
 }
@@ -58,17 +101,23 @@
     font-size: 17px;
     font-family: sans-serif;
     letter-spacing: 1px;
-    color: #3d3d3d;
+    color: #ffffff;
 
+}
+
+.lable:hover{
+    color: black;
 }
 
 .button:hover {
-    background: #5e41de4d;
+    background: rgba(65, 86, 222, 0.3);
+
 }
 
 .button .svg-icon {
-    color: #5c5c5c;
+    color: #000000;
 }
+
 
 .button:hover .svg-icon {
     animation: spin 2s linear infinite;
@@ -99,17 +148,17 @@
     transition-duration: .3s;
     overflow: hidden;
     position: relative;
+    margin-left: -40px;
 }
 
 .svgIcon {
-    width: fit-content;
+    width: 12px;
     transition-duration: .3s;
-    color: white;
 }
 
-/* .svgIcon path {
+ .svgIcon path {
     fill: white;
-} */
+}
 
 .button-delete:hover {
     width: 120px;
@@ -120,7 +169,6 @@
 }
 
 .button-delete:hover .svgIcon {
-    margin-top: -25px;
     font-size: 50px;
     transition-duration: .3s;
     transform: translateY(60%);
@@ -143,5 +191,13 @@
 }
 
 .form-show{
+    position: relative;
     margin-left: 30%;
+    width: 200px;
+}
+
+.img-report{
+    width: 50px;
+    height: 50px;
+    margin-left: 5%;
 }

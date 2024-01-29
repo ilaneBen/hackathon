@@ -1,11 +1,27 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
+import Modal from "../../Components/Modal/index.jsx";
+import Form from "../Form";
+import Delete from "../Delete";
+import CloseRef from"../../Components/Modal/index"
 const ProjectDetails = ({ project, }) => {
-    
+    const [report, setReport] = useState(null);
+    const [deleteCsrf, setDeleteCsrf] = useState("");
+    const [isForm, setIsForm] = useState(false);
+    const handleDelete = (report) => {
+        setIsForm(false);
+        setDeleteCsrf(report.deleteCsrf);
+        setReport(report);
+    };
+    const [finalProjets, setFinalProjects] = useState(project);
+    const closeRef = useRef();
     return (
         <div className="m-2">
-            <h1>Projet {project.name}</h1>
+            <div className="d-flex">
+            <h1>Rapports du Projet {project.name}</h1>
+            <img className="img-report" src="/img/monitor.png"/>
+            </div>
             <h2 className="bg-success"></h2>
-            <table className="">
+            <table className="table table-striped-columns">
                 <tbody>
                 <tr>
                     <th>URL :</th>
@@ -35,13 +51,20 @@ const ProjectDetails = ({ project, }) => {
                                 <td styles="max-width: 95%; min-width: 95%;">
                                     <div className="d-flex">
                                         <a href={report.showUrl} className="button">
-                                        <i class="bi bi-gear svg-icon"></i>
+                                        <i className="bi bi-gear svg-icon"></i>
                                             <span className="lable">Voir le rapport</span>
                                         </a>
-                                        <form className="form-show" action={`/delete_project/${project.id}`} method="post">
-                                            <button type="submit" className="button-delete">
-                                                <i className="bi bi-trash3 svgIcon"></i>
+                                        <form className="form-show" on method="post">
+                                            <button
+                                                type="button"
+                                                className="button-delete"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#projectModal"
+                                                onClick={() => handleDelete(project)}
+                                            >
+                                                <svg viewBox="0 0 448 512" className="svgIcon"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"></path></svg>
                                             </button>
+
                                         </form>
                                     </div>
                                 </td>
@@ -60,9 +83,23 @@ const ProjectDetails = ({ project, }) => {
 
             {/* <a className="button-repport" href={project.editUrl}>Modifier</a> */}
 
-            <a className="button-repport" href={project.cloneUrl}>Lancer le Test</a>
+            <a className="button-repport2" href={project.cloneUrl}>Lancer le Test</a>
 
             </div>
+            <Modal
+                ClroeRef={closeRef}
+                title={isForm ? (project ? "Modifier un projet" : "Créer un projet") : "Supprimer un projet"}
+            >
+                {isForm ? (
+                    <Form
+                        closeRef={closeRef}
+                        project={project}
+                        newProjectPath={newProjectPath}
+                    />
+                ) : (
+                    <Delete closeRef={closeRef} project={project} csrf={deleteCsrf} setFinalProjects={setFinalProjects} />
+                )}
+            </Modal>
         </div>
     );
 };

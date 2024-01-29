@@ -99,7 +99,7 @@ export default function ({ title, projects, newProjectPath }) {
                   </td>
                 </tr>
               </Fragment>
-            ))}
+            ))}                 
           </tbody>
         </table>
       </div>
