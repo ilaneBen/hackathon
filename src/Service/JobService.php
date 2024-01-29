@@ -22,7 +22,7 @@ class JobService
      * @param string  $name    le nom du job
      * @param string  $output  la sortie du job
      *
-     * @return job L'objet Job nouvellement créé
+     * @return Job L'objet Job nouvellement créé
      */
     public function createJob(Project $project, string $name, string $output): Job
     {
