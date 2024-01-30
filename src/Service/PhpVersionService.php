@@ -11,7 +11,7 @@ class PhpVersionService
      *
      * @return string|null La version PHP ou null en cas d'erreur
      */
-    public function getPhpVersionFromComposerJson(string $directory): ?string
+    public function getPhpVersionFromComposerJson(string $directory): ?array
     {
         // Supposant que le chemin vers le fichier composer.json est correct
         $composerJsonPath = realpath($directory.'/composer.json');
@@ -33,6 +33,6 @@ class PhpVersionService
         }
 
         // Récupérer la version PHP depuis la section "require"
-        return $composerData['require']['php'] ?? null;
+        return [$composerData['require']['php'] ?? null];
     }
 }

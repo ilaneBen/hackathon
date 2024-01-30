@@ -20,11 +20,11 @@ class JobService
      *
      * @param Project $project le projet auquel le job est associé
      * @param string  $name    le nom du job
-     * @param string  $output  la sortie du job
+     * @param array   $output  la sortie du job
      *
      * @return Job L'objet Job nouvellement créé
      */
-    public function createJob(Project $project, string $name, string $output): Job
+    public function createJob(Project $project, string $name, array $output): Job
     {
         $job = new Job();
         $job->setName($name);

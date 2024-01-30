@@ -11,6 +11,7 @@ use App\Service\PhpCsAnalysisService;
 use App\Service\PhpStanAnalysisService;
 use App\Service\PhpVersionService;
 use App\Service\RapportService;
+use App\Service\ResultToArray;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,6 +31,7 @@ class ApiGitCloneController extends AbstractController
         private JobService $jobService,
         private RapportService $rapportService,
         private EmailService $emailService,
+        private ResultToArray $resultToArray,
         private EntityManagerInterface $entityManager
     ) {
     }
@@ -68,15 +70,15 @@ class ApiGitCloneController extends AbstractController
             // Exécuter PHPStan
             if ($useComposer){
                 $composerAuditProcess = $this->composerAnalysisService->runComposerAudit($destination);
-                $jobs[] = $this->jobService->createJob($project, 'Composer Audit', $composerAuditProcess->getOutput());
+                $jobs[] = $this->jobService->createJob($project, 'Composer Audit', $this->resultToArray->resultToarray($composerAuditProcess));
             }
             if ($usePHPStan){
                 $phpStanProcess = $this->phpStanAnalysisService->runPhpStanAnalysis($destination);
-                $jobs[] = $this->jobService->createJob($project, 'PHP STAN', $phpStanProcess->getOutput());
+                $jobs[] = $this->jobService->createJob($project, 'PHP STAN', $this->resultToArray->resultToarray($phpStanProcess));
             }
             if ($usePHPCS){
                 $phpCsProcess = $this->phpCsAnalysisService->runPhpCsAnalysis($destination);
-                $jobs[] = $this->jobService->createJob($project, 'PHP Cs', $phpCsProcess->getOutput());
+                $jobs[] = $this->jobService->createJob($project, 'PHP Cs', $this->resultToArray->resultToarray($phpCsProcess));
 
             }
             if ($usePHPVersion){
