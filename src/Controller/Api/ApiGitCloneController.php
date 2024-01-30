@@ -66,7 +66,6 @@ class ApiGitCloneController extends AbstractController
             $composerAuditProcess = $this->composerAnalysisService->runComposerAudit($destination);
             // Get the PHP version from composer.json
             $phpVersion = $this->phpVersionService->getPhpVersionFromComposerJson($destination);
-
             // Exécuter PHPCS
             $phpCsProcess = $this->phpCsAnalysisService->runPhpCsAnalysis($destination);
             // Creer un tableau avec le résultat PHPCS
@@ -78,12 +77,14 @@ class ApiGitCloneController extends AbstractController
             $jobs[] = $this->jobService->createJob($project, 'PHP Version', $phpVersion);
             $jobs[] = $this->jobService->createJob($project, 'PHP Cs', $this->resultToArray->resultToarray($phpCsProcess));
             $rapport = $this->rapportService->createRapport($project, $jobs);
+
             // Nettoyer le répertoire cloné une fois terminé
             $this->gitCloningService->cleanCloneDirectory($destination);
             // Sauvegarder les entités et renvoyer la réponse
             $this->entityManager->flush();
             // Email sender !!! APRES LE FLUSH SINON IMPOSSIBLE DE RÉCUPÉRER ID RAPPORT !!!
             $this->emailService->sendEmail($project, $rapport);
+            dd($rapport);
 
             return $this->json([
                 'code' => 200,

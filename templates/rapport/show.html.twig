@@ -1,23 +1,113 @@
+{# templates/rapport/show.html.twig #}
 
-{% block title %}Rapport{% endblock %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du Rapport{% endblock %}
 
 {% block body %}
-    <h1 class="text-uppercase">{{  rapport.content }} {{ rapport.id }}</h1>
-<p> Le {{ rapport.date ? rapport.date|date('Y-m-d H:i:s') : '' }}</p>
+<section class="container">
+    <div>
+        <h1 class="text-center m-5">Détails du Rapport</h1>
 
-{% if rapport.job is not empty %}
-        {% for job in rapport.job %}
-            <ul style="list-style-type: none;">
-                <h2>Résultat {{ job.name }}</h2>
-                {% for detailItem in job.detail %}
-                    <li style="list-style-type: none;">
-                        {{ detailItem|replace({'-': ' ', '?': ' '})|nl2br }}
-                    </li>
-                {% endfor %}
-            </ul>
+        <div>
+            <h2>Informations générales du Rapport</h2>
+            <p>ID: {{ rapport.getId() }}</p>
+            <p>Date: {{ rapport.getDate()|date('Y-m-d H:i:s') }}</p>
+            <p>Contenu: {{ rapport.getContent() }}</p>
+            <p>Projet: {{ rapport.getProject().getName() }}</p>
+        </div>
+        <div>
+            <a href="{{ path('app_rapport_show_pdf', {'id': rapport.getId()}) }}" class="btn btn-primary mb-3">Télécharger en PDF</a>
+        </div>
+
+        {% if formattedJobs is not empty %}
+        <h2>Détails des Jobs</h2>
+        {% for formattedJob in formattedJobs %}
+            <div class="">
+                <p>{% set jobViewModel = formattedJob.jobViewModel %}</p>
+                <p>{{ jobViewModel.getName() }}:</p>
+                <p>{% set details = formattedJob.details %}</p>
+            </div>
+            {% if details is defined %}
+            {% for key, value in details %}
+                <p>{{ key }}:</p>
+                {% if key == 'Résultats de PHP Cs' %}
+                    {% for result in value %}
+                <div class="{% if loop.first %}resumer{% else %}d-none{% endif %}">
+                    <div class="d-flex justify-content-around">
+                    <div class="d-flex">
+                        <P>Erreurs:</P>
+                        <P class="badge bg-danger">{{ result.Erreurs }} </P>
+                    </div>
+                    <div class="d-flex">
+                        <P>Avertissements:</P>
+                        <P class=" badge bg-warning">{{ result.Avertissements }}</P>
+                    </div>
+                    <div class="d-flex">
+                    <P>Réparable: </P>
+                    <P class=" badge bg-info ">{{ result.Réparable }}</P>
+                </div>
+                </div>
+                </div>
+                {% for file in result.Fichiers %}
+                <div class="m-5 d-flex justify-content-around">
+                {% set pathParts = file['Chemin du fichier']|split('/repoClone/') %}
+                {% if pathParts|length > 1 %}
+                <p><strong>Nom du fichier </strong> {{ pathParts[1] }}</p>
+                {% else %}
+                    <p><strong>Nom du fichier </strong> {{ file['Chemin du fichier'] }}</p>
+                {% endif %}
+                <p><strong>Erreurs:</strong> {{ file.Erreurs }}</p>
+                <p><strong>Avertissements:</strong> {{ file.Avertissements }}</p>
+                <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapse-result-{{ loop.index }}"
+                   role="button" aria-expanded="false" aria-controls="collapse-result-{{ loop.index }}">
+                    afficher detail
+                </a>
+
+                </div>
+                <div class=" d-flex justify-content-center ">
+                    <table class="collapse table table-striped w-75" id="collapse-result-{{ loop.index }}">
+                        <thead class="thead-dark ">
+                        <tr>
+                            <th scope="col">Ligne</th>
+                            <th scope="col">Colonne</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Source</th>
+                            <th scope="col">Fixable</th>
+                            <th scope="col">Message</th>
+                            <th scope="col">Sévérité</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for message in file.Messages %}
+                            <tr>
+                                <td>{{ message.line }}</td>
+                                <td>{{ message.column }}</td>
+                                <td>{{ message.type }}</td>
+                                <td>{{ message.source }}</td>
+                                <td>{{ message.fixable ? 'Oui' : 'Non' }}</td>
+                                <td>{{ message.message }}</td>
+                                <td>{{ message.severity }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
         {% endfor %}
-{% else %}
-    <p>Aucun job trouvé pour ce rapport.</p>
-{% endif %}
-{#    {{ include('rapport/_delete_form.html.twig') }}#}
+        {% else %}
+        <p> {{ value }}</p>
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% else %}
+        Aucun détail disponible pour ce Job</div>
+    {% endif %}
+    {% endfor %}
+    {% else %}
+        <p>Aucun Job disponible pour ce Rapport</p></div>
+    {% endif %}
+
+
+</section>
 {% endblock %}
