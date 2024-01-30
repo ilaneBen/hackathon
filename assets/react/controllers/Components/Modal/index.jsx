@@ -2,7 +2,6 @@ import React, { Children } from "react";
 
 export default function ({ title, children, closeRef }) {
   const element = Children.only(children);
-
   return (
     <div className="modal fade" id="projectModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div className="modal-dialog">

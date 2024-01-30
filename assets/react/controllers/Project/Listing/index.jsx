@@ -27,7 +27,6 @@ export default function ({ title, projects, newProjectPath }) {
       setProject(null);
     }
   };
-
   const handleDelete = (project) => {
     setIsForm(false);
     setDeleteCsrf(project.deleteCsrf);

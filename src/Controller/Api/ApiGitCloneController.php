@@ -58,21 +58,37 @@ class ApiGitCloneController extends AbstractController
             ]);
         }
         try {
-            // Exécuter PHPStan
-            $phpStanProcess = $this->phpStanAnalysisService->runPhpStanAnalysis($destination);
-            // Exécuter la commande Composer Audit
-            $composerAuditProcess = $this->composerAnalysisService->runComposerAudit($destination);
-            // Get the PHP version from composer.json
-            $phpVersion = $this->phpVersionService->getPhpVersionFromComposerJson($destination);
-            // Exécuter PHP MD
-            $phpCsProcess = $this->phpCsAnalysisService->runPhpCsAnalysis($destination);
-            // Créer les jobs et le rapport
+            $inputBag = $request->request;
             $jobs = [];
-            $jobs[] = $this->jobService->createJob($project, 'Composer Audit', $composerAuditProcess->getOutput());
-            $jobs[] = $this->jobService->createJob($project, 'PHP STAN', $phpStanProcess->getOutput());
-            $jobs[] = $this->jobService->createJob($project, 'PHP Version', $phpVersion);
-            $jobs[] = $this->jobService->createJob($project, 'PHP Cs', $phpCsProcess->getOutput());
+            // Utilisez les valeurs des cases à cocher
+            $useComposer = $inputBag->get('useComposer');
+            $usePHPStan = $inputBag->get('usePHPStan');
+            $usePHPCS = $inputBag->get('usePHPCS');
+            $usePHPVersion = $inputBag->get('usePHPVersion');
+            // Exécuter PHPStan
+            if ($useComposer){
+                $composerAuditProcess = $this->composerAnalysisService->runComposerAudit($destination);
+                $jobs[] = $this->jobService->createJob($project, 'Composer Audit', $composerAuditProcess->getOutput());
+            }
+            if ($usePHPStan){
+                $phpStanProcess = $this->phpStanAnalysisService->runPhpStanAnalysis($destination);
+                $jobs[] = $this->jobService->createJob($project, 'PHP STAN', $phpStanProcess->getOutput());
+            }
+            if ($usePHPCS){
+                $phpCsProcess = $this->phpCsAnalysisService->runPhpCsAnalysis($destination);
+                $jobs[] = $this->jobService->createJob($project, 'PHP Cs', $phpCsProcess->getOutput());
+
+            }
+            if ($usePHPVersion){
+                $phpVersion = $this->phpVersionService->getPhpVersionFromComposerJson($destination);
+                $jobs[] = $this->jobService->createJob($project, 'PHP Version', $phpVersion);
+
+            }
+
             $rapport = $this->rapportService->createRapport($project, $jobs);
+
+
+
             // Nettoyer le répertoire cloné une fois terminé
             $this->gitCloningService->cleanCloneDirectory($destination);
             // Sauvegarder les entités et renvoyer la réponse
