@@ -9,15 +9,18 @@
     <div>
         <h1 class="text-center m-5">Détails du Rapport</h1>
 
-        <div>
-            <h2>Informations générales du Rapport</h2>
-            <p>ID: {{ rapport.getId() }}</p>
-            <p>Date: {{ rapport.getDate()|date('Y-m-d H:i:s') }}</p>
-            <p>Contenu: {{ rapport.getContent() }}</p>
-            <p>Projet: {{ rapport.getProject().getName() }}</p>
-        </div>
-        <div>
-            <a href="{{ path('app_rapport_show_pdf', {'id': rapport.getId()}) }}" class="btn btn-primary mb-3">Télécharger en PDF</a>
+        <div class="d-flex justify-content-between">
+            <div>
+                <h2>Informations générales du Rapport</h2>
+                <p>ID: {{ rapport.getId() }}</p>
+                <p>Date: {{ rapport.getDate()|date('Y-m-d H:i:s') }}</p>
+                <p>Contenu: {{ rapport.getContent() }}</p>
+                <p>Projet: {{ rapport.getProject().getName() }}</p>
+            </div>
+            <div>
+                <a href="{{ path('app_rapport_show_pdf', {'id': rapport.getId()}) }}" class="btn btn-primary mb-3">Télécharger
+                    en PDF</a>
+            </div>
         </div>
 
         {% if formattedJobs is not empty %}
