@@ -1,14 +1,17 @@
 // Importez useEffect et useState depuis React
 import React, { useState } from "react";
+import Loader from "../../Loader";  // Assurez-vous d'importer votre composant Loader
 
 export default function ({ closeRef, project, setRapports, rapport }) {
-    // Nouvel état pour les outils
+    // Nouvel état pour les outils et le chargement
     const [toolSettings, setToolSettings] = useState({
         useComposer: true,
         usePHPVersion: true,
         usePHPStan: true,
         usePHPCS: true,
     });
+
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (tool) => {
         setToolSettings((prevSettings) => ({
@@ -19,18 +22,14 @@ export default function ({ closeRef, project, setRapports, rapport }) {
 
     const submitForm = async (e) => {
         e.preventDefault();
-        console.log(e.target);
-            const formData = new FormData(e.target);
-            // Assurez-vous que les noms des champs correspondent aux noms dans Symfony
-            formData.set('useComposer', toolSettings.useComposer ? '1' : '0');
-            formData.set('usePHPStan', toolSettings.usePHPStan ? '1' : '0');
-            formData.set('usePHPCS', toolSettings.usePHPCS ? '1' : '0');
-            formData.set('usePHPVersion', toolSettings.usePHPVersion ? '1' : '0');
 
-            // const response = await fetch(`/api/git/clone/${project.id}`, {
-            //     method: "POST",
-            //     body: formData,
-            // });
+        setIsLoading(true);  // Activer le chargement au début de la requête
+
+        const formData = new FormData(e.target);
+        formData.set('useComposer', toolSettings.useComposer ? '1' : '0');
+        formData.set('usePHPStan', toolSettings.usePHPStan ? '1' : '0');
+        formData.set('usePHPCS', toolSettings.usePHPCS ? '1' : '0');
+        formData.set('usePHPVersion', toolSettings.usePHPVersion ? '1' : '0');
 
         fetch(`/api/git/clone/${project.id}`, {
             method: "POST",
@@ -39,11 +38,16 @@ export default function ({ closeRef, project, setRapports, rapport }) {
             .then((res) => res.json())
             .then((res) => {
                 if (res?.code === 200) {
-                   window.location.href =`/rapport/${res.rapportId}`;
+                    window.location.href = `/rapport/${res.rapportId}`;
                 }
             })
+            .catch((error) => {
+                console.error("Erreur lors de la requête fetch :", error);
+            })
+            .finally(() => {
+                setIsLoading(false);  // Désactiver le chargement à la fin de la requête
+            });
     };
-
 
     return (
         <form onSubmit={submitForm} className="modal-form">
@@ -57,7 +61,6 @@ export default function ({ closeRef, project, setRapports, rapport }) {
                         checked={toolSettings.useComposer}
                         onChange={() => handleChange('useComposer')}
                     />
-
                 </label>
                 Utiliser Composer Audit
             </div>
@@ -101,8 +104,8 @@ export default function ({ closeRef, project, setRapports, rapport }) {
             {/* Ajoutez des champs similaires pour d'autres outils */}
 
             <div className="form-group">
-                <button type="submit" className="btn btn-primary">
-                    Envoyer
+                <button type="submit" className="btn btn-primary" disabled={isLoading}>
+                    {isLoading ? <Loader /> : "Envoyer"}
                 </button>
             </div>
         </form>

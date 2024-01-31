@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import clsx from "clsx";
+import Loader from "../../loader";
 
 export default function ({ closeRef, project, finalProjects, setFinalProjects, newProjectPath }) {
   const isEditing = !!project;
@@ -103,8 +104,8 @@ export default function ({ closeRef, project, finalProjects, setFinalProjects, n
       </div>
 
       <div className="form-group">
-        <button type="submit" className={clsx("btn btn-primary", isLoading && "disabled")}>
-          {isLoading ? loadingButtonText : buttonText}
+        <button type="submit" className={clsx("btn btn-primary", isLoading && "disabled")} disabled={isLoading}>
+          {isLoading ? <Loader /> : buttonText}
         </button>
       </div>
     </form>
