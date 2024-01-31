@@ -27,67 +27,11 @@
                 <p>Date: {{ rapport.getDate()|date('Y-m-d H:i:s') }}</p>
                 <p>Contenu: {{ rapport.getContent() }}</p>
                 <p>Projet: {{ rapport.getProject().getName() }}</p>
+                {% include 'rapport/phpVersion.html.twig' %}
             </div>
         </div>
-
-        {% if formattedJobs is not empty %}
-        <h2>Détails des Jobs</h2>
-        {% for formattedJob in formattedJobs %}
-        <div>
-            <p>{{ formattedJob.jobViewModel.getName() }}:</p>
-            {% set details = formattedJob.details %}
-            {% if details is defined %}
-            {% for key, value in details %}
-            <p>{{ key }}:</p>
-            {% if key == 'Résultats de PHP Cs' %}
-            {% for result in value %}
-            <div>
-                <p>Erreurs: {{ result.Erreurs }} </p>
-                <p>Avertissements: {{ result.Avertissements }}</p>
-                <p>Réparable: {{ result.Réparable }}</p>
-                {% for file in result.Fichiers %}
-                {% set pathParts = file['Chemin du fichier']|split('/repoClone/') %}
-                <p>Nom du
-                    fichier: {% if pathParts|length > 1 %}{{ pathParts[1] }}{% else %}{{ file['Chemin du fichier'] }}{% endif %}</p>
-                <p>Erreurs: {{ file.Erreurs }}</p>
-                <p>Avertissements: {{ file.Avertissements }}</p>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Ligne</th>
-                        <th>Colonne</th>
-                        <th>Type</th>
-                        <th>Source</th>
-                        <th>Fixable</th>
-                        <th>Message</th>
-                        <th>Sévérité</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for message in file.Messages %}
-                        <tr>
-                            <td>{{ message.line }}</td>
-                            <td>{{ message.column }}</td>
-                            <td>{{ message.type }}</td>
-                            <td>{{ message.source }}</td>
-                            <td>{{ message.fixable ? 'Oui' : 'Non' }}</td>
-                            <td>{{ message.message }}</td>
-                            <td>{{ message.severity }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-                {% endfor %}
-            </div>
-            {% endfor %}
-            {% endif %}
-            {% endfor %}
-            {% endif %}
-        </div>
-        {% endfor %}
-        {% else %}
-            <p>Aucun Job disponible pour ce Rapport</p>
-        {% endif %}
-    </div>
+    {% include 'rapport/composerAudit.html.twig' %}
+    {% include 'rapport/phpStanJob.html.twig' %}
+    {% include 'rapport/phpcsJob.html.twig' %}
 </section>
 </html>
