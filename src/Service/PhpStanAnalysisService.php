@@ -15,7 +15,7 @@ class PhpStanAnalysisService
      */
     public function runPhpStanAnalysis(string $directory): Process
     {
-        $process = new Process(['../../vendor/bin/phpstan', '--error-format=json', 'analyse']);
+        $process = new Process(['../../vendor/bin/phpstan', '--error-format=json', 'analyse', $directory]);
         $process->setWorkingDirectory($directory);
         $process->run();
 

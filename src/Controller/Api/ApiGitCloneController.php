@@ -89,15 +89,13 @@ class ApiGitCloneController extends AbstractController
             }
 
             $rapport = $this->rapportService->createRapport($project, $jobs);
-
-
-
             // Nettoyer le répertoire cloné une fois terminé
             $this->gitCloningService->cleanCloneDirectory($destination);
             // Sauvegarder les entités et renvoyer la réponse
             $this->entityManager->flush();
             // Email sender !!! APRES LE FLUSH SINON IMPOSSIBLE DE RÉCUPÉRER ID RAPPORT !!!
             $this->emailService->sendEmail($project, $rapport);
+
             return $this->json([
                 'rapportId'=>$rapport->getId(),
                 'code' => 200,

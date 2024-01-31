@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Rapport;
+use App\Model\JobViewModel;
 use Doctrine\ORM\EntityManagerInterface;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -15,15 +16,41 @@ use Symfony\Component\Routing\Annotation\Route;
 class RapportController extends AbstractController
 {
     #[Route('/{id}', name: 'app_rapport_show', methods: ['GET'])]
-    public function show(Rapport $rapport): Response
+    public function showRapport(Rapport $rapport): Response
     {
-        // Configuration de Dompdf avec le HTML
-        $data = [
-            'rapport' => $rapport,
-        ];
-        $html = $this->renderView('rapport/show.html.twig', $data);
+        $formattedJobs = [];
 
-        // Configure dompdf
+        foreach ($rapport->getJob() as $job) {
+            $jobViewModel = new JobViewModel($job);
+            $formattedJobs[] = [
+                'jobViewModel' => $jobViewModel,
+                'details' => $jobViewModel->getDetails(), // Ajoutez cette ligne pour obtenir les détails
+            ];
+        }
+
+        return $this->render('rapport/show.html.twig', [
+            'rapport' => $rapport,
+            'formattedJobs' => $formattedJobs,
+        ]);
+    }
+
+    #[Route('pdf/{id}', name: 'app_rapport_show_pdf', methods: ['GET'])]
+    public function pdfRapport(Rapport $rapport): Response
+    {
+        $formattedJobs = [];
+
+        foreach ($rapport->getJob() as $job) {
+            $jobViewModel = new JobViewModel($job);
+            $formattedJobs[] = [
+                'jobViewModel' => $jobViewModel,
+                'details' => $jobViewModel->getDetails(), // Ajoutez cette ligne pour obtenir les détails
+            ];
+        }
+
+        $html = $this->renderView('rapport/rapportPDF.html.twig', [
+            'rapport' => $rapport,
+            'formattedJobs' => $formattedJobs,
+        ]);
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
         $options->set('isPhpEnabled', true);
@@ -33,7 +60,7 @@ class RapportController extends AbstractController
         $dompdf->loadHtml($html);
 
         // (Optional) Set paper size and orientation
-        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->setPaper('A4', 'landscape');
 
         // Render the HTML as PDF
         $dompdf->render();
@@ -45,6 +72,7 @@ class RapportController extends AbstractController
 
         return $response;
     }
+    // Configure dompdf
 
     #[Route('/{id}', name: 'app_rapport_delete', methods: ['POST'])]
     public function delete(Request $request, Rapport $rapport, EntityManagerInterface $entityManager): Response
