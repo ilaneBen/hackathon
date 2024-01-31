@@ -15,7 +15,7 @@ class PhpCsAnalysisService
      */
     public function runPhpCsAnalysis(string $directory): Process
     {
-        $process = new Process(['../../vendor/bin/phpcs', '--report=json', '../../public/repoClone/src']);
+        $process = new Process(['../../vendor/bin/phpcs', '--report=json', '../../public/repoClone']);
         $process->setWorkingDirectory($directory);
         $process->run();
 
