@@ -54,11 +54,8 @@ class ApiGitCloneController extends AbstractController
         // Cloner le dépôt Git
         $this->gitCloningService->cloneRepository($repositoryUrl, 'repoClone');
         // Vérifier que le dossier repoClone existe bien après le clonage
-        if (!is_dir($destination)) {
-            return $this->json([
-                'code' => 500,
-                'message' => 'Le répertoire de destination n\'existe pas.',
-            ]);
+        while (!is_dir($destination)) {
+            sleep(1000);
         }
         try {
             $inputBag = $request->request;
@@ -69,23 +66,21 @@ class ApiGitCloneController extends AbstractController
             $usePHPCS = $inputBag->get('usePHPCS');
             $usePHPVersion = $inputBag->get('usePHPVersion');
             // Exécuter PHPStan
-            if ($useComposer){
+            if ($useComposer) {
                 $composerAuditProcess = $this->composerAnalysisService->runComposerAudit($destination);
                 $jobs[] = $this->jobService->createJob($project, 'Composer Audit', $this->resultToArray->resultToarray($composerAuditProcess));
             }
-            if ($usePHPStan){
+            if ($usePHPStan) {
                 $phpStanProcess = $this->phpStanAnalysisService->runPhpStanAnalysis($destination);
                 $jobs[] = $this->jobService->createJob($project, 'PHP STAN', $this->resultToArray->resultToarray($phpStanProcess));
             }
-            if ($usePHPCS){
+            if ($usePHPCS) {
                 $phpCsProcess = $this->phpCsAnalysisService->runPhpCsAnalysis($destination);
                 $jobs[] = $this->jobService->createJob($project, 'PHP Cs', $this->resultToArray->resultToarray($phpCsProcess));
-
             }
-            if ($usePHPVersion){
+            if ($usePHPVersion) {
                 $phpVersion = $this->phpVersionService->getPhpVersionFromComposerJson($destination);
                 $jobs[] = $this->jobService->createJob($project, 'PHP Version', $phpVersion);
-
             }
 
             $rapport = $this->rapportService->createRapport($project, $jobs);
@@ -97,7 +92,7 @@ class ApiGitCloneController extends AbstractController
             $this->emailService->sendEmail($project, $rapport);
 
             return $this->json([
-                'rapportId'=>$rapport->getId(),
+                'rapportId' => $rapport->getId(),
                 'code' => 200,
                 'message' => 'Analyse du dépôt Git réussi.',
             ]);
