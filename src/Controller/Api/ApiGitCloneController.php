@@ -50,6 +50,7 @@ class ApiGitCloneController extends AbstractController
         }
         // Chemin relatif du répertoire de destination
         $destination = realpath(__DIR__.'/../../../public/repoClone');
+
         // Cloner le dépôt Git
         $this->gitCloningService->cloneRepository($repositoryUrl, 'repoClone');
         // Vérifier que le dossier repoClone existe bien après le clonage
@@ -97,8 +98,8 @@ class ApiGitCloneController extends AbstractController
             $this->entityManager->flush();
             // Email sender !!! APRES LE FLUSH SINON IMPOSSIBLE DE RÉCUPÉRER ID RAPPORT !!!
             $this->emailService->sendEmail($project, $rapport);
-
             return $this->json([
+                'rapportId'=>$rapport->getId(),
                 'code' => 200,
                 'message' => 'Analyse du dépôt Git réussi.',
             ]);

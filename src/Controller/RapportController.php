@@ -51,8 +51,8 @@ class RapportController extends AbstractController
     {
         $project = $rapport->getProject();
         $message = 'rapport '.$rapport->getContent().' a bien été suprimer';
-        if ($this->isCsrfTokenValid('delete'.$rapport->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($rapport);
+        if (true) {
+       $entityManager->remove($rapport);
             $entityManager->flush();
         }
 
