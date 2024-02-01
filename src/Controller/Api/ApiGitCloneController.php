@@ -48,9 +48,12 @@ class ApiGitCloneController extends AbstractController
                 'message' => 'Aucun dépôt sélectionné',
             ]);
         }
+        // Chemin relatif du répertoire de destination
+        $destination = realpath(__DIR__.'/../../../public/repoClone');
 
         // Cloner le dépôt Git
         $this->gitCloningService->cloneRepository($repositoryUrl, 'repoClone');
+
         // Chemin relatif du répertoire de destination
         $destination = realpath(__DIR__.'/../../../public/repoClone');
         // Vérifier que le dossier repoClone existe bien après le clonage
@@ -71,28 +74,28 @@ class ApiGitCloneController extends AbstractController
             // Exécuter PHPStan
             if ($useComposer) {
                 $composerAuditProcess = $this->composerAnalysisService->runComposerAudit($destination);
-                $jobs[] = $this->jobService->createJob($project, 'Composer Audit', $this->resultToArray->resultToarray($composerAuditProcess));
+                $jobs[] = $this->jobService->createJob($project, 'Composer Audit', $this->resultToArray->resultToarray($composerAuditProcess), $useComposer);
             }
             if ($usePHPStan) {
                 $phpStanProcess = $this->phpStanAnalysisService->runPhpStanAnalysis($destination);
-                $jobs[] = $this->jobService->createJob($project, 'PHP STAN', $this->resultToArray->resultToarray($phpStanProcess));
+                $jobs[] = $this->jobService->createJob($project, 'PHP STAN', $this->resultToArray->resultToarray($phpStanProcess), $usePHPStan);
             }
             if ($usePHPCS) {
                 $phpCsProcess = $this->phpCsAnalysisService->runPhpCsAnalysis($destination);
-                $jobs[] = $this->jobService->createJob($project, 'PHP Cs', $this->resultToArray->resultToarray($phpCsProcess));
+                $jobs[] = $this->jobService->createJob($project, 'PHP Cs', $this->resultToArray->resultToarray($phpCsProcess), $usePHPCS);
             }
             if ($usePHPVersion) {
                 $phpVersion = $this->phpVersionService->getPhpVersionFromComposerJson($destination);
-                $jobs[] = $this->jobService->createJob($project, 'PHP Version', $phpVersion);
+                $jobs[] = $this->jobService->createJob($project, 'PHP Version', $phpVersion, $usePHPVersion);
             }
+
             $rapport = $this->rapportService->createRapport($project, $jobs);
             // Nettoyer le répertoire cloné une fois terminé
             $this->gitCloningService->cleanCloneDirectory($destination);
-
+            // Sauvegarder les entités et renvoyer la réponse
             $this->entityManager->flush();
-
             // Email sender !!! APRES LE FLUSH SINON IMPOSSIBLE DE RÉCUPÉRER ID RAPPORT !!!
-//            $this->emailService->sendEmail($project, $rapport);
+            $this->emailService->sendEmail($project, $rapport);
 
             return $this->json([
                 'rapportId' => $rapport->getId(),
@@ -106,6 +109,5 @@ class ApiGitCloneController extends AbstractController
                 'message' => $exception->getMessage(),
             ]);
         }
-
     }
 }
