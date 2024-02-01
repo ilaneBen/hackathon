@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
+import Button from "../../Components/Button";
 
 export default function ({ closeRef, project, csrf, setFinalProjects }) {
+  const [isLoading, setIsLoading] = useState(false);
+
   const submitForm = (e) => {
     e.preventDefault();
+
+    setIsLoading(true);
 
     const formData = new FormData(e.target);
 
@@ -18,7 +23,8 @@ export default function ({ closeRef, project, csrf, setFinalProjects }) {
           closeRef.current.click();
           setFinalProjects((finalProjects) => finalProjects.filter((finalProject) => project.id !== finalProject.id));
         }
-      });
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -30,9 +36,7 @@ export default function ({ closeRef, project, csrf, setFinalProjects }) {
       <input type="hidden" name="deleteCsrf" value={csrf} />
 
       <div className="text-center">
-        <button type="submit" className="btn btn-danger">
-          Supprimer le projet
-        </button>
+        <Button text="Supprimer le projet" loadingText="Suppression..." variant="danger" isLoading={isLoading} />
       </div>
     </form>
   );

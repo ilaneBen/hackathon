@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import clsx from "clsx";
+import Button from "../../Components/Button";
 
 export default function ({ title, csrf, redirectPath, apiPath }) {
   const [firstName, setFirstName] = useState("");
@@ -45,7 +45,7 @@ export default function ({ title, csrf, redirectPath, apiPath }) {
         </div>
       )}
 
-      <div className="form-group col-6">
+      <div className="form-group col-sm-6">
         <label htmlFor="firstName">Prénom</label>
         <input
           type="text"
@@ -57,7 +57,7 @@ export default function ({ title, csrf, redirectPath, apiPath }) {
         />
       </div>
 
-      <div className="form-group col-6">
+      <div className="form-group col-sm-6">
         <label htmlFor="name">Nom</label>
         <input
           type="text"
@@ -69,7 +69,7 @@ export default function ({ title, csrf, redirectPath, apiPath }) {
         />
       </div>
 
-      <div className="form-group col-12">
+      <div className="form-group col-sm-6">
         <label htmlFor="email">Email</label>
         <input
           type="email"
@@ -81,7 +81,7 @@ export default function ({ title, csrf, redirectPath, apiPath }) {
         />
       </div>
 
-      <div className="form-group col-12">
+      <div className="form-group col-sm-6">
         <label htmlFor="password">Mot de passe</label>
         <input
           type="password"
@@ -97,9 +97,7 @@ export default function ({ title, csrf, redirectPath, apiPath }) {
       <input type="hidden" name="type" value="signup" />
 
       <div className="form-group col-12">
-        <button type="submit" className={clsx("btn btn-primary btn-lg", isLoading && "disabled")}>
-          {isLoading ? "Création du compte..." : "S'inscrire"}
-        </button>
+        <Button text="S'inscrire" loadingText="Inscription..." size="lg" isLoading={isLoading} />
       </div>
     </form>
   );

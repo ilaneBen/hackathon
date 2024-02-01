@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
+import Button from "../../Components/Button";
 import toast from "react-hot-toast";
-import clsx from "clsx";
 
 export default function ({ closeRef, project, finalProjects, setFinalProjects, newProjectPath }) {
   const isEditing = !!project;
 
   const [name, setName] = useState("");
   const [url, setUrl] = useState("");
-  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -16,7 +15,7 @@ export default function ({ closeRef, project, finalProjects, setFinalProjects, n
   }, [project]);
 
   const buttonText = isEditing ? "Modifier" : "Créer";
-  const loadingButtonText = isEditing ? "Modification en cours..." : "Création en cours...";
+  const loadingButtonText = isEditing ? "Modification..." : "Création...";
   const apiPath = isEditing ? project?.editUrl : newProjectPath;
 
   const submitForm = (e) => {
@@ -25,14 +24,14 @@ export default function ({ closeRef, project, finalProjects, setFinalProjects, n
     setIsLoading(true);
 
     if (!name || !url) {
-      setError("Veuillez remplir tous les champs.");
+      toast.error("Veuillez remplir tous les champs obligatoires.");
       setIsLoading(false);
       return;
     }
 
     // Check if the URL is a GitHub repository.
     if (!url.match(/^(http|https):\/\/github.com\/[^ "]+$/)) {
-      setError("Veuillez entrer une URL de répertoire GitHub valide.");
+      toast.error("Veuillez entrer une URL de répertoire GitHub valide.");
       setIsLoading(false);
       return;
     }
@@ -46,7 +45,6 @@ export default function ({ closeRef, project, finalProjects, setFinalProjects, n
       .then((res) => res.json())
       .then((res) => {
         if (res?.code === 200) {
-          setError("");
           closeRef.current.click();
           toast.success("Le projet a bien été " + (isEditing ? "modifié" : "créé") + ".");
 
@@ -63,21 +61,15 @@ export default function ({ closeRef, project, finalProjects, setFinalProjects, n
           setName("");
           setUrl("");
         } else {
-          setError(res?.message);
+          toast.error(res?.message);
         }
       })
-      .catch(() => setError("Une erreur est survenue."))
+      .catch(() => toast.error("Une erreur est survenue."))
       .finally(() => setIsLoading(false));
   };
 
   return (
     <form onSubmit={submitForm} className="modal-form">
-      {error && (
-        <div className="alert alert-danger" role="alert">
-          {error}
-        </div>
-      )}
-
       <div className="form-group">
         <label htmlFor="name">Nom du projet</label>
         <input
@@ -103,9 +95,7 @@ export default function ({ closeRef, project, finalProjects, setFinalProjects, n
       </div>
 
       <div className="form-group">
-        <button type="submit" className={clsx("btn btn-primary", isLoading && "disabled")}>
-          {isLoading ? loadingButtonText : buttonText}
-        </button>
+        <Button text={buttonText} loadingText={loadingButtonText} isLoading={isLoading} />
       </div>
     </form>
   );
