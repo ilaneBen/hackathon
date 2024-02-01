@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\JobRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: JobRepository::class)]
@@ -27,6 +28,9 @@ class Job
 
     #[ORM\ManyToOne(inversedBy: 'job')]
     private ?Rapport $rapport = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ['default' => "CURRENT_TIMESTAMP"])]
+    private ?\DateTimeInterface $date = null;
 
     public function getId(): ?int
     {
@@ -89,6 +93,18 @@ class Job
     public function setRapport(?Rapport $rapport): static
     {
         $this->rapport = $rapport;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeInterface $date): static
+    {
+        $this->date = $date;
 
         return $this;
     }

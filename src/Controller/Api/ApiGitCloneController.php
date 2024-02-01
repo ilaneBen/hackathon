@@ -49,7 +49,7 @@ class ApiGitCloneController extends AbstractController
             ]);
         }
         // Chemin relatif du répertoire de destination
-        $destination = realpath(__DIR__.'/../../../public/repoClone');
+        $destination = realpath(__DIR__ . '/../../../public/repoClone');
         // Cloner le dépôt Git
         $this->gitCloningService->cloneRepository($repositoryUrl, 'repoClone');
         // Vérifier que le dossier repoClone existe bien après le clonage

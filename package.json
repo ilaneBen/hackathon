@@ -29,7 +29,9 @@
     "dependencies": {
         "bootstrap-icons": "^1.11.3",
         "bootstrap5": "^1.1.9",
+        "chart.js": "^4.4.1",
         "clsx": "^2.1.0",
+        "react-chartjs-2": "^5.2.0",
         "react-hot-toast": "^2.4.1",
         "sass": "^1.69.7",
         "sass-loader": "^13.3.3"

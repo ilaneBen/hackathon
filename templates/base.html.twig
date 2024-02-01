@@ -18,6 +18,7 @@
 	</head>
 	<body>
 		<div {{ react_component('Base/Header/index', {
+			flashes: app.flashes,
       		isLogged: app.user,
       		homePath: path('home'),
       		signinPath: path('user_signin'),

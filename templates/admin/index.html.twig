@@ -1,0 +1,5 @@
+{% extends '_other.html.twig' %}
+
+{% block other_body %}
+	<div {{ react_component('Admin/Home/index', { message: message, dashboardUrl: path('api_admin_dashboard') }) }}></div>
+{% endblock %}

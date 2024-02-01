@@ -40,20 +40,28 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
-    //    /**
-    //     * @return User[] Returns an array of User objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('u.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * @return User[] Returns an array of User objects
+     */
+    public function getPodium(): array
+    {
+        // dd($this->createQueryBuilder('u')
+        //     ->select('count(u.name) as countRapport, u.name')
+        //     ->leftJoin('u.project', 'p', 'ON', 'u.id = p.user')
+        //     ->leftJoin('p.rapport', 'r', 'ON', 'r.project = p.id')
+        //     ->groupBy('u.name')
+        //     ->orderBy('countRapport', 'DESC')
+        //     ->setMaxResults(3)->getDQL());
+        return $this->createQueryBuilder('u')
+            ->select('count(u.name) as countRapport, u.name')
+            ->leftJoin('u.project', 'p', 'WITH', 'u.id = p.user')
+            ->leftJoin('p.rapport', 'r', 'WITH', 'r.project = p.id')
+            ->groupBy('u.name')
+            ->orderBy('countRapport', 'DESC')
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getResult();
+    }
 
     //    public function findOneBySomeField($value): ?User
     //    {

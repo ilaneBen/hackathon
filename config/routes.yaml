@@ -11,3 +11,21 @@ api_controllers:
     name_prefix: 'api_'
     prefix: '/api'
     type: attribute
+
+
+admin_controllers:
+    resource:
+        path: ../src/Controller/Admin/
+        namespace: App\Controller\Admin
+    name_prefix: 'admin_'
+    prefix: '/admin'
+    type: attribute
+
+
+api_admin_controllers:
+    resource:
+        path: ../src/Controller/Api/Admin/
+        namespace: App\Controller\Api\Admin
+    name_prefix: 'api_admin_'
+    prefix: '/api/admin'
+    type: attribute
