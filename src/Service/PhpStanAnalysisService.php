@@ -11,11 +11,11 @@ class PhpStanAnalysisService
      *
      * @param string $directory le répertoire sur lequel effectuer l'analyse PHPStan
      *
-     * @return process L'objet Process Symfony représentant l'analyse
+     * @return Process L'objet Process Symfony représentant l'analyse
      */
     public function runPhpStanAnalysis(string $directory): Process
     {
-        $process = new Process(['../../vendor/bin/phpstan', 'analyse']);
+        $process = new Process(['../../vendor/bin/phpstan', '--error-format=json', 'analyse', $directory]);
         $process->setWorkingDirectory($directory);
         $process->run();
 

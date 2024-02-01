@@ -1,0 +1,38 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+        {% block title %}Welcome!
+        {% endblock %}
+    </title>
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</head>
+<section class="container">
+    <div>
+        <h1 class="text-center m-5">Détails du Rapport</h1>
+
+        <div class="mb-3">
+            <div>
+                <h2>Informations générales du Rapport</h2>
+                <p>ID: {{ rapport.getId() }}</p>
+                <p>Date: {{ rapport.getDate()|date('Y-m-d H:i:s') }}</p>
+                <p>Contenu: {{ rapport.getContent() }}</p>
+                <p>Projet: {{ rapport.getProject().getName() }}</p>
+                {% include 'rapport/phpVersion.html.twig' %}
+            </div>
+        </div>
+    </div>
+    {% include 'rapport/composerAudit.html.twig' %}
+    {% include 'rapport/phpStanJob.html.twig' %}
+    {% include 'rapport/phpcsJob.html.twig' %}
+</section>
+</html>
