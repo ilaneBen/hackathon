@@ -1,9 +1,14 @@
 // Importez useEffect et useState depuis React
 import React, { useState } from "react";
-import Loader from "../../Loader";  // Assurez-vous d'importer votre composant Loader
+import Loader from "../../Loader";
+import Button from "../../Components/Button";  // Assurez-vous d'importer votre composant Loader
 
 export default function ({ closeRef, project, setRapports, rapport }) {
-    // Nouvel état pour les outils et le chargement
+    const isEditing = !!rapport;
+    const buttonText = isEditing ? "Modifier" : "Créer";
+    const loadingButtonText = isEditing ? "Modification..." : "Création...";
+
+
     const [toolSettings, setToolSettings] = useState({
         useComposer: true,
         usePHPVersion: true,
@@ -23,7 +28,7 @@ export default function ({ closeRef, project, setRapports, rapport }) {
     const submitForm = async (e) => {
         e.preventDefault();
 
-        setIsLoading(true);  // Activer le chargement au début de la requête
+        setIsLoading(true);
 
         const formData = new FormData(e.target);
         formData.set('useComposer', toolSettings.useComposer ? '1' : '0');
@@ -31,22 +36,31 @@ export default function ({ closeRef, project, setRapports, rapport }) {
         formData.set('usePHPCS', toolSettings.usePHPCS ? '1' : '0');
         formData.set('usePHPVersion', toolSettings.usePHPVersion ? '1' : '0');
 
-        fetch(`/api/git/clone/${project.id}`, {
-            method: "POST",
-            body: formData,
-        })
-            .then((res) => res.json())
-            .then((res) => {
-                if (res?.code === 200) {
-                    window.location.href = `/rapport/${res.rapportId}`;
-                }
-            })
-            .catch((error) => {
-                console.error("Erreur lors de la requête fetch :", error);
-            })
-            .finally(() => {
-                setIsLoading(false);  // Désactiver le chargement à la fin de la requête
+        try {
+            const response = await fetch(`/api/git/clone/${project.id}`, {
+
+                method: "POST",
+                body: formData,
             });
+
+            const responseData = await response.json();
+
+            console.log(responseData);
+
+            if (responseData.code === 200) {
+                console.log('La requête a réussi');
+                // Assurez-vous que la réponse contient l'ID du rapport
+                const rapportId = responseData.rapportId;
+                closeRef.current.click();
+                window.location.href = `/rapport/${rapportId}`;
+            } else {
+                console.error("La requête a échoué avec le code :", responseData.code);
+            }
+        } catch (error) {
+            console.error("Erreur lors de la requête fetch :", error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -104,9 +118,9 @@ export default function ({ closeRef, project, setRapports, rapport }) {
             {/* Ajoutez des champs similaires pour d'autres outils */}
 
             <div className="form-group">
-                <button type="submit" className="btn btn-primary" disabled={isLoading}>
-                    {isLoading ? <Loader /> : "Envoyer"}
-                </button>
+                <div className="form-group">
+                    <Button text={buttonText} loadingText={loadingButtonText} isLoading={isLoading} />
+                </div>
             </div>
         </form>
     );

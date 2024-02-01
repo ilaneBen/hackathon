@@ -48,14 +48,17 @@ class ApiGitCloneController extends AbstractController
                 'message' => 'Aucun dépôt sélectionné',
             ]);
         }
-        // Chemin relatif du répertoire de destination
-        $destination = realpath(__DIR__.'/../../../public/repoClone');
 
         // Cloner le dépôt Git
         $this->gitCloningService->cloneRepository($repositoryUrl, 'repoClone');
+        // Chemin relatif du répertoire de destination
+        $destination = realpath(__DIR__.'/../../../public/repoClone');
         // Vérifier que le dossier repoClone existe bien après le clonage
-        while (!is_dir($destination)) {
-            sleep(1000);
+        if (!is_dir($destination)) {
+            return $this->json([
+                'code' => 500,
+                'message' => 'Le répertoire de destination n\'existe pas.',
+            ]);
         }
         try {
             $inputBag = $request->request;
@@ -82,14 +85,14 @@ class ApiGitCloneController extends AbstractController
                 $phpVersion = $this->phpVersionService->getPhpVersionFromComposerJson($destination);
                 $jobs[] = $this->jobService->createJob($project, 'PHP Version', $phpVersion);
             }
-
             $rapport = $this->rapportService->createRapport($project, $jobs);
             // Nettoyer le répertoire cloné une fois terminé
             $this->gitCloningService->cleanCloneDirectory($destination);
-            // Sauvegarder les entités et renvoyer la réponse
+
             $this->entityManager->flush();
+
             // Email sender !!! APRES LE FLUSH SINON IMPOSSIBLE DE RÉCUPÉRER ID RAPPORT !!!
-            $this->emailService->sendEmail($project, $rapport);
+//            $this->emailService->sendEmail($project, $rapport);
 
             return $this->json([
                 'rapportId' => $rapport->getId(),
@@ -103,5 +106,6 @@ class ApiGitCloneController extends AbstractController
                 'message' => $exception->getMessage(),
             ]);
         }
+
     }
 }

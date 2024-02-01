@@ -15,7 +15,7 @@ const ProjectDetails = ({ project }) => {
     };
 
     const closeRef = useRef();
-    const chooseTest = ()=>{setIsForm(true)};
+    const chooseTest = ()=>{setIsForm(true);};
     console.log(rapports);
     return (
         <div className="m-2">
@@ -53,10 +53,12 @@ const ProjectDetails = ({ project }) => {
                                 <td styles="max-width: 5%; min-width: 5%;">{rapport.id}</td>
                                 <td styles="max-width: 95%; min-width: 95%;">
                                     <div className="d-flex">
+                                        <div className="d-flex align-items-center">
                                         <a href={rapport.showUrl} className="button">
                                         <i className="bi bi-gear svg-icon"></i>
                                             <span className="lable">Voir le rapport</span>
                                         </a>
+                                        </div>
                                         <form className="form-show" onSubmit={() => {}} method="POST">
                                             <button
                                                 type="button"
@@ -102,6 +104,7 @@ const ProjectDetails = ({ project }) => {
             >
                 {isForm ? (
                     <Form
+                        rapport={rapport}
                         closeRef={closeRef}
                         rapports={rapports}
                         project={project}

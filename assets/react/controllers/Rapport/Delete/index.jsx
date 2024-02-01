@@ -2,7 +2,6 @@ import React from "react";
 import toast from "react-hot-toast";
 
 export default function ({ closeRef, rapport, csrf, project, setRapports }) {
-    console.log(rapport);
     const submitForm = (e) => {
         e.preventDefault();
 

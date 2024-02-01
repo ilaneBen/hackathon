@@ -192,8 +192,8 @@
 
 .form-show{
     position: relative;
-    margin-left: 30%;
-    width: 200px;
+    margin-left: 60%;
+    width: 0px;
 }
 
 .img-report{
@@ -386,4 +386,11 @@
         stroke-dashoffset: 439.82;
         transform: translate(100px,100px) rotate(112deg);
     }
+}
+.loading{
+    display: none;
+}
+.container.base{
+    margin-top: 40px!important;
+    width: 70%!important;
 }

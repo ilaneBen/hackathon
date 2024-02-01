@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
+import Button from "../../Components/Button";
 import toast from "react-hot-toast";
-import clsx from "clsx";
-import Loader from "../../loader";
 
 export default function ({ closeRef, project, finalProjects, setFinalProjects, newProjectPath }) {
   const isEditing = !!project;
 
   const [name, setName] = useState("");
   const [url, setUrl] = useState("");
-  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -17,7 +15,7 @@ export default function ({ closeRef, project, finalProjects, setFinalProjects, n
   }, [project]);
 
   const buttonText = isEditing ? "Modifier" : "Créer";
-  const loadingButtonText = isEditing ? "Modification en cours..." : "Création en cours...";
+  const loadingButtonText = isEditing ? "Modification..." : "Création...";
   const apiPath = isEditing ? project?.editUrl : newProjectPath;
 
   const submitForm = (e) => {
@@ -26,14 +24,14 @@ export default function ({ closeRef, project, finalProjects, setFinalProjects, n
     setIsLoading(true);
 
     if (!name || !url) {
-      setError("Veuillez remplir tous les champs.");
+      toast.error("Veuillez remplir tous les champs obligatoires.");
       setIsLoading(false);
       return;
     }
 
     // Check if the URL is a GitHub repository.
     if (!url.match(/^(http|https):\/\/github.com\/[^ "]+$/)) {
-      setError("Veuillez entrer une URL de répertoire GitHub valide.");
+      toast.error("Veuillez entrer une URL de répertoire GitHub valide.");
       setIsLoading(false);
       return;
     }
@@ -44,70 +42,61 @@ export default function ({ closeRef, project, finalProjects, setFinalProjects, n
       method: "POST",
       body: formData,
     })
-      .then((res) => res.json())
-      .then((res) => {
-        if (res?.code === 200) {
-          setError("");
-          closeRef.current.click();
-          toast.success("Le projet a bien été " + (isEditing ? "modifié" : "créé") + ".");
+        .then((res) => res.json())
+        .then((res) => {
+          if (res?.code === 200) {
+            closeRef.current.click();
+            toast.success("Le projet a bien été " + (isEditing ? "modifié" : "créé") + ".");
 
-          if (!isEditing) {
-            setFinalProjects((finalProjects) => [...finalProjects, res?.project]);
+            if (!isEditing) {
+              setFinalProjects((finalProjects) => [...finalProjects, res?.project]);
+            } else {
+              const finalProjectsCopy = [...finalProjects];
+              const index = finalProjectsCopy.findIndex((project) => project.id === res?.project.id);
+              finalProjectsCopy[index] = res?.project;
+              setFinalProjects(finalProjectsCopy);
+            }
+
+            // Reset form.
+            setName("");
+            setUrl("");
           } else {
-            const finalProjectsCopy = [...finalProjects];
-            const index = finalProjectsCopy.findIndex((project) => project.id === res?.project.id);
-            finalProjectsCopy[index] = res?.project;
-            setFinalProjects(finalProjectsCopy);
+            toast.error(res?.message);
           }
-
-          // Reset form.
-          setName("");
-          setUrl("");
-        } else {
-          setError(res?.message);
-        }
-      })
-      .catch(() => setError("Une erreur est survenue."))
-      .finally(() => setIsLoading(false));
+        })
+        .catch(() => toast.error("Une erreur est survenue."))
+        .finally(() => setIsLoading(false));
   };
 
   return (
-    <form onSubmit={submitForm} className="modal-form">
-      {error && (
-        <div className="alert alert-danger" role="alert">
-          {error}
+      <form onSubmit={submitForm} className="modal-form">
+        <div className="form-group">
+          <label htmlFor="name">Nom du projet</label>
+          <input
+              type="text"
+              id="name"
+              name="name"
+              className="form-control"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+          />
         </div>
-      )}
 
-      <div className="form-group">
-        <label htmlFor="name">Nom du projet</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          className="form-control"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </div>
+        <div className="form-group">
+          <label htmlFor="url">Lien du répertoire GitHub</label>
+          <input
+              type="text"
+              id="url"
+              name="url"
+              className="form-control"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+          />
+        </div>
 
-      <div className="form-group">
-        <label htmlFor="url">Lien du répertoire GitHub</label>
-        <input
-          type="text"
-          id="url"
-          name="url"
-          className="form-control"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-        />
-      </div>
-
-      <div className="form-group">
-        <button type="submit" className={clsx("btn btn-primary", isLoading && "disabled")} disabled={isLoading}>
-          {isLoading ? <Loader /> : buttonText}
-        </button>
-      </div>
-    </form>
+        <div className="form-group">
+          <Button text={buttonText} loadingText={loadingButtonText} isLoading={isLoading} />
+        </div>
+      </form>
   );
 }
