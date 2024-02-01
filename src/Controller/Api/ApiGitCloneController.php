@@ -14,6 +14,7 @@ use App\Service\RapportService;
 use App\Service\ResultToArray;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -32,7 +33,7 @@ class ApiGitCloneController extends AbstractController
         private RapportService $rapportService,
         private EmailService $emailService,
         private ResultToArray $resultToArray,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -85,10 +86,7 @@ class ApiGitCloneController extends AbstractController
             // Email sender !!! APRES LE FLUSH SINON IMPOSSIBLE DE RÉCUPÉRER ID RAPPORT !!!
             $this->emailService->sendEmail($project, $rapport);
 
-            return $this->json([
-                'code' => 200,
-                'message' => 'Analyse du dépôt Git réussi.',
-            ]);
+            return new RedirectResponse($this->generateUrl('app_rapport_show', ['id' => $rapport->getId()]));
         } catch (ProcessFailedException $exception) {
             // Gérer les erreurs
             return $this->json([
