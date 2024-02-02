@@ -28,14 +28,29 @@ export default function Monkey() {
     container.current.appendChild(renderer.domElement);
 
     const loader = new GLTFLoader();
-    loader.load("animation/monkey_chirurgie.glb", (gltf) => {
+    loader.load("animation/monkey.glb", (gltf) => {
       monkey = gltf.scene;
-      console.log(monkey);
+
       const boundingBox = new THREE.Box3().setFromObject(monkey);
       const center = boundingBox.getCenter(new THREE.Vector3());
       monkey.position.sub(center);
 
-      monkey.map = THREE.LinearFilter; // Anti-aliasing
+      // Traverse through the model's children and apply a standard material with shadows
+      monkey.traverse((node) => {
+        if (node.isMesh) {
+          node.castShadow = true;
+          node.receiveShadow = true;
+          // You may also set other material properties if needed, e.g., node.material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        }
+      });
+
+      // Add lights for shadows
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+      directionalLight.position.set(5, 5, 5);
+      scene.add(directionalLight);
+
+      const ambientLight = new THREE.AmbientLight(0x404040); // Soft white light
+      scene.add(ambientLight);
 
       pivot = new THREE.Group();
       pivot.add(monkey);
