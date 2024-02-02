@@ -70,7 +70,6 @@ export default function ({ title, projectsUrl, newProjectPath }) {
               <th>ID</th>
               <th>Nom</th>
               <th>Lien repo</th>
-              <th>Statut</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -84,16 +83,6 @@ export default function ({ title, projectsUrl, newProjectPath }) {
                     <a href={project.url} target="_blank" rel="noopener noreferrer">
                       {project.url}
                     </a>
-                  </td>
-                  <td>
-                    {project.statut ? (
-                      "Terminé"
-                    ) : (
-                      <>
-                        <span>En cours</span>
-                        <Spinner />
-                      </>
-                    )}
                   </td>
                   <td className="actions-row">
                     <a href={project.showUrl} className="btn btn-primary btn-sm">
