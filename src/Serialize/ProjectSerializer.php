@@ -54,7 +54,7 @@ class ProjectSerializer
             'adminDelete' => $this->router->generate('api_admin_project_delete', ['id' => $project->getId()]),
             'deleteCsrf' => $this->csrf->refreshToken('delete' . $project->getId())->getValue(),
             'cloneUrl' => $this->router->generate('api_git_clone', ['project' => $project->getId()]),
-        ];
+       ];
 
         return $serializedProject;
     }

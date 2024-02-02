@@ -1,0 +1,7 @@
+.chevron-rapport {
+  transition: transform 0.3s;
+
+  &.collapsed {
+    transform: rotate(180deg);
+  }
+}

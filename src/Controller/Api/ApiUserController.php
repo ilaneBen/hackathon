@@ -76,7 +76,7 @@ class ApiUserController extends AbstractController
 
         return $this->json([
             'code' => 200,
-            'message' => "L'utilisateur a bien été modifié",
+            'message' => "L'utilisateur a bien été modifié.",
         ]);
     }
 }

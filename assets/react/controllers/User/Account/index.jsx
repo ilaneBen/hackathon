@@ -1,25 +1,23 @@
 import React, { useState } from "react";
-import clsx from "clsx";
 import toast, { Toaster } from "react-hot-toast";
+import Button from "../../Components/Button";
 
 export default function ({ title, user, editApiPath }) {
   const [firstName, setFirstName] = useState(user.firstName);
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const onFormSubmit = (e) => {
     e.preventDefault();
 
-    setError("");
     setIsLoading(true);
 
     const formData = new FormData(e.target);
 
     if (!firstName || !name || !email) {
-      setError("Veuillez remplir tous les champs obligatoires.");
+      toast.error("Veuillez remplir tous les champs obligatoires.");
       setIsLoading(false);
       return;
     }
@@ -35,10 +33,10 @@ export default function ({ title, user, editApiPath }) {
           toast.success(res?.message);
           setPassword("");
         } else {
-          setError(res?.message);
+          toast.error(res?.message);
         }
       })
-      .catch(() => setError("Une erreur est survenue."))
+      .catch(() => toast.error("Une erreur est survenue."))
       .finally(() => setIsLoading(false));
   };
 
@@ -48,14 +46,7 @@ export default function ({ title, user, editApiPath }) {
 
       <Toaster />
 
-      {error && (
-        <div className="alert alert-danger alert-dismissible fade show" role="alert">
-          {error}
-          <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-      )}
-
-      <div className="form-group col-6">
+      <div className="form-group col-sm-6">
         <label htmlFor="firstName">Prénom</label>
         <input
           type="text"
@@ -67,7 +58,7 @@ export default function ({ title, user, editApiPath }) {
         />
       </div>
 
-      <div className="form-group col-6">
+      <div className="form-group col-sm-6">
         <label htmlFor="name">Nom</label>
         <input
           type="text"
@@ -79,7 +70,7 @@ export default function ({ title, user, editApiPath }) {
         />
       </div>
 
-      <div className="form-group col-12">
+      <div className="form-group col-sm-6">
         <label htmlFor="email">Email</label>
         <input
           type="email"
@@ -91,7 +82,7 @@ export default function ({ title, user, editApiPath }) {
         />
       </div>
 
-      <div className="form-group col-12">
+      <div className="form-group col-sm-6">
         <label htmlFor="password">Mot de passe</label>
         <input
           type="password"
@@ -105,9 +96,7 @@ export default function ({ title, user, editApiPath }) {
       </div>
 
       <div className="form-group col-12">
-        <button type="submit" className={clsx("btn btn-primary btn-lg", isLoading && "disabled")}>
-          {isLoading ? "Modification en cours..." : "Modifier"}
-        </button>
+        <Button text="Modifier" loadingText="Modification..." size="lg" isLoading={isLoading} />
       </div>
     </form>
   );

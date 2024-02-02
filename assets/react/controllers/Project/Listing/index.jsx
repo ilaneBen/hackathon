@@ -24,12 +24,6 @@ export default function ({ title, projectsUrl, newProjectPath }) {
       });
   }, []);
 
-  const Spinner = () => (
-    <div className="spinner-border spinner-border-sm ms-2" role="status">
-      <span className="visually-hidden">Chargement...</span>
-    </div>
-  );
-
   const toggleForm = (type, project = null) => {
     setIsForm(true);
 
@@ -39,7 +33,6 @@ export default function ({ title, projectsUrl, newProjectPath }) {
       setProject(null);
     }
   };
-
   const handleDelete = (project) => {
     setIsForm(false);
     setDeleteCsrf(project.deleteCsrf);
@@ -64,13 +57,12 @@ export default function ({ title, projectsUrl, newProjectPath }) {
       <Toaster />
 
       <div className="table-responsive">
-        <table className="table">
+        <table className="table table-striped">
           <thead>
             <tr>
               <th>ID</th>
               <th>Nom</th>
               <th>Lien repo</th>
-              <th>Statut</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -84,16 +76,6 @@ export default function ({ title, projectsUrl, newProjectPath }) {
                     <a href={project.url} target="_blank" rel="noopener noreferrer">
                       {project.url}
                     </a>
-                  </td>
-                  <td>
-                    {project.statut ? (
-                      "Terminé"
-                    ) : (
-                      <>
-                        <span>En cours</span>
-                        <Spinner />
-                      </>
-                    )}
                   </td>
                   <td className="actions-row">
                     <a href={project.showUrl} className="btn btn-primary btn-sm">

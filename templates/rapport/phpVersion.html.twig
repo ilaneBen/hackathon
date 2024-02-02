@@ -1,0 +1,25 @@
+{% block body %}
+<div class="mb-1">
+    {% if formattedJobs is not empty %}
+
+        {% set phpVersionJob = formattedJobs|filter(job => job.jobViewModel.getName() == 'PHP Version')|first %}
+
+        {% if phpVersionJob is defined %}
+            <div class="">
+                <p>{% set details = phpVersionJob.details %}</p>
+                {% if details is defined %}
+                    <div>
+                        <p>Version de PHP minimale requise: {{ details['Version minimale requise'] ?? 'Non spécifié' }}</p>
+                    </div>
+                {% else %}
+                    <p>Aucun détail disponible pour ce Job</p>
+                {% endif %}
+            </div>
+        {% else %}
+            <p>Aucun détail disponible pour le Job "php_version"</p>
+        {% endif %}
+    {% else %}
+        <p>Aucun Job disponible pour ce Rapport</p>
+    {% endif %}
+</div>
+{% endblock %}

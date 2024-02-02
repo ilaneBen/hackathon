@@ -6,6 +6,7 @@
 /public/bundles/
 /var/
 /vendor/
+public/repoClone
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###
@@ -32,3 +33,5 @@ public/._oxv/
 /.php-cs-fixer.php
 /.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###
+
+/public/animation/
