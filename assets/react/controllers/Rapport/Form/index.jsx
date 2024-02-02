@@ -34,7 +34,7 @@ export default function ({ closeRef, project, setRapports, rapport }) {
         formData.set('useComposer', toolSettings.useComposer ? '1' : '0');
         formData.set('usePHPStan', toolSettings.usePHPStan ? '1' : '0');
         formData.set('usePHPCS', toolSettings.usePHPCS ? '1' : '0');
-        formData.set('usePHPVersion', toolSettings.usePHPVersion ? '1' : '0');
+        formData.set('usePHPVersion', toolSettings.usePHPVersion ='1');
 
         try {
             const response = await fetch(`/api/git/clone/${project.id}`, {
@@ -102,18 +102,7 @@ export default function ({ closeRef, project, setRapports, rapport }) {
                 </label>
                 Utiliser PHPCS
             </div>
-            <div className="form-check form-switch">
-                <label className="form-check-label">
-                    <input
-                        className="form-check-input"
-                        type="checkbox"
-                        name="usePHPVersion"
-                        checked={toolSettings.usePHPVersion}
-                        onChange={() => handleChange('usePHPVersion')}
-                    />
-                </label>
-                Utiliser PHP Version
-            </div>
+
 
             {/* Ajoutez des champs similaires pour d'autres outils */}
 
