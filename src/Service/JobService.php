@@ -24,13 +24,14 @@ class JobService
      *
      * @return Job L'objet Job nouvellement créé
      */
-    public function createJob(Project $project, string $name, array $output): Job
+    public function createJob(Project $project, string $name, array $output, bool $resultat): Job
     {
         $job = new Job();
         $job->setName($name);
         $job->setProject($project);
         $job->setResultat(empty($output));
         $job->setDetail(['result' => $output]);
+        $job->setResultat($resultat);
 
         $this->entityManager->persist($job);
 

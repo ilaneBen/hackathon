@@ -53,7 +53,7 @@ class ProjectSerializer
             'editUrl' => $this->router->generate('api_project_edit', ['id' => $project->getId()]),
             'deleteCsrf' => $this->csrf->refreshToken('delete'.$project->getId())->getValue(),
             'cloneUrl' => $this->router->generate('api_git_clone', ['project' => $project->getId()]),
-        ];
+       ];
 
         return $serializedProject;
     }

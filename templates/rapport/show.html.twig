@@ -6,29 +6,38 @@
 
 {% block body %}
     <section class="container">
-      <div class="mt-5 mb-5">
-          <h1 class="text-center m-5">Détails du Rapport</h1>
-
-          <div class="d-flex justify-content-between">
-              <div>
-                  <h2>Informations générales du Rapport</h2>
-                  <p>ID: {{ rapport.getId() }}</p>
-                  <p>Date: {{ rapport.getDate()|date('Y-m-d H:i:s') }}</p>
-                  <p>Contenu: {{ rapport.getContent() }}</p>
-                  <p>Projet: {{ rapport.getProject().getName() }}</p>
-                  {% include 'rapport/phpVersion.html.twig' %}
-              </div>
-              <div>
-                  <a href="{{ path('app_rapport_show_pdf', {'id': rapport.getId()}) }}" class="btn btn-primary mb-3">Télécharger
-                      en PDF</a>
-              </div>
-          </div>
-      </div>
-       <div>
-           <h2 class="mb-3 mt-5">Détails des Jobs</h2>
-           {% include 'rapport/phpcsJob.html.twig' %}
-           {% include 'rapport/composerAudit.html.twig' %}
-           {% include 'rapport/phpStanJob.html.twig' %}
-       </div>
+        <div class="mt-5 mb-5">
+            <h1 class="text-center m-5">Détails du Rapport</h1>
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h2>Informations générales du Rapport</h2>
+                    <p>ID: {{ rapport.getId() }}</p>
+                    <p>Date: {{ rapport.getDate()|date('Y-m-d H:i:s') }}</p>
+                    <p>Contenu: {{ rapport.getContent() }}</p>
+                    <p>Projet: {{ rapport.getProject().getName() }}</p>
+                    {% include 'rapport/phpVersion.html.twig' %}
+                </div>
+                <div>
+                    <a href="{{ path('app_rapport_show_pdf', {'id': rapport.getId()}) }}" class="btn btn-primary mb-3">Télécharger
+                        en PDF</a>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h2 class="mb-3 mt-5">Détails des Jobs</h2>
+            {% set displayedJobTypes = [] %}
+            {% for job in rapport.project.job %}
+                {% if job.resultat == true and job.name not in displayedJobTypes %}
+                    {% set displayedJobTypes = displayedJobTypes|merge([job.name]) %}
+                    {% if job.name == "PHP Cs" %}
+                        {% include 'rapport/phpcsJob.html.twig' %}
+                    {% elseif job.name == "PHP STAN" %}
+                        {% include 'rapport/phpStanJob.html.twig' %}
+                    {% elseif job.name == "Composer Audit" %}
+                        {% include 'rapport/composerAudit.html.twig' %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
     </section>
 {% endblock %}
