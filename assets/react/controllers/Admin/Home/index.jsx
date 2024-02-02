@@ -51,6 +51,14 @@ export default function ({ message, dashboardUrl }) {
                             'chartColor': "rgba(25, 135, 84, 0.8)",
                             'chart': true,
                         },
+                        {
+                            ...res.data.usersData,
+                            'name': "utilisateurs",
+                            'action': "inscrits",
+                            'icon': "people-fill",
+                            'iconColor': "primary",
+                            'chart': false,
+                        },
                     ]);
                 }
             });
@@ -62,9 +70,10 @@ export default function ({ message, dashboardUrl }) {
                 el.classList.add('pop');
             });
 
-            document.querySelectorAll('.card.charts').forEach(el => {
+            document.querySelectorAll('.card.charts, .card.podium').forEach(el => {
                 el.classList.add('show');
             });
+
         }, 100);
 
         ChartJS.register(
@@ -80,7 +89,7 @@ export default function ({ message, dashboardUrl }) {
         let tabCharts = {
             data: {
                 labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-                datasets: data.map(
+                datasets: data.filter((object) => object.chart).map(
                     (typeData) => {
                         return {
                             label: typeData.name.charAt(0).toUpperCase() + typeData.name.slice(1) + " " + typeData.action,
@@ -113,12 +122,18 @@ export default function ({ message, dashboardUrl }) {
         };
         setChartsOpt(tabCharts);
 
+        setTimeout(() => {
+            document.querySelectorAll('.card.podium .bar').forEach(el => {
+                el.classList.add('show');
+                el.classList.add('grow');
+            });
+        }, 500);
+
     }, [data]);
 
     return (
         <div id="dashboard">
-            <h1>{message}</h1>
-            <h2>Quelques chiffres</h2>
+            <h1 className="dashboard-title">Dashboard</h1>
             <div className="row">
                 {
                     data.map((typeData) => (
@@ -162,18 +177,33 @@ export default function ({ message, dashboardUrl }) {
                 {
                     data.filter((object) => !object.chart).map((typeData) => (
                         <Fragment key={typeData.name}>
-                            <div className="card col-4 charts fade">
-                                <div className="card-header">
-                                    Nombre de {typeData.name} {typeData.action}
-                                </div>
-                                <div className="card-body">
-
+                            <div className="card podium fade">
+                                <div className="card-body text-center">
+                                    <div className="card-title">
+                                        <h4>Classment d'utilisation (rapports effectués)</h4>
+                                    </div>
+                                    <div className="scoreboard row">
+                                        {
+                                            typeData.podium.map((user) => (
+                                                <Fragment key={user.email}>
+                                                    <div className="col-3 bar-div">
+                                                        <p className="rapport-count">{user.countRapport}</p>
+                                                        <div className={"bar fade " + user.place}>
+                                                            {user.placeNumber}
+                                                        </div>
+                                                        <p>{user.name} <br /> <small>{user.email}</small></p>
+                                                    </div>
+                                                </Fragment>
+                                            ))
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </Fragment>
                     ))
                 }
+
             </div>
-        </div>
+        </div >
     );
 }

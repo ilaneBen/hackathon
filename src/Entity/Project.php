@@ -22,9 +22,6 @@ class Project
     #[ORM\Column(length: 255)]
     private ?string $url = null;
 
-    #[ORM\Column]
-    private ?bool $statut = null;
-
     #[ORM\ManyToOne(inversedBy: 'project')]
     private ?User $user = null;
 
@@ -68,18 +65,6 @@ class Project
     public function setUrl(string $url): static
     {
         $this->url = $url;
-
-        return $this;
-    }
-
-    public function isStatut(): ?bool
-    {
-        return $this->statut;
-    }
-
-    public function setStatut(bool $statut): static
-    {
-        $this->statut = $statut;
 
         return $this;
     }

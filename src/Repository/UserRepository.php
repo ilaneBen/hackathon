@@ -53,10 +53,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         //     ->orderBy('countRapport', 'DESC')
         //     ->setMaxResults(3)->getDQL());
         return $this->createQueryBuilder('u')
-            ->select('count(u.name) as countRapport, u.name')
+            ->select('u.name, u.email')
             ->leftJoin('u.project', 'p', 'WITH', 'u.id = p.user')
             ->leftJoin('p.rapport', 'r', 'WITH', 'r.project = p.id')
-            ->groupBy('u.name')
+            ->addSelect('count(r.id) as countRapport')
+            ->groupBy('u.email')
             ->orderBy('countRapport', 'DESC')
             ->setMaxResults(3)
             ->getQuery()

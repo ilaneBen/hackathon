@@ -108,7 +108,26 @@ class ApiAdminController extends AbstractController
         $users = $userRepository->findAll();
         $data['usersData']['nbObjects'] = count($users);
 
-        dd($userRepository->getPodium());
+        $data['usersData']['podium'] = $userRepository->getPodium();
+
+        foreach ($data['usersData']['podium'] as $key => $value) {
+            if ($key === 0) {
+                $place = "first";
+            } else if ($key === 1) {
+                $place = "second";
+            }
+            if ($key === 2) {
+                $place = "third";
+            }
+
+            $data['usersData']['podium'][$key] = [
+                ...$value,
+                'place' => $place,
+                'placeNumber' => $key + 1,
+            ];
+        }
+
+        // dd($userRepository->getPodium());
 
         // $data['usersData']['podium'] = $podium;
 
