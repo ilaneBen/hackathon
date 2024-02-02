@@ -10,7 +10,7 @@ import {
     Legend,
 } from 'chart.js';
 
-export default function ({ message, dashboardUrl }) {
+export default function ({ message, dashboardUrl, usersUrl }) {
 
     const [data, setData] = useState([]);
     const [chartsOpt, setChartsOpt] = useState({});
@@ -195,6 +195,9 @@ export default function ({ message, dashboardUrl }) {
                                                 </Fragment>
                                             ))
                                         }
+                                    </div>
+                                    <div className="text-center">
+                                        <a className="btn btn-primary" href={usersUrl}>Accéder aux utilisateurs <i class="bi bi-people-fill"></i></a>
                                     </div>
                                 </div>
                             </div>

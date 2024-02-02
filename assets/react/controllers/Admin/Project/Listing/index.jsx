@@ -4,55 +4,46 @@ import Modal from "../../../Components/Modal/index.jsx";
 import Form from "../Form/index.jsx";
 import Delete from "../Delete/index.jsx";
 
-export default function ({ title, usersUrl, newUserPath }) {
-    const [finalUsers, setFinalUsers] = useState([]);
-    const finalTitle = title + (finalUsers.length > 0 ? " (" + finalUsers.length + ")" : "");
-    const [user, setUser] = useState(null);
+export default function ({ title, projectsUrl, newProjectPath }) {
+    const [finalProjects, setFinalProjects] = useState([]);
+    const finalTitle = title + (finalProjects.length > 0 ? " (" + finalProjects.length + ")" : "");
+    const [project, setProject] = useState(null);
     const [deleteCsrf, setDeleteCsrf] = useState("");
     const [isForm, setIsForm] = useState(false);
     const closeRef = useRef();
 
     useEffect(() => {
-        fetch(usersUrl, {
+        fetch(projectsUrl, {
             method: "GET",
         })
             .then((res) => res.json())
             .then((res) => {
                 if (res?.code === 200) {
-                    setFinalUsers(res.users);
+                    setFinalProjects(res.projects);
                 }
             });
     }, []);
 
-    const toggleForm = (type, user = null) => {
+    const toggleForm = (type, project = null) => {
         setIsForm(true);
 
-        if (type === "edit" && user) {
-            setUser(user);
+        if (type === "edit" && project) {
+            setProject(project);
         } else if (type === "new") {
-            setUser(null);
+            setProject(null);
         }
     };
 
-    const handleDelete = (user) => {
+    const handleDelete = (project) => {
         setIsForm(false);
-        setDeleteCsrf(user.deleteCsrf);
-        setUser(user);
+        setDeleteCsrf(project.deleteCsrf);
+        setProject(project);
     };
 
     return (
-        <div className="users">
+        <div className="projects">
             <div className="d-flex justify-content-between mb-4">
                 <h1>{finalTitle}</h1>
-                <button
-                    type="button"
-                    className="btn btn-primary h-100 align-self-center"
-                    data-bs-toggle="modal"
-                    data-bs-target="#projectModal"
-                    onClick={() => toggleForm("new")}
-                >
-                    Créer un utilisateur
-                </button>
             </div>
 
             <Toaster />
@@ -62,38 +53,28 @@ export default function ({ title, usersUrl, newUserPath }) {
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nom</th>
-                            <th>Prénom</th>
-                            <th>Email</th>
-                            <th>Actions</th>
+                            <th>Nom du projet</th>
+                            <th>Url du projet</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {finalUsers.map((user) => (
-                            <Fragment key={user.id}>
+                        {finalProjects.map((project) => (
+                            <Fragment key={project.id}>
                                 <tr>
-                                    <td>{user.id}</td>
-                                    <td>{user.name}</td>
+                                    <td>{project.id}</td>
+                                    <td>{project.name}</td>
                                     <td>
-                                        {user.firstName}
-                                    </td>
-                                    <td>
-                                        {user.email}
+                                        <a href={project.url} target="_blank" rel="noopener noreferrer">
+                                            {project.url}
+                                        </a>
                                     </td>
                                     <td className="actions-row">
-                                        <a
-                                            href={user.adminProjectsUrl}
-                                            className="btn btn-primary btn-sm"
-                                        >
-                                            <i class="bi bi-list-ol"></i>
-                                        </a>
-
                                         <button
                                             type="button"
                                             className="btn btn-secondary btn-sm"
                                             data-bs-toggle="modal"
                                             data-bs-target="#projectModal"
-                                            onClick={() => toggleForm("edit", user)}
+                                            onClick={() => toggleForm("edit", project)}
                                         >
                                             <i className="bi bi-pencil-square"></i>
                                         </button>
@@ -103,7 +84,7 @@ export default function ({ title, usersUrl, newUserPath }) {
                                             className="btn btn-danger btn-sm"
                                             data-bs-toggle="modal"
                                             data-bs-target="#projectModal"
-                                            onClick={() => handleDelete(user)}
+                                            onClick={() => handleDelete(project)}
                                         >
                                             <i className="bi bi-trash-fill"></i>
                                         </button>
@@ -117,18 +98,18 @@ export default function ({ title, usersUrl, newUserPath }) {
 
             <Modal
                 closeRef={closeRef}
-                title={isForm ? (user ? "Modifier un utilisateur" : "Créer un utilisateur") : "Supprimer un utilisateur"}
+                title={isForm ? (project ? "Modifier un projet" : "Créer un projet") : "Supprimer un projet"}
             >
                 {isForm ? (
                     <Form
                         closeRef={closeRef}
-                        user={user}
-                        newUserPath={newUserPath}
-                        finalUsers={finalUsers}
-                        setFinalUsers={setFinalUsers}
+                        project={project}
+                        newProjectPath={newProjectPath}
+                        finalProjects={finalProjects}
+                        setFinalProjects={setFinalProjects}
                     />
                 ) : (
-                    <Delete closeRef={closeRef} user={user} csrf={deleteCsrf} setFinalUsers={setFinalUsers} />
+                    <Delete closeRef={closeRef} project={project} csrf={deleteCsrf} setFinalProjects={setFinalProjects} />
                 )}
             </Modal>
         </div>

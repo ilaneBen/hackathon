@@ -19,7 +19,7 @@ export default function ({ closeRef, user, finalUsers, setFinalUsers, newUserPat
 
     const buttonText = isEditing ? "Modifier" : "Créer";
     const loadingButtonText = isEditing ? "Modification en cours..." : "Création en cours...";
-    const apiPath = isEditing ? user?.editUrl : newUserPath;
+    const apiPath = isEditing ? user?.adminEditUrl : newUserPath;
 
     const submitForm = (e) => {
         e.preventDefault();

@@ -3,5 +3,5 @@
 {% set title = "Projets scannés" %}
 
 {% block other_body %}
-	{# <div {{ react_component('Admin/Project/Listing/index', { title: title, projectsUrl: path('api_admin_project_index') } ) }}></div> #}
+	<div {{ react_component('Admin/Project/Listing/index', { title: title, projectsUrl: path('api_admin_project_index', {'id': user.id}) } ) }}></div>
 {% endblock %}

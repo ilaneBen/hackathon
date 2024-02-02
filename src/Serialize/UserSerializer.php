@@ -47,8 +47,9 @@ class UserSerializer
             'name' => $user->getName(),
             'firstName' => $user->getFirstName(),
             'deleteCsrf' => $this->csrf->refreshToken('delete' . $user->getId())->getValue(),
-            'editUrl' => $this->router->generate('api_admin_user_edit', ['id' => $user->getId()]),
-            'deleteUrl' => $this->router->generate('api_admin_user_delete', ['id' => $user->getId()]),
+            'adminEditUrl' => $this->router->generate('api_admin_user_edit', ['id' => $user->getId()]),
+            'adminDeleteUrl' => $this->router->generate('api_admin_user_delete', ['id' => $user->getId()]),
+            'adminProjectsUrl' => $this->router->generate('admin_project_index', ['id' => $user->getId()]),
         ];
 
         return $serializedUser;
