@@ -42,61 +42,61 @@ export default function ({ closeRef, project, finalProjects, setFinalProjects, n
       method: "POST",
       body: formData,
     })
-        .then((res) => res.json())
-        .then((res) => {
-          if (res?.code === 200) {
-            closeRef.current.click();
-            toast.success("Le projet a bien été " + (isEditing ? "modifié" : "créé") + ".");
+      .then((res) => res.json())
+      .then((res) => {
+        if (res?.code === 200) {
+          closeRef.current.click();
+          toast.success("Le projet a bien été " + (isEditing ? "modifié" : "créé") + ".");
 
-            if (!isEditing) {
-              setFinalProjects((finalProjects) => [...finalProjects, res?.project]);
-            } else {
-              const finalProjectsCopy = [...finalProjects];
-              const index = finalProjectsCopy.findIndex((project) => project.id === res?.project.id);
-              finalProjectsCopy[index] = res?.project;
-              setFinalProjects(finalProjectsCopy);
-            }
-
-            // Reset form.
-            setName("");
-            setUrl("");
+          if (!isEditing) {
+            setFinalProjects((finalProjects) => [...finalProjects, res?.project]);
           } else {
-            toast.error(res?.message);
+            const finalProjectsCopy = [...finalProjects];
+            const index = finalProjectsCopy.findIndex((project) => project.id === res?.project.id);
+            finalProjectsCopy[index] = res?.project;
+            setFinalProjects(finalProjectsCopy);
           }
-        })
-        .catch(() => toast.error("Une erreur est survenue."))
-        .finally(() => setIsLoading(false));
+
+          // Reset form.
+          setName("");
+          setUrl("");
+        } else {
+          toast.error(res?.message);
+        }
+      })
+      .catch(() => toast.error("Une erreur est survenue."))
+      .finally(() => setIsLoading(false));
   };
 
   return (
-      <form onSubmit={submitForm} className="modal-form">
-        <div className="form-group">
-          <label htmlFor="name">Nom du projet</label>
-          <input
-              type="text"
-              id="name"
-              name="name"
-              className="form-control"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-          />
-        </div>
+    <form onSubmit={submitForm} className="modal-form">
+      <div className="form-group">
+        <label htmlFor="name">Nom du projet</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          className="form-control"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </div>
 
-        <div className="form-group">
-          <label htmlFor="url">Lien du répertoire GitHub</label>
-          <input
-              type="text"
-              id="url"
-              name="url"
-              className="form-control"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-          />
-        </div>
+      <div className="form-group">
+        <label htmlFor="url">Lien du répertoire GitHub</label>
+        <input
+          type="text"
+          id="url"
+          name="url"
+          className="form-control"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+        />
+      </div>
 
-        <div className="form-group">
-          <Button text={buttonText} loadingText={loadingButtonText} isLoading={isLoading} />
-        </div>
-      </form>
+      <div className="form-group">
+        <Button text={buttonText} loadingText={loadingButtonText} isLoading={isLoading} />
+      </div>
+    </form>
   );
 }

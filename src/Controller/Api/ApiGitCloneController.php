@@ -32,7 +32,7 @@ class ApiGitCloneController extends AbstractController
         private RapportService $rapportService,
         private EmailService $emailService,
         private ResultToArray $resultToArray,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -48,9 +48,6 @@ class ApiGitCloneController extends AbstractController
                 'message' => 'Aucun dépôt sélectionné',
             ]);
         }
-        // Chemin relatif du répertoire de destination
-        $destination = realpath(__DIR__.'/../../../public/repoClone');
-
         // Cloner le dépôt Git
         $this->gitCloningService->cloneRepository($repositoryUrl, 'repoClone');
 

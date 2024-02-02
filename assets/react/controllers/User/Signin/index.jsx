@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import clsx from "clsx";
+import Button from "../../Components/Button";
 
 export default function ({ title, csrf, redirectPath, apiPath }) {
   const [email, setEmail] = useState("");
@@ -70,9 +70,7 @@ export default function ({ title, csrf, redirectPath, apiPath }) {
       <input type="hidden" name="type" value="signin" />
 
       <div className="form-group col-12">
-        <button type="submit" className={clsx("btn btn-primary btn-lg", isLoading && "disabled")}>
-          {isLoading ? "Connexion..." : "Se connecter"}
-        </button>
+        <Button text="Se connecter" loadingText="Connexion..." size="lg" isLoading={isLoading} />
       </div>
     </form>
   );
