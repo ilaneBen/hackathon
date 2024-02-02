@@ -24,12 +24,6 @@ export default function ({ title, projectsUrl, newProjectPath }) {
       });
   }, []);
 
-  const Spinner = () => (
-    <div className="spinner-border spinner-border-sm ms-2" role="status">
-      <span className="visually-hidden">Chargement...</span>
-    </div>
-  );
-
   const toggleForm = (type, project = null) => {
     setIsForm(true);
 
@@ -110,7 +104,7 @@ export default function ({ title, projectsUrl, newProjectPath }) {
                   </td>
                 </tr>
               </Fragment>
-            ))}                 
+            ))}
           </tbody>
         </table>
       </div>
