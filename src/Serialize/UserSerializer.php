@@ -4,12 +4,14 @@ namespace App\Serialize;
 
 use App\Entity\User;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class UserSerializer
 {
     public function __construct(
         private RouterInterface $router,
         private ProjectSerializer $projectSerializer,
+        private CsrfTokenManagerInterface $csrf
     ) {
     }
 
@@ -44,6 +46,9 @@ class UserSerializer
             'email' => $user->getEmail(),
             'name' => $user->getName(),
             'firstName' => $user->getFirstName(),
+            'deleteCsrf' => $this->csrf->refreshToken('delete' . $user->getId())->getValue(),
+            'editUrl' => $this->router->generate('api_admin_user_edit', ['id' => $user->getId()]),
+            'deleteUrl' => $this->router->generate('api_admin_user_delete', ['id' => $user->getId()]),
         ];
 
         return $serializedUser;

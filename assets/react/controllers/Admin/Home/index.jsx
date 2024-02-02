@@ -21,7 +21,6 @@ export default function ({ message, dashboardUrl }) {
         })
             .then((res) => res.json())
             .then((res) => {
-                console.log(res);
                 if (res?.code === 200) {
                     setData([
                         {
