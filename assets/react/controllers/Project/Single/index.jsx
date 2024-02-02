@@ -114,7 +114,7 @@ const ProjectDetails = ({project}) => {
                 <p>Aucun rapport disponible pour ce projet.</p>
             )}
 
-            <div className="mb-2 d-flex">
+            <div className="mb-2 mt-3 d-flex">
                 <a className="button-repport" href={project.indexUrl}>Retour à la liste</a>
                 <button
                     className="button-repport2"
