@@ -2,7 +2,6 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Project;
 use App\Entity\Rapport;
 use App\Serialize\RapportSerializer;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,11 +21,10 @@ class ApiRapportController extends AbstractController
     #[Route('/{id}', name: 'delete', methods: ['POST'])]
     public function delete(Request $request, Rapport $rapport, EntityManagerInterface $entityManager): Response
     {
-
         if (!$rapport) {
             return $this->json([
                 'code' => 400,
-                'message' => "Ce rapport n'existe pas",
+                'message' => "Ce rapport n'existe pas.",
             ]);
         }
 
@@ -36,18 +34,23 @@ class ApiRapportController extends AbstractController
         if (!$inputBag->has('deleteCsrf')) {
             return $this->json([
                 'code' => 403,
-                'message' => 'Token manquant',
+                'message' => 'Token manquant.',
             ]);
         }
 
-        if ($this->isCsrfTokenValid('delete'.$rapport->getId(), $inputBag->get('deleteCsrf'))) {
+        if ($this->isCsrfTokenValid('delete' . $rapport->getId(), $inputBag->get('deleteCsrf'))) {
             $entityManager->remove($rapport);
             $entityManager->flush();
+
+            return $this->json([
+                'code' => 200,
+                'message' => 'Le rapport a été supprimé.',
+            ]);
         }
 
         return $this->json([
-            'code' => 200,
-            'message' => 'Le rapport a été supprimé.',
+            'code' => 403,
+            'message' => 'Token invalide.',
         ]);
     }
 }
