@@ -56,12 +56,15 @@ const ProjectDetails = ({project}) => {
             {/* Rendu du tableau */}
             {rapports && rapports.length !== 0 ? (
                 <div className="mt-5">
-                    <h2>Rapports du Projet</h2>
+
                     <a href="#collapse-rapport-historique" data-bs-toggle="collapse"
                        role="button"
                        aria-expanded="false"
-                       aria-controls="collapse-rapport-historique">Affichez Historique</a>
-                    <table className="table collapse mt-5" id="collapse-rapport-historique">
+                       aria-controls="collapse-rapport-historique"><div className="d-flex div-rapport justify-content-between">
+                        <h2>Rapports du Projet</h2>
+                        <i className="bi bi-chevron-down" styles="font-size: 2rem;"></i>
+                    </div></a>
+                    <table className="table collapse  table-striped " id="collapse-rapport-historique">
                         <thead>
                         <tr>
                             <th styles="max-width: 5%; min-width: 5%;">ID</th>
@@ -85,7 +88,7 @@ const ProjectDetails = ({project}) => {
                                                               clip-rule="evenodd"></path>
                                                     </g>
                                                 </svg>
-                                                <span className="label">Voir le rapport</span>
+                                                <span className="lable">Voir le rapport</span>
                                             </a>
                                         </div>
                                         <form className="form-show" onSubmit={() => {}} method="POST">

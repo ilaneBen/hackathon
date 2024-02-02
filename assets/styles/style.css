@@ -1,3 +1,19 @@
+table{
+    border: 1px solid rgba(0, 0, 0, 0.14);
+}
+.div-rapport{
+    border: 1px solid rgba(0, 0, 0, 0.14);
+    padding: 10px;
+    color: #3d3D3D;
+}
+a{
+    text-decoration: none;
+}
+tbody, td, tfoot, th, thead, tr {
+    border-color: inherit;
+    border-style: none !important;
+    border-width: 0;
+}
 .button-repport {
     background-color: #ff2539;
     margin:0.45%;
@@ -91,7 +107,7 @@
     width: auto;
     height: fit-content;
     border: none;
-    background: #0074D9;
+    background: rgba(45,0,255,0.2);
     border-radius: 20px;
     cursor: pointer;
 }
@@ -101,7 +117,7 @@
     font-size: 17px;
     font-family: sans-serif;
     letter-spacing: 1px;
-    color: #ffffff;
+    color: #3D3D3D;
 
 }
 
