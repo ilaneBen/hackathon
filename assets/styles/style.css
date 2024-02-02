@@ -6,6 +6,9 @@ table{
     padding: 10px;
     color: #3d3D3D;
 }
+.chevron-rapport{
+    font-size: 2rem;
+}
 a{
     text-decoration: none;
 }

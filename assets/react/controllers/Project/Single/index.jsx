@@ -46,9 +46,9 @@ const ProjectDetails = ({project}) => {
                 </tbody>
             </table>
             {dernierRapport && (
-                <div>
+                <div className="d-flex justify-content-evenly mt-5">
                     <p>Rapport n: {dernierRapport.id}</p>
-                    <a href={dernierRapport.showUrl}>
+                    <a  className="btn btn-light" href={dernierRapport.showUrl}>
                         <span className="label">Voir le dernier rapport</span>
                     </a>
                 </div>
@@ -62,7 +62,7 @@ const ProjectDetails = ({project}) => {
                        aria-expanded="false"
                        aria-controls="collapse-rapport-historique"><div className="d-flex div-rapport justify-content-between">
                         <h2>Rapports du Projet</h2>
-                        <i className="bi bi-chevron-down" styles="font-size: 2rem;"></i>
+                        <i className="bi bi-chevron-down chevron-rapport" styles="font-size: 2rem;"></i>
                     </div></a>
                     <table className="table collapse  table-striped " id="collapse-rapport-historique">
                         <thead>
