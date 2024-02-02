@@ -39,7 +39,6 @@ export default function ({ title, projectsUrl, newProjectPath }) {
       setProject(null);
     }
   };
-
   const handleDelete = (project) => {
     setIsForm(false);
     setDeleteCsrf(project.deleteCsrf);
@@ -64,7 +63,7 @@ export default function ({ title, projectsUrl, newProjectPath }) {
       <Toaster />
 
       <div className="table-responsive">
-        <table className="table">
+        <table className="table table-striped">
           <thead>
             <tr>
               <th>ID</th>
@@ -111,7 +110,7 @@ export default function ({ title, projectsUrl, newProjectPath }) {
                   </td>
                 </tr>
               </Fragment>
-            ))}
+            ))}                 
           </tbody>
         </table>
       </div>
