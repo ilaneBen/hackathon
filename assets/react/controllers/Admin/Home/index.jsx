@@ -14,6 +14,9 @@ export default function ({ message, dashboardUrl, usersUrl }) {
 
     const [data, setData] = useState([]);
     const [chartsOpt, setChartsOpt] = useState({});
+    const now = (new Date()).getFullYear();
+    const [chartDate, setChartDate] = useState(now);
+    const [copyOpt, setCopyOpt] = useState({});
 
     useEffect(() => {
         fetch(dashboardUrl, {
@@ -84,42 +87,78 @@ export default function ({ message, dashboardUrl, usersUrl }) {
             Legend
         );
 
-
         let tabCharts = {
-            data: {
-                labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-                datasets: data.filter((object) => object.chart).map(
-                    (typeData) => {
-                        return {
-                            label: typeData.name.charAt(0).toUpperCase() + typeData.name.slice(1) + " " + typeData.action,
-                            data: Object.values(typeData.countSorted),
-                            borderWidth: 1,
-                            backgroundColor: typeData.chartColor,
+            [now - 1]: {
+                data: {
+                    labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+                    datasets: data.filter((object) => object.chart).map(
+                        (typeData) => {
+                            return {
+                                label: typeData.name.charAt(0).toUpperCase() + typeData.name.slice(1) + " " + typeData.action,
+                                data: Object.values(typeData.countSorted[now - 1]),
+                                borderWidth: 1,
+                                backgroundColor: typeData.chartColor,
+                            }
                         }
-                    }
-                )
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                aspectRatio: 2,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+                    )
                 },
-                ticks: {
-                    precision: 0
-                },
-                plugins: {
-                    title: {
-                        display: true,
-                        text: `Données de l'année ` + (new Date()).getFullYear(),
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    aspectRatio: 2,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
                     },
+                    ticks: {
+                        precision: 0
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Données de l'année ` + (now - 1),
+                        },
+                    }
+                }
+            },
+            [now]: {
+                data: {
+                    labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+                    datasets: data.filter((object) => object.chart).map(
+                        (typeData) => {
+                            return {
+                                label: typeData.name.charAt(0).toUpperCase() + typeData.name.slice(1) + " " + typeData.action,
+                                data: Object.values(typeData.countSorted[now]),
+                                borderWidth: 1,
+                                backgroundColor: typeData.chartColor,
+                            }
+                        }
+                    )
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    aspectRatio: 2,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    ticks: {
+                        precision: 0
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Données de l'année ` + now,
+                        },
+                    }
                 }
             }
         };
-        setChartsOpt(tabCharts);
+        setCopyOpt(tabCharts);
+        setChartsOpt(tabCharts[chartDate]);
 
         setTimeout(() => {
             document.querySelectorAll('.card.podium .bar').forEach(el => {
@@ -129,6 +168,18 @@ export default function ({ message, dashboardUrl, usersUrl }) {
         }, 500);
 
     }, [data]);
+
+    useEffect(() => {
+        setChartsOpt(copyOpt[chartDate]);
+    }, [chartDate]);
+
+    const changeDate = (target) => {
+
+        document.querySelector('.select-date.selected').classList.remove('selected');
+        target.classList.add('selected');
+
+        setChartDate(target.dataset.value);
+    }
 
     return (
         <div id="dashboard">
@@ -161,8 +212,27 @@ export default function ({ message, dashboardUrl, usersUrl }) {
             <div className="row">
                 <div className="card charts fade">
                     <div className="card-body">
+                        <div className="radios">
+                            <div
+                                onClick={(e) => changeDate(e.target)}
+                                className="select-date"
+                                data-value={now - 1}
+                                id={"chart-date-" + (now - 1)}
+                            >
+                                {now - 1}
+                            </div>
+                            <div
+                                onClick={(e) => changeDate(e.target)}
+                                className="select-date selected"
+                                data-value={now}
+                                id={"chart-date-" + (now)}
+                            >
+                                {now}
+                            </div>
+                        </div>
+
                         {
-                            chartsOpt.options && chartsOpt.data ? (
+                            chartsOpt?.options && chartsOpt?.data ? (
                                 <Bar
                                     options={chartsOpt.options}
                                     data={chartsOpt.data}
@@ -197,7 +267,7 @@ export default function ({ message, dashboardUrl, usersUrl }) {
                                         }
                                     </div>
                                     <div className="text-center">
-                                        <a className="btn btn-primary" href={usersUrl}>Accéder aux utilisateurs <i class="bi bi-people-fill"></i></a>
+                                        <a className="btn btn-primary" href={usersUrl}>Accéder aux utilisateurs <i className="bi bi-people-fill"></i></a>
                                     </div>
                                 </div>
                             </div>

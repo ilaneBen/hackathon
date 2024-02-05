@@ -57,11 +57,11 @@ export default function ({ flashes, isLogged, homePath, signinPath, signupPath, 
                                     </li>
                                     {isAdmin && (
                                         <>
-                                            <li class="nav-item">
-                                                <button href="#" class="dropdown-toggle nav-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <li className="nav-item">
+                                                <button href="#" className="dropdown-toggle nav-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                     Admin
                                                 </button>
-                                                <ul class="dropdown-menu">
+                                                <ul className="dropdown-menu">
                                                     <li className="nav-item">
                                                         <a className="nav-link" href={dashboardPath}>
                                                             Dashboard

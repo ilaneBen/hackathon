@@ -109,8 +109,34 @@ p {
         }
 
         &.charts {
+            .radios {
+                display: flex;
+                justify-content: center;
+                gap: 20px;
+
+                .select-date {
+                    border: 1px solid #000000a6;
+                    border-radius: 20px;
+                    padding: 2px 15px 0px;
+                    cursor: pointer;
+                    transition: background-color 0.5s, color 0.5s;
+                    color: #000000a6;
+
+                    &.selected {
+                        cursor: auto;
+                    }
+
+                    &.selected,
+                    &:hover {
+                        background-color: #000000a6;
+                        color: white;
+                    }
+                }
+            }
+
             canvas {
-                height: auto !important;
+                height: 500px !important;
+                max-height: 500px;
                 min-height: 500px;
             }
         }
