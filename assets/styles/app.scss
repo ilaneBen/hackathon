@@ -109,6 +109,28 @@ p {
         }
 
         &.charts {
+            .chart-tabs {
+                margin-top: 10px;
+                margin-bottom: 10px;
+                border-bottom: 1px solid #0000004F;
+
+                .chart-tab {
+                    background: none;
+                    border: 2px solid transparent;
+                    transition: background-color 0.5s, color 0.5s;
+
+                    &:hover,
+                    &.selected {
+                        color: white !important;
+                        background-color: initial;
+                    }
+
+                    &:not(:hover):not(.selected) {
+                        background-color: unset !important;
+                    }
+                }
+            }
+
             .radios {
                 display: flex;
                 justify-content: center;
