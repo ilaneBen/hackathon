@@ -75,7 +75,7 @@ export default function ({ title, usersUrl, newUserPath }) {
                                     <td>{user.email}</td>
                                     <td className="actions-row">
                                         <a href={user.adminProjectsUrl} className="btn btn-primary btn-sm">
-                                            <i class="bi bi-list-ol"></i>
+                                            <i className="bi bi-list-ol"></i>
                                         </a>
 
                                         <button
