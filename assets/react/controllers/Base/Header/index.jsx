@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
-export default function ({ flashes, isLogged, homePath, signinPath, signupPath, projectsPath, myAccountPath, signoutPath }) {
+export default function ({ flashes, isLogged, homePath, signinPath, signupPath, projectsPath, myAccountPath, signoutPath, dashboardPath, adminUsersPath }) {
 
     useEffect(() => {
         Object.keys(flashes).map((type) => {
@@ -55,6 +55,27 @@ export default function ({ flashes, isLogged, homePath, signinPath, signupPath, 
                                             Mon compte
                                         </a>
                                     </li>
+                                    {isLogged && (
+                                        <>
+                                            <li class="nav-item">
+                                                <button href="#" class="dropdown-toggle nav-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Admin
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li className="nav-item">
+                                                        <a className="nav-link" href={dashboardPath}>
+                                                            Dashboard
+                                                        </a>
+                                                    </li>
+                                                    <li className="nav-item">
+                                                        <a className="nav-link" href={adminUsersPath}>
+                                                            Utilisateurs
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </>
+                                    )}
                                 </>
                             )}
                         </ul>

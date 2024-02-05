@@ -137,7 +137,7 @@ export default function ({ message, dashboardUrl, usersUrl }) {
                 {
                     data.map((typeData) => (
                         <Fragment key={typeData.name}>
-                            <div className="col-lg-3 col-sm-5 col-xs-12">
+                            <div className="col-xl-3 col-md-5 col-xs-12">
                                 <div className="card stats m-2">
                                     <div className="card-body">
                                         <div className="row">
