@@ -60,7 +60,6 @@ class ApiProjectController extends AbstractController
 
         $project->setName($name);
         $project->setUrl($url);
-        $project->setStatut(false);
         $project->setUser($user);
 
         $entityManager->persist($project);
@@ -159,7 +158,7 @@ class ApiProjectController extends AbstractController
             ]);
         }
 
-        if ($this->isCsrfTokenValid('delete'.$project->getId(), $inputBag->get('deleteCsrf'))) {
+        if ($this->isCsrfTokenValid('delete' . $project->getId(), $inputBag->get('deleteCsrf'))) {
             $entityManager->remove($project);
             $entityManager->flush();
         }
