@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import Button from "../../Components/Button";
 
 export default function ({ title, user, editApiPath }) {
@@ -43,8 +43,6 @@ export default function ({ title, user, editApiPath }) {
   return (
     <form onSubmit={onFormSubmit} className="row user-form">
       <h1>{title}</h1>
-
-      <Toaster />
 
       <div className="form-group col-sm-6">
         <label htmlFor="firstName">Prénom</label>

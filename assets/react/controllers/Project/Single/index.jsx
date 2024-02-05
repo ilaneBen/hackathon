@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import { Toaster } from "react-hot-toast";
 import Modal from "../../Components/Modal/index.jsx";
 import Form from "../../Rapport/Form";
 import Delete from "../../Rapport/Delete";
@@ -33,8 +32,6 @@ const ProjectDetails = ({ project }) => {
 
   return (
     <div className="m-2">
-      <Toaster />
-
       <div className="d-flex">
         <h1>Rapports du projet {project.name}</h1>
         <img className="img-report" src="/img/monitor.png" />

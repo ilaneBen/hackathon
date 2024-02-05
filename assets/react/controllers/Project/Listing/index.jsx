@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { Toaster } from "react-hot-toast";
 import Modal from "../../Components/Modal/index.jsx";
 import Form from "../Form/index.jsx";
 import Delete from "../Delete/index.jsx";
@@ -53,8 +52,6 @@ export default function ({ title, projectsUrl, newProjectPath }) {
           Créer un projet
         </button>
       </div>
-
-      <Toaster />
 
       <div className="table-responsive">
         <table className="table table-striped">

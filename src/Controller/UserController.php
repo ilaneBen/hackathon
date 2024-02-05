@@ -18,21 +18,33 @@ class UserController extends AbstractController
     #[Route('/signup', name: 'signup', methods: ['GET'])]
     public function signUp_view(): Response
     {
-        if ($this->getUser()) {
-            return $this->redirectToRoute('home');
+        $user = $this->getUser();
+
+        if (!$user) {
+            return $this->render('user/signup.html.twig');
         }
 
-        return $this->render('user/signup.html.twig');
+        if (in_array('ROLE_ADMIN', $user->getRoles(), true)) {
+            return $this->redirectToRoute('admin_dashboard');
+        } else {
+            return $this->redirectToRoute('project_index');
+        }
     }
 
     #[Route('/signin', name: 'signin', methods: ['GET'])]
     public function signIn_view(): Response
     {
-        if ($this->getUser()) {
-            return $this->redirectToRoute('home');
+        $user = $this->getUser();
+
+        if (!$user) {
+            return $this->render('user/signin.html.twig');
         }
 
-        return $this->render('user/signin.html.twig');
+        if (in_array('ROLE_ADMIN', $user->getRoles(), true)) {
+            return $this->redirectToRoute('admin_dashboard');
+        } else {
+            return $this->redirectToRoute('project_index');
+        }
     }
 
     #[Route('/account', name: 'account', methods: ['GET'])]

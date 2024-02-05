@@ -1,16 +1,14 @@
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import Button from "../../Components/Button";
 
-export default function ({ title, csrf, redirectPath, apiPath }) {
+export default function ({ title, csrf, redirectPaths, apiPath }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const onFormSubmit = (e) => {
     e.preventDefault();
-    setError("");
-
     setIsLoading(true);
 
     const formData = new FormData(e.target);
@@ -22,25 +20,18 @@ export default function ({ title, csrf, redirectPath, apiPath }) {
       .then((res) => res.json())
       .then((res) => {
         if (res?.code === 200) {
-          window.location = redirectPath;
+          window.location = redirectPaths[res?.role];
         } else {
-          setError(res?.message);
+          toast.error(res?.message);
         }
       })
-      .catch(() => setError("Une erreur est survenue."))
+      .catch(() => toast.error("Une erreur est survenue."))
       .finally(() => setIsLoading(false));
   };
 
   return (
     <form onSubmit={onFormSubmit} className="row user-form">
       <h1>{title}</h1>
-
-      {error && (
-        <div className="alert alert-danger alert-dismissible fade show" role="alert">
-          {error}
-          <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-      )}
 
       <div className="form-group col-12">
         <label htmlFor="email">Email</label>

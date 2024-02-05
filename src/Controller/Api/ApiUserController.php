@@ -23,6 +23,7 @@ class ApiUserController extends AbstractController
         return $this->json([
             'code' => 200,
             'message' => 'Connected',
+            'role' => $this->getUser()->getRoles()[0],
         ]);
     }
 
