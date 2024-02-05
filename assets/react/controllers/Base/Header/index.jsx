@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
-export default function ({ flashes, isLogged, homePath, signinPath, signupPath, projectsPath, myAccountPath, signoutPath, dashboardPath, adminUsersPath }) {
+export default function ({ flashes, isLogged, homePath, signinPath, signupPath, projectsPath, myAccountPath, signoutPath, dashboardPath, adminUsersPath, isAdmin }) {
 
     useEffect(() => {
         Object.keys(flashes).map((type) => {
@@ -55,7 +55,7 @@ export default function ({ flashes, isLogged, homePath, signinPath, signupPath, 
                                             Mon compte
                                         </a>
                                     </li>
-                                    {isLogged && (
+                                    {isAdmin && (
                                         <>
                                             <li class="nav-item">
                                                 <button href="#" class="dropdown-toggle nav-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">

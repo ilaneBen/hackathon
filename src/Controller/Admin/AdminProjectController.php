@@ -15,12 +15,12 @@ class AdminProjectController extends AbstractController
     {
         if (!$currentUser = $this->getUser()) {
             $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page');
-            return $this->redirectToRoute('user_signup');
+            return $this->redirectToRoute('user_signin');
         }
 
         if (!in_array('ROLE_ADMIN', $currentUser->getRoles())) {
             $this->addFlash('error', 'Vous n\'avez pas les accès nécessaires pour accéder à cette page');
-            return $this->redirectToRoute('user_signup');
+            return $this->redirectToRoute('user_signin');
         }
 
         return $this->render('admin/project/index.html.twig', [

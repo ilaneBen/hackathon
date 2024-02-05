@@ -11,17 +11,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdminUserController extends AbstractController
 {
     #[Route('/', name: 'index', methods: ['GET'])]
-    public function dashboard(Request $request): Response
+    public function dashboard(): Response
     {
         // dd($request->get('_route'));
         if (!$user = $this->getUser()) {
             $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page');
-            return $this->redirectToRoute('user_signup');
+            return $this->redirectToRoute('user_signin');
         }
 
         if (!in_array('ROLE_ADMIN', $user->getRoles())) {
             $this->addFlash('error', 'Vous n\'avez pas les accès nécessaires pour accéder à cette page');
-            return $this->redirectToRoute('user_signup');
+            return $this->redirectToRoute('user_signin');
         }
 
         return $this->render('admin/user/index.html.twig', []);
