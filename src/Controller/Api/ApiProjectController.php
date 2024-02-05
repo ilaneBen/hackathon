@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use App\Entity\Project;
 use App\Repository\ProjectRepository;
 use App\Serialize\ProjectSerializer;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,6 +62,7 @@ class ApiProjectController extends AbstractController
         $project->setName($name);
         $project->setUrl($url);
         $project->setUser($user);
+        $project->setDate(new \DateTimeImmutable('now'));
 
         $entityManager->persist($project);
         $entityManager->flush();

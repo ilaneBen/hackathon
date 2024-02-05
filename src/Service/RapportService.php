@@ -28,10 +28,11 @@ class RapportService
         $rapport = new Rapport();
         $rapport->setProject($project);
         $rapport->setDate(new \DateTimeImmutable('now'));
-        $rapport->setContent('Rapport '.$rapport->getId());
+        $rapport->setContent('Rapport ' . $rapport->getId());
 
         foreach ($jobs as $job) {
             $job->setRapport($rapport);
+            $job->setDate(new \DateTimeImmutable('now'));
             $rapport->addJob($job);
         }
 
