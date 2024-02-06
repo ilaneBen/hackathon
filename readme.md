@@ -11,3 +11,4 @@ commande fixture :
 - `symfony console app:create-jobs`
 - `symfony console app:create-projects` 
 - `symfony console app:create-rapports `
+- `symfony console app:create-users `
