@@ -30,7 +30,10 @@
 			{% block title %}Welcome!
 			{% endblock %}
 		</title>
-		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+		<link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+		<link rel="manifest" href="/favicons/site.webmanifest">
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}
 		{% endblock %}
@@ -40,7 +43,19 @@
 		{% endblock %}
 	</head>
 	<body>
-		<div {{ react_component('Base/Header/index', { flashes: app.flashes, isLogged: app.user, isAdmin: is_granted('ROLE_ADMIN'), homePath: path('home'), signinPath: path('user_signin'), signupPath: path('user_signup'), projectsPath: path('project_index'), myAccountPath: path('user_account'), signoutPath: path('user_signout'), dashboardPath: path('admin_dashboard'), adminUsersPath: path('admin_user_index'), } ) }}></div>
+		<div {{ react_component('Base/Header/index', {
+         flashes: app.flashes,
+         isLogged: app.user,
+         isAdmin: is_granted('ROLE_ADMIN'),
+         homePath: path('home'),
+         signinPath: path('user_signin'),
+         signupPath: path('user_signup'),
+         projectsPath: path('project_index'),
+         myAccountPath: path('user_account'),
+         signoutPath: path('user_signout'),
+         dashboardPath: path('admin_dashboard'),
+         adminUsersPath: path('admin_user_index')
+      } ) }}></div>
 
 		{% block body %}{% endblock %}
 		{% include 'footer.html.twig' %}
