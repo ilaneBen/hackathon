@@ -29,25 +29,21 @@ class ProjectFixture extends Command
     {
         $faker = Factory::create();
 
-        // URLs for the three different repositories
         $urls = [
             'https://github.com/rahdyyAlb/e-commerce_alb.git',
             'https://github.com/rahdyyAlb/Mon-blog-info.git',
             'https://github.com/ilaneBen/hackathon.git',
         ];
 
-        // Retrieve all users from the database
         $users = $this->entityManager->getRepository(User::class)->findAll();
 
-        // Create 600 projects for each URL
         for ($i = 0; $i < 1200; ++$i) {
             $project = new Project();
-            $project->setName($faker->word); // You can customize the project name generation
-            $project->setUrl($urls[$i % 3]); // Cycle through the URLs
-            $project->setDate(new \DateTime()); // Set the current date
+            $project->setName($faker->word);
+            $project->setUrl($urls[$i % 3]);
+            $project->setDate(new \DateTime());
 
-            // Assign a user
-            $user = $users[array_rand($users)]; // Pick a random user from the array
+            $user = $users[array_rand($users)];
             $project->setUser($user);
 
             $this->entityManager->persist($project);

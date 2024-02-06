@@ -33,19 +33,15 @@ class UsersFixture extends Command
         $faker = Factory::create();
         $generatedEmails = [];
 
-        // Create an admin user
         $adminUser = new User();
-        $adminEmail = $this->getUniqueEmail($faker->email, $generatedEmails);
-        $adminUser->setEmail($adminEmail);
+        $adminUser->setEmail('admin@user.fr');
         $adminUser->setPassword(password_hash('adminpassword', PASSWORD_BCRYPT));
         $adminUser->setName($faker->lastName);
         $adminUser->setFirstName($faker->firstName);
         $adminUser->setRoles(['ROLE_ADMIN']);
 
         $this->entityManager->persist($adminUser);
-        $generatedEmails[] = $adminEmail;
 
-        // Create 399 regular users
         for ($i = 0; $i < 499; ++$i) {
             $user = new User();
             $userEmail = $this->getUniqueEmail($faker->email, $generatedEmails);

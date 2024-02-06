@@ -1,7 +1,5 @@
 <?php
 
-// src/Command/CreateUsersCommand.php
-
 namespace App\Fixture;
 
 use App\Entity\Job;
@@ -43,7 +41,6 @@ class JobFixture extends Command
                 $job->setName($type);
                 $job->setProject($faker->randomElement($projects));
 
-                // Ajoutez la logique spécifique pour chaque type de job
                 switch ($type) {
                     case 'PHP Version':
                         $job->setResultat(1);
@@ -308,7 +305,7 @@ class JobFixture extends Command
                 }
 
                 $job->setRapport($rapport);
-                $job->setDate($rapport->getDate()); // Utilise la date du rapport
+                $job->setDate($rapport->getDate());
 
                 $this->entityManager->persist($job);
             }
