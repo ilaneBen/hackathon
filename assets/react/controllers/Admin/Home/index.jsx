@@ -120,7 +120,7 @@ export default function ({ title, dashboardUrl, usersUrl }) {
                         plugins: {
                             title: {
                                 display: true,
-                                text: `Données de l'année ` + now,
+                                text: `Données de l'année ` + (now - 1),
                             },
                         }
                     }
