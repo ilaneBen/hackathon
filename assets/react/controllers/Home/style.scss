@@ -1,0 +1,37 @@
+@import "../../../styles/common.scss";
+
+.home-hero {
+  background-image: url("../../../../public/img/parallax-1.jpg");
+  background-position: center;
+  background-size: cover;
+  color: #ffff;
+  width: 100%;
+
+  @include mobile {
+    position: relative;
+
+    .texts-container,
+    .images-container {
+      position: relative;
+      z-index: 2;
+    }
+
+    &::after {
+      background-color: rgb(0 0 0 / 30%);
+      content: "";
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+  }
+}
+
+.card .card-image {
+  height: 350px;
+
+  @include mobile {
+    height: 200px;
+  }
+}
