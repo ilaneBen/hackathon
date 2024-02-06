@@ -31,8 +31,10 @@ class RapportFixture extends Command
 
         for ($i = 0; $i < 900; ++$i) {
             $dateWithinOneYear = new \DateTimeImmutable();
-            $dateWithinOneYear = $dateWithinOneYear->sub(new \DateInterval('P1Y')); // Soustraire un an
+            $dateWithinOneYear = $dateWithinOneYear->sub(new \DateInterval('P1Y'));
 
+            $randomDays = rand(0, 364);
+            $dateWithinOneYear = $dateWithinOneYear->add(new \DateInterval("P{$randomDays}D"));
             $rapport = new Rapport();
             $rapport->setDate($dateWithinOneYear);
             $rapport->setContent('Rapport');

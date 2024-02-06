@@ -38,10 +38,15 @@ class ProjectFixture extends Command
         $users = $this->entityManager->getRepository(User::class)->findAll();
 
         for ($i = 0; $i < 1200; ++$i) {
+            $dateWithinOneYear = new \DateTimeImmutable();
+            $dateWithinOneYear = $dateWithinOneYear->sub(new \DateInterval('P1Y'));
+
+            $randomDays = rand(0, 364);
+            $dateWithinOneYear = $dateWithinOneYear->add(new \DateInterval("P{$randomDays}D"));
             $project = new Project();
             $project->setName($faker->word);
             $project->setUrl($urls[$i % 3]);
-            $project->setDate(new \DateTime());
+            $project->setDate($dateWithinOneYear);
 
             $user = $users[array_rand($users)];
             $project->setUser($user);
