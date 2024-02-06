@@ -7,7 +7,7 @@ export default function () {
   monkey(200, 200, ref, "footer");
 
   return (
-    <footer className="container-fluid mt-auto">
+    <footer className="container-fluid">
       <div className="py-3 my-4">
         <div className="d-flex justify-content-center" ref={ref} />
         <p className="text-center p-3 border-top text-muted">© 2024 IT Akademy</p>
