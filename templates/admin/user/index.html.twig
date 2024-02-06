@@ -2,6 +2,10 @@
 
 {% set title = "Utilisateurs inscrits" %}
 
+{% block title %}
+	{{ title }}
+{% endblock %}
+
 {% block other_body %}
 	<div {{ react_component('Admin/User/Listing/index', { title: title, usersUrl: path('api_admin_user_index'), newUserPath: path('api_admin_user_new') } ) }}></div>
 {% endblock %}

@@ -1,5 +1,11 @@
 {% extends '_other.html.twig' %}
 
+{% set title = "Dashboard" %}
+
+{% block title %}
+	{{ title }}
+{% endblock %}
+
 {% block other_body %}
-	<div {{ react_component('Admin/Home/index', { message: message, dashboardUrl: path('api_admin_dashboard'), usersUrl: path('admin_user_index') }) }}></div>
+	<div {{ react_component('Admin/Home/index', { title: title, dashboardUrl: path('api_admin_dashboard'), usersUrl: path('admin_user_index') }) }}></div>
 {% endblock %}

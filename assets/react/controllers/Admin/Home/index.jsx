@@ -10,7 +10,7 @@ import {
     Legend,
 } from 'chart.js';
 
-export default function ({ message, dashboardUrl, usersUrl }) {
+export default function ({ title, dashboardUrl, usersUrl }) {
 
     const [data, setData] = useState([]);
     const [chartsOpt, setChartsOpt] = useState({});
@@ -212,7 +212,7 @@ export default function ({ message, dashboardUrl, usersUrl }) {
 
     return (
         <div id="dashboard">
-            <h1 className="dashboard-title">Dashboard</h1>
+            <h1 className="dashboard-title">{title}</h1>
             <div className="row">
                 {
                     data.map((typeData) => (
