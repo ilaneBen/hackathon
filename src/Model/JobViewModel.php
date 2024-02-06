@@ -74,14 +74,18 @@ class JobViewModel
                 foreach ($details['result'] as $index => $result) {
                     $files = [];
 
-                    foreach ($result as $filePath => $fileDetails) {
-                        if ('errors' !== $filePath && 'warnings' !== $filePath && 'fixable' !== $filePath) {
-                            $files[] = [
-                                'Chemin du fichier' => $filePath,
-                                'Erreurs' => $fileDetails['errors'] ?? 0,
-                                'Avertissements' => $fileDetails['warnings'] ?? 0,
-                                'Messages' => $fileDetails['messages'] ?? [],
-                            ];
+                    if (isset($result['file_errors'])) {
+                        $phpStanResults['Erreurs'] = $result['file_errors'];
+                    } else {
+                        foreach ($result as $filePath => $fileDetails) {
+                            if ('errors' !== $filePath && 'warnings' !== $filePath && 'fixable' !== $filePath) {
+                                $files[] = [
+                                    'Chemin du fichier' => $filePath,
+                                    'Erreurs' => $fileDetails['errors'] ?? 0,
+                                    'Avertissements' => $fileDetails['warnings'] ?? 0,
+                                    'Messages' => $fileDetails['messages'] ?? [],
+                                ];
+                            }
                         }
                     }
 
