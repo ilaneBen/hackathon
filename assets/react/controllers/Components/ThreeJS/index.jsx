@@ -57,15 +57,16 @@ export default function monkey(width, height, ref, location) {
     });
 
     return () => {
-      scene.dispose();
-      renderer.dispose();
+      scene.dispose?.();
+      renderer.dispose?.();
     };
   }, [renderer]);
 
-  function animation(time) {
+  function animation() {
     if (pivot) {
       pivot.rotation.y += 0.01;
     }
+
     renderer.render(scene, camera);
   }
 }
