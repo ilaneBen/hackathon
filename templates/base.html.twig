@@ -1,4 +1,27 @@
 <!DOCTYPE html>
+<!-- 								 	***                                     
+                                     *********                                  
+                                 .***************                               
+                              **********************,                           
+                           *****************************                        
+                        *******///*************///*********                     
+                    ,*****************************************.                 
+                    ,*////(((((((((((/////((/////((((((//////*,                 
+               ////(//(((((//////(//(((////////////////((((////*/////*          
+             //////(((//(//(///////(///////////////////(////////////(//         
+             .//((//((//((((////////////////(/(/////////////////////(//         
+              ///((((((((((((((((////////////(/(((////////////////////          
+                 (//////(((((((////////////////////////(///////////*            
+                      /(///(((((((///////((////((((((((///////                  
+                                ,(((((////////(/((,                             
+                                  *((((////////(                                
+                                 /((////////////                                
+                                 ((//////////////                               
+                                (((//////////////                               
+                                ((////////////////                              
+                                ((//(((///(///////                              
+                               ,((((((////////////
+-->
 <html>
 	<head>
 		<meta charset="UTF-8">
@@ -17,22 +40,10 @@
 		{% endblock %}
 	</head>
 	<body>
-		<div {{ react_component('Base/Header/index', {
-			flashes: app.flashes,
-      		isLogged: app.user,
-      		isAdmin: is_granted('ROLE_ADMIN'),
-      		homePath: path('home'),
-      		signinPath: path('user_signin'),
-			signupPath: path('user_signup'),
-			projectsPath: path('project_index'),
-			myAccountPath: path('user_account'),
-			signoutPath: path('user_signout'),
-			dashboardPath: path('admin_dashboard'),
-			adminUsersPath: path('admin_user_index'),
-    	} ) }}></div>
+		<div {{ react_component('Base/Header/index', { flashes: app.flashes, isLogged: app.user, isAdmin: is_granted('ROLE_ADMIN'), homePath: path('home'), signinPath: path('user_signin'), signupPath: path('user_signup'), projectsPath: path('project_index'), myAccountPath: path('user_account'), signoutPath: path('user_signout'), dashboardPath: path('admin_dashboard'), adminUsersPath: path('admin_user_index'), } ) }}></div>
 
 		{% block body %}{% endblock %}
 		{% include 'footer.html.twig' %}
 
-		</body>
-	</html>
+	</body>
+</html>

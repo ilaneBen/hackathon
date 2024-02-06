@@ -1,10 +1,9 @@
-import React, { useRef, useEffect } from "react";
+import { useEffect } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
-export default function Monkey() {
-  const width = 500,
-    height = 500;
+export default function monkey(width, height, ref, location) {
+  const path = location === "header" ? "/animation/monkey_header.glb" : "/animation/monkey_footer.glb";
 
   const scene = new THREE.Scene();
   scene.background = null; // Fond transparent
@@ -12,7 +11,7 @@ export default function Monkey() {
   const light = new THREE.AmbientLight(0xffffff); // Lumière blanche
   scene.add(light);
 
-  const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
+  const camera = new THREE.PerspectiveCamera(30, width / height, 0.01, 2000);
   camera.position.set(0, 0, 6);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); // Fond transparent
@@ -20,15 +19,14 @@ export default function Monkey() {
   renderer.setAnimationLoop(animation);
   renderer.shadowMap.enabled = true; // Ombres
 
-  const container = useRef();
   let monkey;
   let pivot;
 
   useEffect(() => {
-    container.current.appendChild(renderer.domElement);
+    ref.current.appendChild(renderer.domElement);
 
     const loader = new GLTFLoader();
-    loader.load("animation/monkey.glb", (gltf) => {
+    loader.load(path, (gltf) => {
       monkey = gltf.scene;
 
       const boundingBox = new THREE.Box3().setFromObject(monkey);
@@ -70,6 +68,4 @@ export default function Monkey() {
     }
     renderer.render(scene, camera);
   }
-
-  return <div ref={container}></div>;
 }
