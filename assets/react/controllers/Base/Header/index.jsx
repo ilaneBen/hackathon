@@ -73,7 +73,6 @@ export default function ({
                     <>
                       <li className="nav-item">
                         <button
-                          href="#"
                           className="dropdown-toggle nav-link"
                           type="button"
                           data-bs-toggle="dropdown"

@@ -42,25 +42,28 @@ class ApiAdminController extends AbstractController
             'Novembre',
             'Décembre',
         ];
-        $now = new \DateTime('now');
+        $now = intval((new \DateTime('now'))->format('Y'));
 
         //projets
         $projects = $projectRepository->findAll();
         $data['projectsData']['nbObjects'] = count($projects);
 
         $countSortedProjects = [];
-        foreach ($months as $key => $month) {
-            $count = count(
-                array_filter(
-                    $projects,
-                    static fn (Project $project) =>
-                    intval($project->getDate()->format('m')) == $key + 1 &&
-                        intval($project->getDate()->format('Y')) == intval($now->format('Y'))
-                )
-            );
+        for ($i = 0; $i < 2; $i++) {
+            foreach ($months as $key => $month) {
+                $count = count(
+                    array_filter(
+                        $projects,
+                        static fn (Project $project) =>
+                        intval($project->getDate()->format('m')) == $key + 1 &&
+                            intval($project->getDate()->format('Y')) == intval($now - $i)
+                    )
+                );
 
-            $countSortedProjects[$month] = $count;
+                $countSortedProjects[$now - $i][$month] = $count;
+            }
         }
+
 
         $data['projectsData']['countSorted'] = $countSortedProjects;
 
@@ -69,17 +72,19 @@ class ApiAdminController extends AbstractController
         $data['rapportsData']['nbObjects'] = count($rapports);
 
         $countSortedRapports = [];
-        foreach ($months as $key => $month) {
-            $count = count(
-                array_filter(
-                    $rapports,
-                    static fn (Rapport $rapport) =>
-                    intval($rapport->getDate()->format('m')) == $key + 1 &&
-                        intval($rapport->getDate()->format('Y')) == intval($now->format('Y'))
-                )
-            );
+        for ($i = 0; $i < 2; $i++) {
+            foreach ($months as $key => $month) {
+                $count = count(
+                    array_filter(
+                        $rapports,
+                        static fn (Rapport $rapport) =>
+                        intval($rapport->getDate()->format('m')) == $key + 1 &&
+                            intval($rapport->getDate()->format('Y')) == intval($now - $i)
+                    )
+                );
 
-            $countSortedRapports[$month] = $count;
+                $countSortedRapports[$now - $i][$month] = $count;
+            }
         }
 
         $data['rapportsData']['countSorted'] = $countSortedRapports;
@@ -89,17 +94,19 @@ class ApiAdminController extends AbstractController
         $data['jobsData']['nbObjects'] = count($jobs);
 
         $countSortedJobs = [];
-        foreach ($months as $key => $month) {
-            $count = count(
-                array_filter(
-                    $jobs,
-                    static fn (Job $job) =>
-                    intval($job->getDate()->format('m')) == $key + 1 &&
-                        intval($job->getDate()->format('Y')) == intval($now->format('Y'))
-                )
-            );
+        for ($i = 0; $i < 2; $i++) {
+            foreach ($months as $key => $month) {
+                $count = count(
+                    array_filter(
+                        $jobs,
+                        static fn (Job $job) =>
+                        intval($job->getDate()->format('m')) == $key + 1 &&
+                            intval($job->getDate()->format('Y')) == intval($now - $i)
+                    )
+                );
 
-            $countSortedJobs[$month] = $count;
+                $countSortedJobs[$now - $i][$month] = $count;
+            }
         }
 
         $data['jobsData']['countSorted'] = $countSortedJobs;

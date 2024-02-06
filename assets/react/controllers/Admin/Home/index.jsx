@@ -14,6 +14,11 @@ export default function ({ message, dashboardUrl, usersUrl }) {
 
     const [data, setData] = useState([]);
     const [chartsOpt, setChartsOpt] = useState({});
+    const now = (new Date()).getFullYear();
+    const [chartDate, setChartDate] = useState(now);
+    const [chartTabs, setChartTabs] = useState([]);
+    const [chartTab, setChartTab] = useState("");
+    const [copyOpt, setCopyOpt] = useState({});
 
     useEffect(() => {
         fetch(dashboardUrl, {
@@ -85,41 +90,90 @@ export default function ({ message, dashboardUrl, usersUrl }) {
         );
 
 
-        let tabCharts = {
-            data: {
-                labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-                datasets: data.filter((object) => object.chart).map(
-                    (typeData) => {
-                        return {
-                            label: typeData.name.charAt(0).toUpperCase() + typeData.name.slice(1) + " " + typeData.action,
-                            data: Object.values(typeData.countSorted),
-                            borderWidth: 1,
-                            backgroundColor: typeData.chartColor,
+        let tabCharts = {};
+        data.filter((el) => el.chart).forEach((el) => {
+            tabCharts[el.name] = {
+                [now - 1]: {
+                    data: {
+                        labels: Object.values(el.countSorted[now - 1]),
+                        datasets: [
+                            {
+                                label: el.name.charAt(0).toUpperCase() + el.name.slice(1),
+                                data: Object.values(el.countSorted[now - 1]),
+                                borderWidth: 1,
+                                backgroundColor: el.chartColor,
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        aspectRatio: 2,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        },
+                        ticks: {
+                            precision: 0
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: `Données de l'année ` + now,
+                            },
                         }
                     }
-                )
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                aspectRatio: 2,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
                 },
-                ticks: {
-                    precision: 0
-                },
-                plugins: {
-                    title: {
-                        display: true,
-                        text: `Données de l'année ` + (new Date()).getFullYear(),
+                [now]: {
+                    data: {
+                        labels: Object.values(el.countSorted[now]),
+                        datasets: [
+                            {
+                                label: el.name.charAt(0).toUpperCase() + el.name.slice(1),
+                                data: Object.values(el.countSorted[now]),
+                                borderWidth: 1,
+                                backgroundColor: el.chartColor,
+                            }
+                        ]
                     },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        aspectRatio: 2,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        },
+                        ticks: {
+                            precision: 0
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: `Données de l'année ` + now,
+                            },
+                        }
+                    }
                 }
             }
-        };
-        setChartsOpt(tabCharts);
+        })
+
+        setCopyOpt(tabCharts);
+        if (data.length) {
+            let colors = data.filter((el) => el.chart).map(el => el.iconColor);
+            let tabs = Object.keys(tabCharts).map((el, index) => {
+                return {
+                    name: el,
+                    color: colors[index],
+                }
+            });
+            setChartTabs(tabs);
+            setChartTab(tabs[0].name);
+
+            setChartsOpt(tabCharts[tabs[0].name][chartDate]);
+        }
 
         setTimeout(() => {
             document.querySelectorAll('.card.podium .bar').forEach(el => {
@@ -127,8 +181,34 @@ export default function ({ message, dashboardUrl, usersUrl }) {
                 el.classList.add('grow');
             });
         }, 500);
-
     }, [data]);
+
+    useEffect(() => {
+        if (data.length) {
+            setChartsOpt(copyOpt[chartTab][chartDate]);
+        }
+    }, [chartDate, chartTab]);
+
+    const changeDate = (target) => {
+
+        document.querySelector('.select-date.selected')?.classList.remove('selected');
+        target.classList.add('selected');
+
+        setChartDate(target.dataset.value);
+    }
+
+    const changeTab = (target) => {
+
+        let selected = document.querySelector('.chart-tab.selected')
+
+        // selected?.classList.remove(selected.dataset.hover);
+        selected?.classList.remove('selected');
+
+        // target.classList.add(target.dataset.hover);
+        target.classList.add('selected');
+
+        setChartTab(target.dataset.tab);
+    }
 
     return (
         <div id="dashboard">
@@ -161,8 +241,37 @@ export default function ({ message, dashboardUrl, usersUrl }) {
             <div className="row">
                 <div className="card charts fade">
                     <div className="card-body">
+                        <div className="radios">
+                            <div
+                                onClick={(e) => changeDate(e.target)}
+                                className="select-date"
+                                data-value={now - 1}
+                                id={"chart-date-" + (now - 1)}
+                            >
+                                {now - 1}
+                            </div>
+                            <div
+                                onClick={(e) => changeDate(e.target)}
+                                className="select-date selected"
+                                data-value={now}
+                                id={"chart-date-" + (now)}
+                            >
+                                {now}
+                            </div>
+                        </div>
+
+                        <div className="chart-tabs row">
+                            {
+                                chartTabs.map((tab) => (
+                                    <button key={tab.name} className={"col-4 chart-tab bg-" + tab.color} onClick={(e) => changeTab(e.target)} data-tab={tab.name} data-hover={"bg-" + tab.color}>
+                                        {tab.name.charAt(0).toUpperCase() + tab.name.slice(1)}
+                                    </button>
+                                ))
+                            }
+                        </div>
+
                         {
-                            chartsOpt.options && chartsOpt.data ? (
+                            chartsOpt?.options && chartsOpt?.data ? (
                                 <Bar
                                     options={chartsOpt.options}
                                     data={chartsOpt.data}
@@ -197,7 +306,7 @@ export default function ({ message, dashboardUrl, usersUrl }) {
                                         }
                                     </div>
                                     <div className="text-center">
-                                        <a className="btn btn-primary" href={usersUrl}>Accéder aux utilisateurs <i class="bi bi-people-fill"></i></a>
+                                        <a className="btn btn-primary" href={usersUrl}>Accéder aux utilisateurs <i className="bi bi-people-fill"></i></a>
                                     </div>
                                 </div>
                             </div>
