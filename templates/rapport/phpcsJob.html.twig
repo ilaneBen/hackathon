@@ -17,15 +17,15 @@
                 {% for result in value %}
             <div class="{% if loop.first %}resumer{% else %}d-none{% endif %}">
                 <div class="d-flex justify-content-around">
-                    <div class="d-flex">
+                    <div class="d-flex job-stat">
                         <p>Erreurs:</p>
                         <p class="badge bg-danger">{{ result.Erreurs }} </p>
                     </div>
-                    <div class="d-flex">
+                    <div class="d-flex job-stat">
                         <p>Avertissements:</p>
                         <p class=" badge bg-warning">{{ result.Avertissements }}</p>
                     </div>
-                    <div class="d-flex">
+                    <div class="d-flex job-stat">
                         <p>Réparable: </p>
                         <p class=" badge bg-info ">{{ result.Réparable }}</p>
                     </div>
