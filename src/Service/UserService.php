@@ -78,4 +78,38 @@ class UserService
 
         return $user;
     }
+
+    /**
+     * Récupère les stats des users depuis la bdd.
+     *
+     * @return array le tableau de données
+     */
+    public function getStats(): array
+    {
+        $data = [];
+
+        $users = $this->userRepository->findAll();
+        $data['nbObjects'] = count($users);
+
+        $data['podium'] = $this->userRepository->getPodium();
+
+        foreach ($data['podium'] as $key => $value) {
+            if ($key === 0) {
+                $place = "first";
+            } else if ($key === 1) {
+                $place = "second";
+            }
+            if ($key === 2) {
+                $place = "third";
+            }
+
+            $data['podium'][$key] = [
+                ...$value,
+                'place' => $place,
+                'placeNumber' => $key + 1,
+            ];
+        }
+
+        return $data;
+    }
 }

@@ -11,6 +11,17 @@ body {
     flex-direction: column;
 }
 
+.resumer {
+    .badge {
+        height: fit-content;
+        margin-left: 5px;
+    }
+
+    .job-stat {
+        align-items: center;
+    }
+}
+
 #dashboard h5 {
     font-size: 0.9rem;
 }

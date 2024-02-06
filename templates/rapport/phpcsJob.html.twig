@@ -17,27 +17,27 @@
                 {% for result in value %}
             <div class="{% if loop.first %}resumer{% else %}d-none{% endif %}">
                 <div class="d-flex justify-content-around">
-                <div class="d-flex">
-                    <p>Erreurs:</p>
-                    <p class="badge bg-danger">{{ result.Erreurs }} </p>
+                    <div class="d-flex job-stat">
+                        <p>Erreurs:</p>
+                        <p class="badge bg-danger">{{ result.Erreurs }} </p>
+                    </div>
+                    <div class="d-flex job-stat">
+                        <p>Avertissements:</p>
+                        <p class=" badge bg-warning">{{ result.Avertissements }}</p>
+                    </div>
+                    <div class="d-flex job-stat">
+                        <p>Réparable: </p>
+                        <p class=" badge bg-info ">{{ result.Réparable }}</p>
+                    </div>
+                    <div>
+                        <a class="btn btn-dark btn-close-white" data-bs-toggle="collapse"
+                        href="#collapse-result-PHPCs" role="button"
+                        aria-expanded="false"
+                        aria-controls="collapse-result-PHPCs">
+                            Voir detail
+                        </a>
+                    </div>
                 </div>
-                <div class="d-flex">
-                    <p>Avertissements:</p>
-                    <p class=" badge bg-warning">{{ result.Avertissements }}</p>
-                </div>
-                <div class="d-flex">
-                <p>Réparable: </p>
-                <p class=" badge bg-info ">{{ result.Réparable }}</p>
-            </div>
-                <div>
-                    <a class="btn btn-dark btn-close-white" data-bs-toggle="collapse"
-                       href="#collapse-result-PHPCs" role="button"
-                       aria-expanded="false"
-                       aria-controls="collapse-result-PHPCs">
-                        Voir detail
-                    </a>
-                </div>
-            </div>
             </div>
                 <div class=" collapse" id="collapse-result-PHPCs">
                     {% for file in result.Fichiers %}

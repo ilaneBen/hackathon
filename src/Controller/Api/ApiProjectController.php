@@ -5,7 +5,6 @@ namespace App\Controller\Api;
 use App\Entity\Project;
 use App\Repository\ProjectRepository;
 use App\Serialize\ProjectSerializer;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
