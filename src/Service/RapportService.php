@@ -4,15 +4,16 @@ namespace App\Service;
 
 use App\Entity\Project;
 use App\Entity\Rapport;
+use App\Repository\RapportRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class RapportService
 {
-    private $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private RapportRepository $rapportRepository
+    ) {
     }
 
     /**
@@ -39,5 +40,54 @@ class RapportService
         $this->entityManager->persist($rapport);
 
         return $rapport;
+    }
+
+    /**
+     * Récupère les stats des rapports depuis la bdd.
+     *
+     * @return array le tableau de données
+     */
+    public function getStats(): array
+    {
+        $data = [];
+
+        $months = [
+            'Janvier',
+            'Février',
+            'Mars',
+            'Avril',
+            'Mai',
+            'Juin',
+            'Juillet',
+            'Août',
+            'Septembre',
+            'Octobre',
+            'Novembre',
+            'Décembre',
+        ];
+        $now = intval((new \DateTime('now'))->format('Y'));
+
+        $rapports = $this->rapportRepository->findAll();
+        $data['nbObjects'] = count($rapports);
+
+        $countSortedRapports = [];
+        for ($i = 0; $i < 2; $i++) {
+            foreach ($months as $key => $month) {
+                $count = count(
+                    array_filter(
+                        $rapports,
+                        static fn (Rapport $rapport) =>
+                        intval($rapport->getDate()->format('m')) == $key + 1 &&
+                            intval($rapport->getDate()->format('Y')) == intval($now - $i)
+                    )
+                );
+
+                $countSortedRapports[$now - $i][$month] = $count;
+            }
+        }
+
+        $data['countSorted'] = $countSortedRapports;
+
+        return $data;
     }
 }
