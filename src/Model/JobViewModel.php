@@ -70,7 +70,7 @@ class JobViewModel
                 ];
             case 'PHP STAN':
                 $phpStanResults = [];
-
+                $phpStanResults['Erreurs'] = 0;
                 foreach ($details['result'] as $index => $result) {
                     $files = [];
 
