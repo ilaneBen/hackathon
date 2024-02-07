@@ -35,6 +35,8 @@
                         {% include 'rapport/phpStanJob.html.twig' %}
                     {% elseif job.name == "Composer Audit" %}
                         {% include 'rapport/composerAudit.html.twig' %}
+                        {% elseif job.name == "Eslint" %}
+					{% include 'rapport/eslintJob.html.twig' %}
                     {% endif %}
                 {% endif %}
             {% endfor %}

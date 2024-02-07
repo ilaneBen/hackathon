@@ -94,12 +94,11 @@ class ApiGitCloneController extends AbstractController
                 $phpVersion = $this->phpVersionService->getPhpVersionFromComposerJson($destination);
                 $jobs[] = $this->jobService->createJob($project, 'PHP Version', $phpVersion, $usePHPVersion);
             }
-            // if ($useEslint) {
-            //     $eslintProcess = $this->eslintService->runEslintAnalysis($destination);
-            //     $jobs[] = $this->jobService->createJob($project, 'Eslint', $this->resultToArray->resultToarray($eslintProcess), $useEslint);
-            // }
-
-            // dd($jobs);
+            if ($useEslint) {
+                $eslintProcess = $this->eslintService->runEslintAnalysis($destination);
+                $test = $this->jobService->createJob($project, 'Eslint', $this->resultToArray->resultToarray($eslintProcess), $useEslint);
+                $jobs[] = $test;
+            }
 
             $rapport = $this->rapportService->createRapport($project, $jobs, $directory);
             // Nettoyer le répertoire cloné une fois terminé

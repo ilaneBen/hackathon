@@ -15,7 +15,7 @@ class EslintAnalysisService
      */
     public function runEslintAnalysis(string $directory): Process
     {
-        $process = new Process(['../../vendor/bin/phpcs', '--report=json', '../../public/repoClone']);
+        $process = new Process(['../../node_modules/.bin/eslint', $directory, '-f', 'json']);
         $process->setWorkingDirectory($directory);
         $process->run();
 

@@ -133,6 +133,26 @@ class JobViewModel
                     'Résultats de PHP Cs' => $phpCsResults,
                 ];
 
+            case 'Eslint':
+                $eslintResults = [];
+
+                foreach ($details['result'] as $result) {
+                    $eslintResults[] = [
+                        'filePath' => $result['filePath'],
+                        'messages' => $result['messages'],
+                        'errorCount' => $result['errorCount'],
+                        'warningCount' => $result['warningCount'],
+                        'fatalErrorCount' => $result['fatalErrorCount'],
+                        'fixableErrorCount' => $result['fixableErrorCount'],
+                        'fixableWarningCount' => $result['fixableWarningCount'],
+                        'obseleteRules' => $result['usedDeprecatedRules'],
+                    ];
+                }
+
+                return [
+                    'eslintResults' => $eslintResults,
+                ];
+
             default:
                 // Si le type de job n'est pas géré, retournez simplement les détails bruts
                 return $details;
