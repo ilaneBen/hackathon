@@ -15,25 +15,12 @@ class StyleLintService
      */
     public function runStyleLintAnalysis(string $directory): Process
     {
-        $stylelintExecutable = $this->getStyleLintExecutablePath();
-
-        $process = new Process([$stylelintExecutable, $directory.'/**/*.{css,scss}', '--formatter', 'json']);
+        $process = new Process(['../../node_modules/.bin/stylelint', $directory.'/**/*.{css,scss}', '--formatter', 'json',  '--ignore-pattern', 'var/**,', 'vendor/**, ', 'build/**, ', 'node_modules/**',
+]);
         $process->setWorkingDirectory($directory);
+
         $process->run();
 
         return $process;
-    }
-
-    /**
-     * Obtient le chemin de l'exécutable de stylelint.
-     *
-     * @return string le chemin de l'exécutable de stylelint
-     */
-    private function getStyleLintExecutablePath(): string
-    {
-        // Ajoutez ici la logique pour obtenir le chemin de l'exécutable de stylelint
-        // Assurez-vous d'avoir installé stylelint dans votre projet via npm
-
-        return 'node_modules/.bin/stylelint';
     }
 }

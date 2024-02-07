@@ -5,7 +5,6 @@ namespace App\Controller\Api;
 use App\Entity\Project;
 use App\Service\ComposerAnalysisService;
 use App\Service\EmailService;
-use Symfony\Component\Uid\Uuid;
 use App\Service\GitCloningService;
 use App\Service\JobService;
 use App\Service\PhpCsAnalysisService;
@@ -13,12 +12,14 @@ use App\Service\PhpStanAnalysisService;
 use App\Service\PhpVersionService;
 use App\Service\RapportService;
 use App\Service\ResultToArray;
+use App\Service\StyleLintService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Uid\Uuid;
 
 #[Route('/git', name: 'git_')]
 class ApiGitCloneController extends AbstractController
@@ -34,6 +35,7 @@ class ApiGitCloneController extends AbstractController
         private EmailService $emailService,
         private ResultToArray $resultToArray,
         private EntityManagerInterface $entityManager,
+        private StyleLintService $lintService
     ) {
     }
 
@@ -51,12 +53,12 @@ class ApiGitCloneController extends AbstractController
                 'message' => 'Aucun dépôt sélectionné',
             ]);
         }
-        $directory = 'repoClone_' . $repoUid;
+        $directory = 'repoClone_'.$repoUid;
         // Cloner le dépôt Git
         $this->gitCloningService->cloneRepository($repositoryUrl, $directory);
 
         // Chemin relatif du répertoire de destination
-        $destination = realpath(__DIR__ . '/../../../public/' . $directory);
+        $destination = realpath(__DIR__.'/../../../public/'.$directory);
         // Vérifier que le dossier repoClone_.$repoUid existe bien après le clonage
         if (!is_dir($destination)) {
             return $this->json([
@@ -72,6 +74,12 @@ class ApiGitCloneController extends AbstractController
             $usePHPStan = $inputBag->get('usePHPStan');
             $usePHPCS = $inputBag->get('usePHPCS');
             $usePHPVersion = $inputBag->get('usePHPVersion');
+            $usestyleLine = $inputBag->get('useStyleLine');
+
+            if ($usestyleLine) {
+                $styleLineProcess = $this->lintService->runStyleLintAnalysis($destination);
+                $jobs[] = $this->jobService->createJob($project, 'Style Lint', $this->resultToArray->resultToArrayJs($styleLineProcess), $usestyleLine);
+            }
             // Exécuter PHPStan
             if ($useComposer) {
                 $composerAuditProcess = $this->composerAnalysisService->runComposerAudit($destination);

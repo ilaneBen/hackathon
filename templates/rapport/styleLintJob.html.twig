@@ -1,0 +1,134 @@
+{% block body %}
+    <div class="mb-5 mt-5">
+    {% if formattedJobs is not empty %}
+        {% for formattedJob in formattedJobs %}
+            {% set jobViewModel = formattedJob.jobViewModel %}
+            {% if jobViewModel.getName() == 'Style Lint' %}
+                <div class="">
+                <h3 class="text-center">{{ jobViewModel.getName() }}</h3>
+                <p>{% set details = formattedJob.details %}</p>
+                <div class="d-flex justify-content-around">
+                    <div class="d-flex job-stat">
+                        <p>Erreurs:</p>
+                        <p class="badge bg-danger"></p>
+                    </div>
+                    <div>
+                        <a class="btn btn-dark btn-close-white" data-bs-toggle="collapse"
+                           href="#collapse-result-style" role="button"
+                           aria-expanded="false"
+                           aria-controls="collapse-result-phpStan"
+                        >
+                            Voir detail
+                        </a>
+                    </div>
+                </div>
+                {% if details is defined %}
+                    {% for result in details.result %}
+                        <div class=" collapse" id="collapse-result-style">
+                            {% set pathParts = result.source|split('/' ~ rapport.tempDir ~ '/') %}
+                            <div class="mt-3  {% if result.errored %}resumer{% else %}d-none{% endif %}">
+                                <div class="m-5 d-flex justify-content-between">
+
+                                    <p><strong>Source:</strong> {{ pathParts[1] }}</p>
+                                    <button class="btn btn-primary btn-close-white" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#resultCollapse{{ loop.index }}"
+                                            aria-expanded="false" aria-controls="resultCollapse{{ loop.index }}">
+                                        Voir plus
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="collapse" id="resultCollapse{{ loop.index }}">
+                                {% if result.warnings is not empty %}
+                                    <table class="table table-striped mt-5">
+                                        <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">Line</th>
+                                            <th scope="col">Rule</th>
+                                            <th scope="col">Message</th>
+                                            <th scope="col">Column</th>
+                                            <th scope="col">Severity</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for warning in result.warnings %}
+                                            <tr>
+                                                <td>{{ warning.line }}</td>
+                                                <td>{{ warning.rule }}</td>
+                                                <td>{{ warning.text }}</td>
+                                                <td>{{ warning.column }}</td>
+                                                <td>{{ warning.severity }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% endif %}
+
+                                {% if result.parseErrors is not empty %}
+                                    <h5>Parse Errors:</h5>
+                                    <table class="table table-striped w-75">
+                                        <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">Error</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for parseError in result.parseErrors %}
+                                            <tr>
+                                                <td>{{ parseError }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% endif %}
+
+                                {% if result.deprecations is not empty %}
+                                    <h5>Deprecations:</h5>
+                                    <table class="table table-striped w-75">
+                                        <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">Deprecation</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for deprecation in result.deprecations %}
+                                            <tr>
+                                                <td>{{ deprecation }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% endif %}
+
+                                {% if result.invalidOptionWarnings is not empty %}
+                                    <h5>Invalid Option Warnings:</h5>
+                                    <table class="table table-striped w-75">
+                                        <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">Warning</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for warning in result.invalidOptionWarnings %}
+                                            <tr>
+                                                <td>{{ warning }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No details available for this job.</p>
+                {% endif %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <p>No jobs available for this report.</p>
+    {% endif %}
+    </div>
+
+{% endblock %}

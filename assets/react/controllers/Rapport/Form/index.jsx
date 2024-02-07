@@ -14,6 +14,7 @@ export default function ({ closeRef, project, setRapports, rapport }) {
         usePHPVersion: true,
         usePHPStan: true,
         usePHPCS: true,
+        useStyleLine: true,
     });
 
     const [isLoading, setIsLoading] = useState(false);
@@ -34,6 +35,7 @@ export default function ({ closeRef, project, setRapports, rapport }) {
         formData.set('useComposer', toolSettings.useComposer ? '1' : '0');
         formData.set('usePHPStan', toolSettings.usePHPStan ? '1' : '0');
         formData.set('usePHPCS', toolSettings.usePHPCS ? '1' : '0');
+        formData.set('useStyleLine', toolSettings.useStyleLine ? '1' : '0');
         formData.set('usePHPVersion', toolSettings.usePHPVersion ='1');
 
         try {
@@ -101,6 +103,18 @@ export default function ({ closeRef, project, setRapports, rapport }) {
                     />
                 </label>
                 Utiliser PHPCS
+            </div>
+            <div className="form-check form-switch">
+                <label className="form-check-label">
+                    <input
+                        className="form-check-input"
+                        type="checkbox"
+                        name="useStyleLine"
+                        checked={toolSettings.useStyleLine}
+                        onChange={() => handleChange('useStyleLine')}
+                    />
+                </label>
+                Utiliser Style Line
             </div>
 
 

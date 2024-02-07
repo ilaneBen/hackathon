@@ -5,32 +5,6 @@
     "vendor/**",
     "build/**",
     "node_modules/**"
-  ],
-  "rules": {
-    "block-no-empty": true,
-    "color-no-invalid-hex": true,
-    "declaration-colon-space-after": "always",
-    "declaration-colon-space-before": "never",
-    "function-comma-space-after": "always",
-    "function-url-quotes": "always",
-    "indentation": 2,
-    "max-empty-lines": 2,
-    "max-nesting-depth": 3,
-    "no-descending-specificity": null,
-    "no-eol-whitespace": true,
-    "no-missing-end-of-source-newline": true,
-    "property-no-unknown": true,
-    "selector-pseudo-element-no-unknown": true,
-    "selector-type-no-unknown": [true, {"ignore": ["custom-elements", "default-namespace"]}],
-    "string-quotes": "double",
-    "value-keyword-case": "lower",
-    "scss/at-else-closing-brace-newline-after": "always-last-in-chain",
-    "scss/at-else-empty-line-before": "never",
-    "scss/at-extend-no-missing-placeholder": true,
-    "scss/at-function-pattern": "^[a-z]+([a-z0-9-]+[a-z0-9]+)?$",
-    "scss/at-if-no-null": true,
-    "scss/at-import-partial-extension": "never",
-    "scss/dollar-variable-pattern": "^[a-z]+([a-z0-9-]+[a-z0-9]+)?$",
-    "scss/selector-no-redundant-nesting-selector": true
-  }
+  ]
+
 }

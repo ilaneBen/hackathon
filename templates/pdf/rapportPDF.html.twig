@@ -27,12 +27,12 @@
                 <p>Date: {{ rapport.getDate()|date('Y-m-d H:i:s') }}</p>
                 <p>Contenu: {{ rapport.getContent() }}</p>
                 <p>Projet: {{ rapport.getProject().getName() }}</p>
-                {% include 'rapport/phpVersion.html.twig' %}
+                {% include 'pdf/phpVersion.html.twig' %}
             </div>
         </div>
     </div>
-    {% include 'rapport/composerAudit.html.twig' %}
-    {% include 'rapport/phpStanJob.html.twig' %}
-    {% include 'rapport/phpcsJob.html.twig' %}
+    {% include 'pdf/composerAudit.html.twig' %}
+    {% include 'pdf/phpStanJob.html.twig' %}
+    {% include 'pdf/phpcsJob.html.twig' %}
 </section>
 </html>

@@ -47,7 +47,7 @@ class RapportController extends AbstractController
             ];
         }
 
-        $html = $this->renderView('rapport/rapportPDF.html.twig', [
+        $html = $this->renderView('pdf/rapportPDF.html.twig', [
             'rapport' => $rapport,
             'formattedJobs' => $formattedJobs,
         ]);
@@ -80,7 +80,7 @@ class RapportController extends AbstractController
         $project = $rapport->getProject();
         $message = 'rapport '.$rapport->getContent().' a bien été suprimer';
         if (true) {
-       $entityManager->remove($rapport);
+            $entityManager->remove($rapport);
             $entityManager->flush();
         }
 
