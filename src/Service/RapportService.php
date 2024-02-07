@@ -21,15 +21,17 @@ class RapportService
      *
      * @param Project $project le projet associé au rapport
      * @param array   $jobs    un tableau de jobs à associer au rapport
+     * @param string   $directory    le nom du dossier temporaire
      *
      * @return rapport L'objet Rapport nouvellement créé
      */
-    public function createRapport(Project $project, array $jobs): Rapport
+    public function createRapport(Project $project, array $jobs, string $directory): Rapport
     {
         $rapport = new Rapport();
         $rapport->setProject($project);
         $rapport->setDate(new \DateTimeImmutable('now'));
         $rapport->setContent('Rapport ' . $rapport->getId());
+        $rapport->setTempDir($directory);
 
         foreach ($jobs as $job) {
             $job->setRapport($rapport);
