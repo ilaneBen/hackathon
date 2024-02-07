@@ -6,7 +6,7 @@
 /public/bundles/
 /var/
 /vendor/
-public/repoClone
+public/repoClone*
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###

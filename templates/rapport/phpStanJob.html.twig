@@ -39,7 +39,7 @@
                                             </div>
                                             {% for file in result.Fichiers %}
                                                 <div class="m-5 d-flex justify-content-between">
-                                                    {% set pathParts = file['Chemin du fichier']|split('/repoClone/') %}
+                                                    {% set pathParts = file['Chemin du fichier']|split('/' ~ rapport.tempDir ~ '/') %}
                                                     {% if pathParts|length > 1 %}
                                                         <p><strong>Nom du fichier </strong> {{ pathParts[1] }}</p>
                                                     {% else %}

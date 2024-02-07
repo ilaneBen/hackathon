@@ -28,6 +28,9 @@ class Rapport
     #[ORM\OneToMany(mappedBy: 'rapport', targetEntity: Job::class, cascade: ['remove', 'persist'])]
     private Collection $job;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $tempDir = null;
+
     public function __construct()
     {
         $this->job = new ArrayCollection();
@@ -100,6 +103,18 @@ class Rapport
                 $job->setRapport(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTempDir(): ?string
+    {
+        return $this->tempDir;
+    }
+
+    public function setTempDir(?string $tempDir): static
+    {
+        $this->tempDir = $tempDir;
 
         return $this;
     }
