@@ -38,6 +38,7 @@ class RapportFixture extends Command
             $rapport = new Rapport();
             $rapport->setDate($dateWithinOneYear);
             $rapport->setContent('Rapport');
+            $rapport->setTempDir('ReposClone');
             $rapport->setProject($faker->randomElement($projects));
 
             $this->entityManager->persist($rapport);
