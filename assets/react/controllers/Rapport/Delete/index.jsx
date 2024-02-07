@@ -34,7 +34,7 @@ export default function ({ closeRef, rapport, csrf, setRapports }) {
 
       <input type="hidden" name="deleteCsrf" value={csrf} />
 
-      <div className="text-center">
+      <div className="text-center mt-3">
         <Button text="Supprimer le rapport" loadingText="Suppression..." isLoading={isLoading} variant="danger" />
       </div>
     </form>

@@ -29,7 +29,7 @@ export default function ({ closeRef, user, csrf, setFinalUsers }) {
 
             <input type="hidden" name="deleteCsrf" value={csrf} />
 
-            <div className="text-center">
+            <div className="text-center mt-3">
                 <button type="submit" className="btn btn-danger">
                     Supprimer l'utilisateur
                 </button>
