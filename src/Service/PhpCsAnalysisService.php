@@ -15,7 +15,7 @@ class PhpCsAnalysisService
      */
     public function runPhpCsAnalysis(string $directory): Process
     {
-        $process = new Process(['../../vendor/bin/phpcs', '--report=json', $directory]);
+        $process = new Process(['../../vendor/bin/phpcs', '--report=json', '--extensions=php', $directory]);
         $process->setWorkingDirectory($directory);
         $process->run();
 
