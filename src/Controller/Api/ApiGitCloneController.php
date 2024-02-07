@@ -6,6 +6,7 @@ use App\Entity\Project;
 use App\Service\ComposerAnalysisService;
 use App\Service\EmailService;
 use App\Service\EslintAnalysisService;
+use Symfony\Component\Uid\Uuid;
 use App\Service\GitCloningService;
 use App\Service\JobService;
 use App\Service\PhpCsAnalysisService;
@@ -41,6 +42,8 @@ class ApiGitCloneController extends AbstractController
     #[Route('/clone/{project}', name: 'clone')]
     public function gitClone(Project $project, Request $request): Response
     {
+        $repoUid = Uuid::v4()->jsonSerialize();
+        // dd($repoUid);
         // Récupérer l'URL du dépôt Git depuis la requête
         $repositoryUrl = $project->getUrl();
         // Vérifier si une URL de dépôt a été fournie
@@ -50,12 +53,13 @@ class ApiGitCloneController extends AbstractController
                 'message' => 'Aucun dépôt sélectionné',
             ]);
         }
+        $directory = 'repoClone_' . $repoUid;
         // Cloner le dépôt Git
-        $this->gitCloningService->cloneRepository($repositoryUrl, 'repoClone');
+        $this->gitCloningService->cloneRepository($repositoryUrl, $directory);
 
         // Chemin relatif du répertoire de destination
-        $destination = realpath(__DIR__ . '/../../../public/repoClone');
-        // Vérifier que le dossier repoClone existe bien après le clonage
+        $destination = realpath(__DIR__ . '/../../../public/' . $directory);
+        // Vérifier que le dossier repoClone_.$repoUid existe bien après le clonage
         if (!is_dir($destination)) {
             return $this->json([
                 'code' => 500,
@@ -97,7 +101,7 @@ class ApiGitCloneController extends AbstractController
 
             // dd($jobs);
 
-            $rapport = $this->rapportService->createRapport($project, $jobs);
+            $rapport = $this->rapportService->createRapport($project, $jobs, $directory);
             // Nettoyer le répertoire cloné une fois terminé
             $this->gitCloningService->cleanCloneDirectory($destination);
             // Sauvegarder les entités et renvoyer la réponse
