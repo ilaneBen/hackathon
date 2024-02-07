@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use App\Entity\Project;
 use App\Service\ComposerAnalysisService;
 use App\Service\EmailService;
+use App\Service\EslintAnalysisService;
 use App\Service\GitCloningService;
 use App\Service\JobService;
 use App\Service\PhpCsAnalysisService;
@@ -28,6 +29,7 @@ class ApiGitCloneController extends AbstractController
         private PhpCsAnalysisService $phpCsAnalysisService,
         private PhpStanAnalysisService $phpStanAnalysisService,
         private PhpVersionService $phpVersionService,
+        private EslintAnalysisService $eslintService,
         private JobService $jobService,
         private RapportService $rapportService,
         private EmailService $emailService,
@@ -63,12 +65,15 @@ class ApiGitCloneController extends AbstractController
         try {
             $inputBag = $request->request;
             $jobs = [];
+
             // Utilisez les valeurs des cases à cocher
             $useComposer = $inputBag->get('useComposer');
             $usePHPStan = $inputBag->get('usePHPStan');
             $usePHPCS = $inputBag->get('usePHPCS');
             $usePHPVersion = $inputBag->get('usePHPVersion');
-            // Exécuter PHPStan
+            $useEslint = $inputBag->get('useEslint');
+
+            // Exécuter les analyses
             if ($useComposer) {
                 $composerAuditProcess = $this->composerAnalysisService->runComposerAudit($destination);
                 $jobs[] = $this->jobService->createJob($project, 'Composer Audit', $this->resultToArray->resultToarray($composerAuditProcess), $useComposer);
@@ -85,6 +90,12 @@ class ApiGitCloneController extends AbstractController
                 $phpVersion = $this->phpVersionService->getPhpVersionFromComposerJson($destination);
                 $jobs[] = $this->jobService->createJob($project, 'PHP Version', $phpVersion, $usePHPVersion);
             }
+            // if ($useEslint) {
+            //     $eslintProcess = $this->eslintService->runEslintAnalysis($destination);
+            //     $jobs[] = $this->jobService->createJob($project, 'Eslint', $this->resultToArray->resultToarray($eslintProcess), $useEslint);
+            // }
+
+            // dd($jobs);
 
             $rapport = $this->rapportService->createRapport($project, $jobs);
             // Nettoyer le répertoire cloné une fois terminé

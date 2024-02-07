@@ -1,116 +1,119 @@
-// Importez useEffect et useState depuis React
 import React, { useState } from "react";
-import Loader from "../../Loader";
-import Button from "../../Components/Button";  // Assurez-vous d'importer votre composant Loader
+import Button from "../../Components/Button";
+import toast from "react-hot-toast";
 
-export default function ({ closeRef, project, setRapports, rapport }) {
-    const isEditing = !!rapport;
-    const buttonText = isEditing ? "Modifier" : "Créer";
-    const loadingButtonText = isEditing ? "Modification..." : "Création...";
+export default function ({ closeRef, project }) {
+  const [toolSettings, setToolSettings] = useState({
+    useComposer: true,
+    usePHPVersion: true,
+    usePHPStan: true,
+    usePHPCS: true,
+    useEslint: true,
+  });
 
+  const [isLoading, setIsLoading] = useState(false);
 
-    const [toolSettings, setToolSettings] = useState({
-        useComposer: true,
-        usePHPVersion: true,
-        usePHPStan: true,
-        usePHPCS: true,
-    });
+  const handleChange = (tool) => {
+    setToolSettings((prevSettings) => ({
+      ...prevSettings,
+      [tool]: !prevSettings[tool],
+    }));
+  };
 
-    const [isLoading, setIsLoading] = useState(false);
+  const submitForm = async (e) => {
+    e.preventDefault();
 
-    const handleChange = (tool) => {
-        setToolSettings((prevSettings) => ({
-            ...prevSettings,
-            [tool]: !prevSettings[tool],
-        }));
-    };
+    setIsLoading(true);
 
-    const submitForm = async (e) => {
-        e.preventDefault();
+    const formData = new FormData(e.target);
+    formData.set("useComposer", toolSettings.useComposer ? "1" : "0");
+    formData.set("usePHPStan", toolSettings.usePHPStan ? "1" : "0");
+    formData.set("usePHPCS", toolSettings.usePHPCS ? "1" : "0");
+    formData.set("usePHPVersion", (toolSettings.usePHPVersion = "1"));
+    formData.set("useEslint", toolSettings.useEslint ? "1" : "0");
 
-        setIsLoading(true);
+    try {
+      const response = await fetch(`/api/git/clone/${project.id}`, {
+        method: "POST",
+        body: formData,
+      });
 
-        const formData = new FormData(e.target);
-        formData.set('useComposer', toolSettings.useComposer ? '1' : '0');
-        formData.set('usePHPStan', toolSettings.usePHPStan ? '1' : '0');
-        formData.set('usePHPCS', toolSettings.usePHPCS ? '1' : '0');
-        formData.set('usePHPVersion', toolSettings.usePHPVersion ='1');
+      const responseData = await response.json();
 
-        try {
-            const response = await fetch(`/api/git/clone/${project.id}`, {
+      if (responseData.code === 200) {
+        const rapportId = responseData.rapportId;
+        toast.success("Le rapport a été créé avec succès.");
+        closeRef.current.click();
+        window.location.href = `/rapport/${rapportId}`;
+      } else {
+        toast.error("La requête a échoué avec le code :", responseData.code);
+      }
+    } catch (error) {
+      toast.error("Une erreur est survenue lors de la création du rapport.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-                method: "POST",
-                body: formData,
-            });
+  return (
+    <form onSubmit={submitForm} className="modal-form">
+      <div className="form-check form-switch">
+        <label className="form-check-label">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            name="useComposer"
+            checked={toolSettings.useComposer}
+            onChange={() => handleChange("useComposer")}
+          />
+        </label>
+        Utiliser Composer Audit
+      </div>
 
-            const responseData = await response.json();
+      <div className="form-check form-switch">
+        <label className="form-check-label">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            name="usePHPStan"
+            checked={toolSettings.usePHPStan}
+            onChange={() => handleChange("usePHPStan")}
+          />
+        </label>
+        Utiliser PHPStan
+      </div>
 
-            console.log(responseData);
+      <div className="form-check form-switch">
+        <label className="form-check-label">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            name="usePHPCS"
+            checked={toolSettings.usePHPCS}
+            onChange={() => handleChange("usePHPCS")}
+          />
+        </label>
+        Utiliser PHPCS
+      </div>
 
-            if (responseData.code === 200) {
-                console.log('La requête a réussi');
-                // Assurez-vous que la réponse contient l'ID du rapport
-                const rapportId = responseData.rapportId;
-                closeRef.current.click();
-                window.location.href = `/rapport/${rapportId}`;
-            } else {
-                console.error("La requête a échoué avec le code :", responseData.code);
-            }
-        } catch (error) {
-            console.error("Erreur lors de la requête fetch :", error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+      <div className="form-check form-switch">
+        <label className="form-check-label">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            name="useEslint"
+            checked={toolSettings.useEslint}
+            onChange={() => handleChange("useEslint")}
+          />
+        </label>
+        Utiliser Eslint
+      </div>
 
-    return (
-        <form onSubmit={submitForm} className="modal-form">
-            {/* Nouveaux champs de formulaire pour les outils */}
-            <div className="form-check form-switch">
-                <label className="form-check-label" >
-                    <input
-                        className="form-check-input"
-                        type="checkbox"
-                        name="useComposer"
-                        checked={toolSettings.useComposer}
-                        onChange={() => handleChange('useComposer')}
-                    />
-                </label>
-                Utiliser Composer Audit
-            </div>
-            <div className="form-check form-switch">
-                <label className="form-check-label">
-                    <input
-                        className="form-check-input"
-                        type="checkbox"
-                        name="usePHPStan"
-                        checked={toolSettings.usePHPStan}
-                        onChange={() => handleChange('usePHPStan')}
-                    />
-                </label>
-                Utiliser PHPStan
-            </div>
-            <div className="form-check form-switch">
-                <label className="form-check-label">
-                    <input
-                        className="form-check-input"
-                        type="checkbox"
-                        name="usePHPCS"
-                        checked={toolSettings.usePHPCS}
-                        onChange={() => handleChange('usePHPCS')}
-                    />
-                </label>
-                Utiliser PHPCS
-            </div>
-
-
-            {/* Ajoutez des champs similaires pour d'autres outils */}
-
-            <div className="form-group">
-                <div className="form-group">
-                    <Button text={buttonText} loadingText={loadingButtonText} isLoading={isLoading} />
-                </div>
-            </div>
-        </form>
-    );
+      <div className="form-group">
+        <div className="form-group">
+          <Button text="Créer" loadingText="Création..." isLoading={isLoading} />
+        </div>
+      </div>
+    </form>
+  );
 }

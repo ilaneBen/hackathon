@@ -143,7 +143,7 @@ const ProjectDetails = ({ project }) => {
 
       <Modal closeRef={closeRef} title={isForm ? "Créer un rapport" : "Supprimer un rapport"}>
         {isForm ? (
-          <Form rapport={rapport} closeRef={closeRef} rapports={rapports} project={project} setRapports={setRapports} />
+          <Form closeRef={closeRef} rapports={rapports} project={project} />
         ) : (
           <>
             <Delete closeRef={closeRef} rapport={rapport} csrf={deleteCsrf} setRapports={setRapports} />
