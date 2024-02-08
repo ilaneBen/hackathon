@@ -188,7 +188,7 @@ class ApiAdminUserController extends AbstractController
             ]);
         }
 
-        if ($this->isCsrfTokenValid('delete' . $user->getId(), $inputBag->get('deleteCsrf'))) {
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $inputBag->get('deleteCsrf'))) {
             $entityManager->remove($user);
             $entityManager->flush();
         }

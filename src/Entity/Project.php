@@ -31,7 +31,7 @@ class Project
     #[ORM\OneToMany(mappedBy: 'project', targetEntity: Rapport::class, cascade: ['persist', 'remove'])]
     private Collection $rapport;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ['default' => "CURRENT_TIMESTAMP"])]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeInterface $date = null;
 
     public function __construct()

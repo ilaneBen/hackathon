@@ -9,7 +9,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class RapportService
 {
-
     public function __construct(
         private EntityManagerInterface $entityManager,
         private RapportRepository $rapportRepository
@@ -19,18 +18,18 @@ class RapportService
     /**
      * Crée un rapport avec les jobs associés pour un projet donné.
      *
-     * @param Project $project le projet associé au rapport
-     * @param array   $jobs    un tableau de jobs à associer au rapport
-     * @param string   $directory    le nom du dossier temporaire
+     * @param Project $project   le projet associé au rapport
+     * @param array   $jobs      un tableau de jobs à associer au rapport
+     * @param string  $directory le nom du dossier temporaire
      *
-     * @return rapport L'objet Rapport nouvellement créé
+     * @return Rapport L'objet Rapport nouvellement créé
      */
     public function createRapport(Project $project, array $jobs, string $directory): Rapport
     {
         $rapport = new Rapport();
         $rapport->setProject($project);
         $rapport->setDate(new \DateTimeImmutable('now'));
-        $rapport->setContent('Rapport ' . $rapport->getId());
+        $rapport->setContent('Rapport '.$rapport->getId());
         $rapport->setTempDir($directory);
 
         foreach ($jobs as $job) {
@@ -73,14 +72,13 @@ class RapportService
         $data['nbObjects'] = count($rapports);
 
         $countSortedRapports = [];
-        for ($i = 0; $i < 2; $i++) {
+        for ($i = 0; $i < 2; ++$i) {
             foreach ($months as $key => $month) {
                 $count = count(
                     array_filter(
                         $rapports,
-                        static fn (Rapport $rapport) =>
-                        intval($rapport->getDate()->format('m')) == $key + 1 &&
-                            intval($rapport->getDate()->format('Y')) == intval($now - $i)
+                        static fn (Rapport $rapport) => intval($rapport->getDate()->format('m')) == $key + 1
+                            && intval($rapport->getDate()->format('Y')) == intval($now - $i)
                     )
                 );
 

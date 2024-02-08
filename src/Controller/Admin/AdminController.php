@@ -13,16 +13,18 @@ class AdminController extends AbstractController
     {
         if (!$user = $this->getUser()) {
             $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page');
+
             return $this->redirectToRoute('user_signin');
         }
 
         if (!in_array('ROLE_ADMIN', $user->getRoles())) {
             $this->addFlash('error', 'Vous n\'avez pas les accès nécessaires pour accéder à cette page');
+
             return $this->redirectToRoute('user_signin');
         }
 
         return $this->render('admin/index.html.twig', [
-            'message' => sprintf("Bienvenue %s %s", $user->getName(), $user->getFirstName()),
+            'message' => sprintf('Bienvenue %s %s', $user->getName(), $user->getFirstName()),
         ]);
     }
 }

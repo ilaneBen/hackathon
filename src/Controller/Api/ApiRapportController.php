@@ -38,7 +38,7 @@ class ApiRapportController extends AbstractController
             ]);
         }
 
-        if ($this->isCsrfTokenValid('delete' . $rapport->getId(), $inputBag->get('deleteCsrf'))) {
+        if ($this->isCsrfTokenValid('delete'.$rapport->getId(), $inputBag->get('deleteCsrf'))) {
             $entityManager->remove($rapport);
             $entityManager->flush();
 
