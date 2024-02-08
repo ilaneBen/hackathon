@@ -67,7 +67,10 @@ export default function ({ closeRef, project, setRapports, rapport }) {
 
     return (
         <form onSubmit={submitForm} className="modal-form">
-            {/* Nouveaux champs de formulaire pour les outils */}
+            <hr/>
+            <div className="d-flex justify-content-center">
+                <h6>Analyse Composer</h6>
+            </div>
             <div className="form-check form-switch">
                 <label className="form-check-label" >
                     <input
@@ -79,6 +82,10 @@ export default function ({ closeRef, project, setRapports, rapport }) {
                     />
                 </label>
                 Utiliser Composer Audit
+            </div>
+            <hr/>
+            <div className="d-flex justify-content-center">
+                <h6>Analyse PHP</h6>
             </div>
             <div className="form-check form-switch">
                 <label className="form-check-label">
@@ -103,6 +110,10 @@ export default function ({ closeRef, project, setRapports, rapport }) {
                     />
                 </label>
                 Utiliser PHPCS
+            </div>
+            <hr/>
+            <div className="d-flex justify-content-center">
+                <h6>Analyse CSS & SCSS</h6>
             </div>
             <div className="form-check form-switch">
                 <label className="form-check-label">
