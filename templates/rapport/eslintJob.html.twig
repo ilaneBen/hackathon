@@ -4,8 +4,9 @@
 			{% for formattedJob in formattedJobs %}
 				{% set jobViewModel = formattedJob.jobViewModel %}
 				{% if jobViewModel.getName() == 'Eslint' %}
-					<div class="d-flex justify-content-around">
-						<h3 class="text-center">{{ jobViewModel.getName() }}</h3>
+					<h3 class="text-center">{{ jobViewModel.getName() }}</h3>
+
+					<div class="d-flex justify-content-end">
 						<button class="btn btn-dark btn-close-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEslint" aria-expanded="false" aria-controls="collapseEslint">
 							Voir détail
 						</button>
