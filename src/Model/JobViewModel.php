@@ -132,7 +132,7 @@ class JobViewModel
                 return [
                     'Résultats de PHP Cs' => $phpCsResults,
                 ];
-            case 'Style Line':
+            case 'Style Lint':
                 $styleLineResults = [];
 
                 $totalJobWarnings = 0;
