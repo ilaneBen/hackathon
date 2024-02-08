@@ -15,21 +15,15 @@
                                     <p class="badge bg-danger">{{ details['Total Job Warnings'] }}</p>
                                 </div>
                             </div>
-                            <div class="d-flex job-stat pt-2">
+                            <div class="d-flex job-stat">
                                 <p> Parse Errors:</p>
                                 <div>
                                     <p class="badge bg-danger">{{ details['Total Job Parse Errors'] }}</p>
                                 </div>
                             </div>
-                            <div class="d-flex job-stat pt-2">
+                            <div class="d-flex job-stat ">
                                 <p> Deprecations:</p>
-                                <div>
-                                    <p class="badge bg-danger">{{ details['Total Job Deprecations'] }}</p>
-                                </div>
-                            </div>
-
-                            <div>
-
+                                <p class="badge bg-danger">{{ details['Total Job Deprecations'] }}</p>
                             </div>
                         </div>
                         {% if details is defined %}

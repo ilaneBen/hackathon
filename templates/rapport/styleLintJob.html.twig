@@ -7,29 +7,31 @@
                     <div class="">
                         <h3 class="text-center">{{ jobViewModel.getName() }}</h3>
                         <p>{% set details = formattedJob.details %}</p>
-                        <div class="d-flex justify-content-between mt-5">
+                        <div class="resumer">
+                            <div class="d-flex justify-content-between mt-5">
 
-                            <div class="d-flex job-stat pt-2">
-                                <p> Erreurs: </p>
-                                <div>
-                                    <p class="badge bg-danger">{{ details['Total Job Warnings'] }}</p>
+                                <div class="d-flex job-stat pt-2">
+                                    <p> Erreurs: </p>
+                                    <div>
+                                        <p class="badge bg-danger">{{ details['Total Job Warnings'] }}</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="d-flex job-stat pt-2">
-                                <p> Deprecations: </p>
-                                <div>
-                                    <p class="badge bg-danger">{{ details['Total Job Deprecations'] }}</p>
+                                <div class="d-flex job-stat pt-2">
+                                    <p> Deprecations: </p>
+                                    <div>
+                                        <p class="badge bg-danger">{{ details['Total Job Deprecations'] }}</p>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <a class="btn btn-dark btn-close-white" data-bs-toggle="collapse"
-                                   href="#collapse-result-style-{{ loop.index }}" role="button"
-                                   aria-expanded="false"
-                                   aria-controls="collapse-result-phpStan"
-                                >
-                                    Voir detail
-                                </a>
+                                <div>
+                                    <a class="btn btn-dark btn-close-white" data-bs-toggle="collapse"
+                                       href="#collapse-result-style-{{ loop.index }}" role="button"
+                                       aria-expanded="false"
+                                       aria-controls="collapse-result-phpStan"
+                                    >
+                                        Voir detail
+                                    </a>
+                                </div>
                             </div>
                         </div>
                         {% if details is defined %}

@@ -22,7 +22,6 @@
 								<p>Avertissements :</p>
 								<p class=" badge bg-warning">{{ totalWarnings }}</p>
 							</div>
-
 							<div class="d-flex job-stat">
 								<p>Réparables :</p>
 								<p class=" badge bg-info">{{ totalFixable }}</p>
@@ -30,7 +29,6 @@
 
 						</div>
 					</div>
-
 					<div class="collapse" id="collapseEslint">
 						<div class="card-body">
 							{% set eslintResults = formattedJob.details.eslintResults %}
@@ -44,7 +42,6 @@
 
 											</h6>
 										</div>
-
 										<div class="collapse" id="collapseResult{{ loop.index }}">
 											<div class="card-body">
 												<p class="card-text mb-3">

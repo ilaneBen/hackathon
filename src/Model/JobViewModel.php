@@ -30,6 +30,17 @@ class JobViewModel
         return $this->job->getProject()->getName();
     }
 
+    private function getTotalVulnerabilities($composerAuditResults)
+    {
+        $totalVulnerabilities = 0;
+
+        foreach ($composerAuditResults as $result) {
+            $totalVulnerabilities += count($result['Vulnerabilities']);
+        }
+
+        return $totalVulnerabilities;
+    }
+
     public function getDetails(): array
     {
         $details = $this->job->getDetail();
@@ -52,16 +63,18 @@ class JobViewModel
                                 'Reported At' => $vulnerability['reportedAt'] ?? 'Non spécifié',
                             ];
                         }
-
+                        $totalVulnerabilities = count($vulnerabilityDetails);
                         $composerAuditResults[] = [
                             'Package Name' => $packageName,
                             'Vulnerabilities' => $vulnerabilityDetails,
+                            'Total Vulnerabilities' => $totalVulnerabilities,
                         ];
                     }
                 }
 
                 return [
                     'Composer Audit Results' => $composerAuditResults,
+                    'Total Vulnerabilities' => $this->getTotalVulnerabilities($composerAuditResults),
                 ];
 
             case 'PHP Version':
