@@ -184,6 +184,9 @@ class JobViewModel
 
             case 'Eslint':
                 $eslintResults = [];
+                $totalErrors = 0;
+                $totalWarnings = 0;
+                $totalFixable = 0;
 
                 foreach ($details['result'] as $result) {
                     $eslintResults[] = [
@@ -196,10 +199,17 @@ class JobViewModel
                         'fixableWarningCount' => $result['fixableWarningCount'],
                         'obseleteRules' => $result['usedDeprecatedRules'],
                     ];
+
+                    $totalErrors += $result['errorCount'] + $result['fatalErrorCount'];
+                    $totalWarnings += $result['warningCount'];
+                    $totalFixable += $result['fixableErrorCount'] + $result['fixableWarningCount'];
                 }
 
                 return [
                     'eslintResults' => $eslintResults,
+                    'totalErrors' => $totalErrors,
+                    'totalWarnings' => $totalWarnings,
+                    'totalFixable' => $totalFixable,
                 ];
 
             default:

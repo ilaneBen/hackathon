@@ -4,13 +4,36 @@
 			{% for formattedJob in formattedJobs %}
 				{% set jobViewModel = formattedJob.jobViewModel %}
 				{% if jobViewModel.getName() == 'Eslint' %}
+					{% set totalErrors = formattedJob.details.totalErrors %}
+					{% set totalWarnings = formattedJob.details.totalWarnings %}
+					{% set totalFixable = formattedJob.details.totalFixable %}
+
 					<h3 class="text-center">{{ jobViewModel.getName() }}</h3>
 
-					<div class="d-flex justify-content-end">
-						<button class="btn btn-dark btn-close-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEslint" aria-expanded="false" aria-controls="collapseEslint">
-							Voir détail
-						</button>
+					<div class="resumer">
+						<div class="d-flex justify-content-between">
+							<div class="d-flex job-stat">
+								<p>Erreurs :</p>
+								<p class="badge bg-danger">{{ totalErrors }}
+								</p>
+							</div>
+
+							<div class="d-flex job-stat">
+								<p>Avertissements :</p>
+								<p class=" badge bg-warning">{{ totalWarnings }}</p>
+							</div>
+
+							<div class="d-flex job-stat">
+								<p>Réparables :</p>
+								<p class=" badge bg-info">{{ totalFixable }}</p>
+							</div>
+
+							<button class="btn btn-dark btn-close-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEslint" aria-expanded="false" aria-controls="collapseEslint">
+								Voir détail
+							</button>
+						</div>
 					</div>
+
 					<div class="collapse" id="collapseEslint">
 						<div class="card-body">
 							{% set eslintResults = formattedJob.details.eslintResults %}
@@ -26,6 +49,7 @@
 												</button>
 											</h6>
 										</div>
+
 										<div class="collapse" id="collapseResult{{ loop.index }}">
 											<div class="card-body">
 												<p class="card-text mb-3">
@@ -40,6 +64,7 @@
 													<span class="badge bg-warning text-dark">Avertissements réparables :
 														{{ eslintResult.fixableWarningCount }}</span>
 												</p>
+
 												{% if eslintResult.obseleteRules is not empty %}
 													<h6>Règles obsolètes :</h6>
 													<table class="table table-striped">
