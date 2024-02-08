@@ -14,7 +14,7 @@
                                 {% if key == 'Résultats de PHP STAN' %}
                                     <h3 class="text-center">{{ jobViewModel.getName() }}</h3>
                                     <div class="{% if loop.first %}resumer{% else %}d-none{% endif %}">
-                                            <div class="d-flex justify-content-around">
+                                            <div class="d-flex justify-content-between">
                                                 <div class="d-flex job-stat">
                                                     <p>Erreurs:</p>
                                                     <p class="badge bg-danger">{{ value.Erreurs }} </p>

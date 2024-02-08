@@ -14,7 +14,7 @@
             {% if key == 'Résultats de PHP Cs' %}
                 {% for result in value %}
             <div class="{% if loop.first %}resumer{% else %}d-none{% endif %}">
-                <div class="d-flex justify-content-around">
+                <div class="d-flex justify-content-between">
                     <div class="d-flex job-stat">
                         <p>Erreurs:</p>
                         <p class="badge bg-danger">{{ result.Erreurs }} </p>
