@@ -32,7 +32,7 @@ class ApiAdminController extends AbstractController
 
         return $this->json([
             'code' => 200,
-            'data' => $data
+            'data' => $data,
         ]);
     }
 }

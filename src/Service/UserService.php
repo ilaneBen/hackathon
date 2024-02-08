@@ -20,7 +20,7 @@ class UserService
     }
 
     /**
-     * Connecte l'utilisateur et/ou l'inscrit
+     * Connecte l'utilisateur et/ou l'inscrit.
      *
      * @param Request $request la requête
      *
@@ -28,7 +28,6 @@ class UserService
      */
     public function authenticateUser(Request $request): User
     {
-
         $inputBag = $request->request;
 
         $email = $inputBag->get('email');
@@ -94,13 +93,13 @@ class UserService
         $data['podium'] = $this->userRepository->getPodium();
 
         foreach ($data['podium'] as $key => $value) {
-            if ($key === 0) {
-                $place = "first";
-            } else if ($key === 1) {
-                $place = "second";
+            if (0 === $key) {
+                $place = 'first';
+            } elseif (1 === $key) {
+                $place = 'second';
             }
-            if ($key === 2) {
-                $place = "third";
+            if (2 === $key) {
+                $place = 'third';
             }
 
             $data['podium'][$key] = [

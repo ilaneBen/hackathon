@@ -37,26 +37,24 @@ class ProjectService
         ];
         $now = intval((new \DateTime('now'))->format('Y'));
 
-        //projets
+        // projets
         $projects = $this->projectRepository->findAll();
         $data['nbObjects'] = count($projects);
 
         $countSortedProjects = [];
-        for ($i = 0; $i < 2; $i++) {
+        for ($i = 0; $i < 2; ++$i) {
             foreach ($months as $key => $month) {
                 $count = count(
                     array_filter(
                         $projects,
-                        static fn (Project $project) =>
-                        intval($project->getDate()->format('m')) == $key + 1 &&
-                            intval($project->getDate()->format('Y')) == intval($now - $i)
+                        static fn (Project $project) => intval($project->getDate()->format('m')) == $key + 1
+                            && intval($project->getDate()->format('Y')) == intval($now - $i)
                     )
                 );
 
                 $countSortedProjects[$now - $i][$month] = $count;
             }
         }
-
 
         $data['countSorted'] = $countSortedProjects;
 

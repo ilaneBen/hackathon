@@ -29,7 +29,7 @@ class Job
     #[ORM\ManyToOne(inversedBy: 'job')]
     private ?Rapport $rapport = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ['default' => "CURRENT_TIMESTAMP"])]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeInterface $date = null;
 
     public function getId(): ?int

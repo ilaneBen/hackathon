@@ -9,16 +9,6 @@
                         <p>{% set details = formattedJob.details %}</p>
                         {% if details is defined %}
                             {% for key, value in details %}
-                                <div class="d-flex justify-content-between">
-                                    <p>{{ key }}:</p>
-                                    <a class="btn btn-dark btn-close-white" data-bs-toggle="collapse"
-                                       href="#collapse-result-Composer" role="button"
-                                       aria-expanded="false"
-                                       aria-controls="collapse-result-Composer">
-                                        Voir detail
-                                    </a>
-                                </div>
-
                                 <div class=" collapse" id="collapse-result-Composer">
                                     {% if key == 'Composer Audit Results' %}
                                         {% for packageData in value %}

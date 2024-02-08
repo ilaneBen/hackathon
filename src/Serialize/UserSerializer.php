@@ -35,7 +35,7 @@ class UserSerializer
     /**
      * Sérialise un utilisateur en un tableau associatif pour l'affichage ou l'envoi en tant que réponse API.
      *
-     * @param user $user L'utilisateur à sérialiser
+     * @param User $user L'utilisateur à sérialiser
      *
      * @return array le tableau associatif représentant l'utilisateur sérialisé
      */
@@ -46,7 +46,7 @@ class UserSerializer
             'email' => $user->getEmail(),
             'name' => $user->getName(),
             'firstName' => $user->getFirstName(),
-            'deleteCsrf' => $this->csrf->refreshToken('delete' . $user->getId())->getValue(),
+            'deleteCsrf' => $this->csrf->refreshToken('delete'.$user->getId())->getValue(),
             'adminEditUrl' => $this->router->generate('api_admin_user_edit', ['id' => $user->getId()]),
             'adminDeleteUrl' => $this->router->generate('api_admin_user_delete', ['id' => $user->getId()]),
             'adminProjectsUrl' => $this->router->generate('admin_project_index', ['id' => $user->getId()]),

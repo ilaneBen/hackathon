@@ -27,12 +27,27 @@
                 <p>Date: {{ rapport.getDate()|date('Y-m-d H:i:s') }}</p>
                 <p>Contenu: {{ rapport.getContent() }}</p>
                 <p>Projet: {{ rapport.getProject().getName() }}</p>
-                {% include 'rapport/phpVersion.html.twig' %}
+                {% include 'pdf/phpVersion.html.twig' %}
             </div>
         </div>
     </div>
-    {% include 'rapport/composerAudit.html.twig' %}
-    {% include 'rapport/phpStanJob.html.twig' %}
-    {% include 'rapport/phpcsJob.html.twig' %}
+    <div>
+        <h2 class="mb-3 mt-5">Détails des Jobs</h2>
+        {% set displayedJobTypes = [] %}
+        {% for job in rapport.project.job %}
+            {% if job.resultat == true and job.name not in displayedJobTypes %}
+                {% set displayedJobTypes = displayedJobTypes|merge([job.name]) %}
+                {% if job.name == "PHP Cs" %}
+                    {% include 'pdf/phpcsJob.html.twig' %}
+                {% elseif job.name == "PHP STAN" %}
+                    {% include 'pdf/phpStanJob.html.twig' %}
+                {% elseif job.name == "Composer Audit" %}
+                    {% include 'pdf/composerAudit.html.twig' %}
+                {% elseif job.name == "Style Lint" %}
+                    {% include 'pdf/StyleLintJob.html.twig' %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </div>
 </section>
 </html>

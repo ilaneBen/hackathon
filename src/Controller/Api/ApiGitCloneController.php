@@ -6,7 +6,6 @@ use App\Entity\Project;
 use App\Service\ComposerAnalysisService;
 use App\Service\EmailService;
 use App\Service\EslintAnalysisService;
-use Symfony\Component\Uid\Uuid;
 use App\Service\GitCloningService;
 use App\Service\JobService;
 use App\Service\PhpCsAnalysisService;
@@ -14,12 +13,14 @@ use App\Service\PhpStanAnalysisService;
 use App\Service\PhpVersionService;
 use App\Service\RapportService;
 use App\Service\ResultToArray;
+use App\Service\StyleLintService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Uid\Uuid;
 
 #[Route('/git', name: 'git_')]
 class ApiGitCloneController extends AbstractController
@@ -36,6 +37,7 @@ class ApiGitCloneController extends AbstractController
         private EmailService $emailService,
         private ResultToArray $resultToArray,
         private EntityManagerInterface $entityManager,
+        private StyleLintService $lintService
     ) {
     }
 
@@ -76,8 +78,14 @@ class ApiGitCloneController extends AbstractController
             $usePHPCS = $inputBag->get('usePHPCS');
             $usePHPVersion = $inputBag->get('usePHPVersion');
             $useEslint = $inputBag->get('useEslint');
+            $usestyleLine = $inputBag->get('useStyleLine');
 
             // Exécuter les analyses
+            if ($usestyleLine) {
+                $styleLineProcess = $this->lintService->runStyleLintAnalysis($destination);
+                $jobs[] = $this->jobService->createJob($project, 'Style Lint', $this->resultToArray->resultToArrayJs($styleLineProcess), $usestyleLine);
+            }
+            // Exécuter PHPStan
             if ($useComposer) {
                 $composerAuditProcess = $this->composerAnalysisService->runComposerAudit($destination);
                 $jobs[] = $this->jobService->createJob($project, 'Composer Audit', $this->resultToArray->resultToarray($composerAuditProcess), $useComposer);

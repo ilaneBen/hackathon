@@ -269,3 +269,17 @@ p {
         padding-left: 0;
     }
 }
+
+.modal-form {
+    h6 {
+        background-color: white;
+        margin-top: -38px;
+        padding: 5px 20px;
+        z-index: 1;
+    }
+
+    hr {
+        margin: 0.5rem;
+        z-index: 0;
+    }
+}

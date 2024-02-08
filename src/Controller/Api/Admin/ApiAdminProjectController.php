@@ -127,7 +127,7 @@ class ApiAdminProjectController extends AbstractController
             ]);
         }
 
-        if ($this->isCsrfTokenValid('delete' . $project->getId(), $inputBag->get('deleteCsrf'))) {
+        if ($this->isCsrfTokenValid('delete'.$project->getId(), $inputBag->get('deleteCsrf'))) {
             $entityManager->remove($project);
             $entityManager->flush();
 

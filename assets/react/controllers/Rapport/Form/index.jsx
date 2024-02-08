@@ -8,6 +8,7 @@ export default function ({ closeRef, project }) {
     usePHPVersion: true,
     usePHPStan: true,
     usePHPCS: true,
+    useStyleLine: true,
     useEslint: true,
   });
 
@@ -29,6 +30,7 @@ export default function ({ closeRef, project }) {
     formData.set("useComposer", toolSettings.useComposer ? "1" : "0");
     formData.set("usePHPStan", toolSettings.usePHPStan ? "1" : "0");
     formData.set("usePHPCS", toolSettings.usePHPCS ? "1" : "0");
+    formData.set("useStyleLine", toolSettings.useStyleLine ? "1" : "0");
     formData.set("usePHPVersion", (toolSettings.usePHPVersion = "1"));
     formData.set("useEslint", toolSettings.useEslint ? "1" : "0");
 
@@ -57,6 +59,10 @@ export default function ({ closeRef, project }) {
 
   return (
     <form onSubmit={submitForm} className="modal-form">
+      <hr />
+      <div className="d-flex justify-content-center">
+        <h6>Analyse Composer</h6>
+      </div>
       <div className="form-check form-switch">
         <label className="form-check-label">
           <input
@@ -69,7 +75,10 @@ export default function ({ closeRef, project }) {
         </label>
         Utiliser Composer Audit
       </div>
-
+      <hr />
+      <div className="d-flex justify-content-center">
+        <h6>Analyse PHP</h6>
+      </div>
       <div className="form-check form-switch">
         <label className="form-check-label">
           <input
@@ -82,7 +91,6 @@ export default function ({ closeRef, project }) {
         </label>
         Utiliser PHPStan
       </div>
-
       <div className="form-check form-switch">
         <label className="form-check-label">
           <input
@@ -95,7 +103,26 @@ export default function ({ closeRef, project }) {
         </label>
         Utiliser PHPCS
       </div>
-
+      <hr />
+      <div className="d-flex justify-content-center">
+        <h6>Analyse CSS & SCSS</h6>
+      </div>
+      <div className="form-check form-switch">
+        <label className="form-check-label">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            name="useStyleLine"
+            checked={toolSettings.useStyleLine}
+            onChange={() => handleChange("useStyleLine")}
+          />
+        </label>
+        Utiliser Style Line
+      </div>
+      <hr />
+      <div className="d-flex justify-content-center">
+        <h6>Analyse JS</h6>
+      </div>
       <div className="form-check form-switch">
         <label className="form-check-label">
           <input

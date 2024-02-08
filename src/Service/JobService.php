@@ -9,7 +9,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class JobService
 {
-
     public function __construct(
         private EntityManagerInterface $entityManager,
         private JobRepository $jobRepository
@@ -68,14 +67,13 @@ class JobService
         $data['nbObjects'] = count($jobs);
 
         $countSortedJobs = [];
-        for ($i = 0; $i < 2; $i++) {
+        for ($i = 0; $i < 2; ++$i) {
             foreach ($months as $key => $month) {
                 $count = count(
                     array_filter(
                         $jobs,
-                        static fn (Job $job) =>
-                        intval($job->getDate()->format('m')) == $key + 1 &&
-                            intval($job->getDate()->format('Y')) == intval($now - $i)
+                        static fn (Job $job) => intval($job->getDate()->format('m')) == $key + 1
+                            && intval($job->getDate()->format('Y')) == intval($now - $i)
                     )
                 );
 

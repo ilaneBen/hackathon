@@ -132,6 +132,55 @@ class JobViewModel
                 return [
                     'Résultats de PHP Cs' => $phpCsResults,
                 ];
+            case 'Style Lint':
+                $styleLineResults = [];
+
+                $totalJobWarnings = 0;
+                $totalJobParseErrors = 0;
+                $totalJobDeprecations = 0;
+                $totalJobInvalidOptionWarnings = 0;
+
+                foreach ($details['result'] as $item) {
+                    $file = $item['source'];
+                    $errored = $item['errored'];
+                    $warnings = $item['warnings'];
+                    $parseErrors = $item['parseErrors'];
+                    $deprecations = $item['deprecations'];
+                    $invalidOptionWarnings = $item['invalidOptionWarnings'];
+
+                    // Total warnings for each file
+                    $totalWarnings = count($warnings);
+                    $totalParseErrors = count($parseErrors);
+                    $totalDeprecations = count($deprecations);
+                    $totalInvalidOptionWarnings = count($invalidOptionWarnings);
+
+                    // Add totals to the global job totals
+                    $totalJobWarnings += $totalWarnings;
+                    $totalJobParseErrors += $totalParseErrors;
+                    $totalJobDeprecations += $totalDeprecations;
+                    $totalJobInvalidOptionWarnings += $totalInvalidOptionWarnings;
+
+                    $styleLineResults[] = [
+                        'file' => $file,
+                        'errored' => $errored,
+                        'warnings' => $warnings,
+                        'parseErrors' => $parseErrors,
+                        'deprecations' => $deprecations,
+                        'invalidOptionWarnings' => $invalidOptionWarnings,
+                        'totalWarnings' => $totalWarnings,
+                        'totalParseErrors' => $totalParseErrors,
+                        'totalDeprecations' => $totalDeprecations,
+                        'totalInvalidOptionWarnings' => $totalInvalidOptionWarnings,
+                    ];
+                }
+
+                return [
+                    'Style Line Results' => $styleLineResults,
+                    'Total Job Warnings' => $totalJobWarnings,
+                    'Total Job Parse Errors' => $totalJobParseErrors,
+                    'Total Job Deprecations' => $totalJobDeprecations,
+                    'Total Job Invalid Option Warnings' => $totalJobInvalidOptionWarnings,
+                ];
 
             case 'Eslint':
                 $eslintResults = [];
@@ -154,7 +203,6 @@ class JobViewModel
                 ];
 
             default:
-                // Si le type de job n'est pas géré, retournez simplement les détails bruts
                 return $details;
         }
     }

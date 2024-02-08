@@ -47,7 +47,7 @@ class RapportController extends AbstractController
             ];
         }
 
-        $html = $this->renderView('rapport/rapportPDF.html.twig', [
+        $html = $this->renderView('pdf/rapportPDF.html.twig', [
             'rapport' => $rapport,
             'formattedJobs' => $formattedJobs,
         ]);
