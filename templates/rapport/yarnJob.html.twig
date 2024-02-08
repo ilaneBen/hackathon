@@ -1,0 +1,91 @@
+{% block body %}
+    <div class="mb-5">
+        {% if formattedJobs is not empty %}
+            {% for formattedJob in formattedJobs %}
+                {% set jobViewModel = formattedJob.jobViewModel %}
+                {% if jobViewModel.getName() == 'Yarn audit' %}
+                    <div>
+                        <h3 class="text-center">{{ jobViewModel.getName() }}</h3>
+                        <p>{% set details = formattedJob.details %}</p>
+
+                        {% if details is defined %}
+                            {% for key, value in details %}
+                                {% if key == 'Yarn Audit Results' %}
+                                    {% if value is not empty %}
+                                        <div class="{% if loop.first %}resumer{% else %}d-none{% endif %}">
+                                            <div class="d-flex justify-content-between">
+                                                <div class="d-flex job-stat">
+                                                    <p>Total Vulnerabilities :</p>
+                                                    {% if value['Total Vulnerabilities'] is defined %}
+                                                        <p class="badge bg-danger">
+                                                            {{ value['Total Vulnerabilities'] }}
+                                                        </p>
+                                                    {% else %}
+                                                        <p class="badge bg-danger">0</p>
+                                                    {% endif %}
+                                                </div>
+
+                                                <div>
+                                                    <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#collapse-result-YarnAudit" aria-expanded="false" aria-controls="collapse-result-YarnAudit">
+                                                        View Details
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="collapse" id="collapse-result-YarnAudit">
+                                            {% for yarnAuditResult in value %}
+                                                <div class="card my-3">
+                                                    <div class="card-header d-flex align-items-center justify-content-between">
+                                                        <p>Package Name: {{ yarnAuditResult['Package Name'] }}</p>
+                                                        <p>Total Vulnerabilities: {{ yarnAuditResult['Total Vulnerabilities'] }}</p>
+                                                        <div>
+                                                            <button type="button" class="btn btn-dark btn-close-white" data-bs-toggle="collapse" data-bs-target="#yarn-audit-collapse-result-{{ loop.index }}" aria-expanded="false" aria-controls="yarn-audit-collapse-result-{{ loop.index }}">
+                                                                View Details
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="collapse" id="yarn-audit-collapse-result-{{ loop.index }}">
+                                                        <table class="table table-striped">
+                                                            <thead class="thead-dark">
+                                                            <tr>
+                                                                <th>CVE</th>
+                                                                <th>Link</th>
+                                                                <th>Title</th>
+                                                                <th>Severity</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            {% for vulnerability in yarnAuditResult['Vulnerabilities'] %}
+                                                                <tr>
+                                                                    <td>{{ vulnerability['CVE'] }}</td>
+                                                                    <td><a href="{{ vulnerability['Link'] }}" target="_blank">{{ vulnerability['Link'] }}</a></td>
+                                                                    <td>{{ vulnerability['Title'] }}</td>
+                                                                    <td>{{ vulnerability['Severity'] }}</td>
+                                                                </tr>
+                                                            {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <p>No data available for Yarn Audit</p>
+                                    {% endif %}
+                                {% else %}
+                                    <p>
+                                        {{ value }}
+                                    </p>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <p>No details available for this Job</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p>No Job available for this Report</p>
+        {% endif %}
+    </div>
+{% endblock %}

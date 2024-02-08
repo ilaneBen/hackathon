@@ -1,0 +1,70 @@
+{% block body %}
+    <div class="mb-5">
+        {% if formattedJobs is not empty %}
+            {% for formattedJob in formattedJobs %}
+                {% set jobViewModel = formattedJob.jobViewModel %}
+                {% if jobViewModel.getName() == 'NPM audit' %}
+                    <div>
+                        <h3 class="text-center">{{ jobViewModel.getName() }}</h3>
+                        <p>{% set details = formattedJob.details %}</p>
+
+                        {% if details is defined %}
+                            {% for key, value in details %}
+                                {% if key == 'Npm Audit Results' %}
+                                    {% if value is not empty %}
+                                        {% for npmAuditResult in value %}
+                                            <div class="{% if loop.first %}resumer{% else %}d-none{% endif %}">
+                                                <div class="d-flex justify-content-between">
+                                                    <div class="d-flex job-stat">
+                                                        <p>Dependencies :</p>
+                                                        {% if npmAuditResult.Dependencies is not empty and npmAuditResult.Dependencies.total is defined %}
+                                                            <p class="badge bg-info">
+                                                                {{ npmAuditResult.Dependencies.total }}
+                                                            </p>
+                                                        {% else %}
+                                                            <p class="badge bg-info">0</p>
+                                                        {% endif %}
+                                                    </div>
+
+                                                    <div class="d-flex job-stat">
+                                                        <p>Vulnerabilities :</p>
+                                                        {% if npmAuditResult.Vulnerabilities is not empty and npmAuditResult.Vulnerabilities.total is defined %}
+                                                            <p class="badge bg-danger">
+                                                                {{ npmAuditResult.Vulnerabilities.total }}
+                                                            </p>
+                                                        {% else %}
+                                                            <p class="badge bg-danger">0</p>
+                                                        {% endif %}
+                                                    </div>
+
+                                                    <div>
+                                                        <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#collapse-result-NpmAudit" aria-expanded="false" aria-controls="collapse-result-NpmAudit">
+                                                            View Details
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="collapse" id="collapse-result-NpmAudit">
+                                                {# Display additional details if needed #}
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <p>No data available for NPM Audit</p>
+                                    {% endif %}
+                                {% else %}
+                                    <p>
+                                        {{ value }}
+                                    </p>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <p>No details available for this Job</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p>No Job available for this Report</p>
+        {% endif %}
+    </div>
+{% endblock %}

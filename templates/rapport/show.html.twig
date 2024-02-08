@@ -1,12 +1,9 @@
-{# templates/rapport/show.html.twig #}
-
 {% extends 'base.html.twig' %}
 
 {% block title %}Détails du Rapport
 {% endblock %}
 
 {% block body %}
-	{{ dump() }}
 	<section class="container">
 		<div class="mt-5 mb-5">
 			<h1 class="text-center m-5">Détails du Rapport</h1>
@@ -46,6 +43,10 @@
 						{% include 'rapport/eslintJob.html.twig' %}
 					{% elseif job.name == "Style Lint" %}
 						{% include 'rapport/StyleLintJob.html.twig' %}
+					{% elseif job.name == "Yarn audit" %}
+						{% include 'rapport/yarnJob.html.twig' %}
+					{% elseif job.name == "NPM audit" %}
+						{% include 'rapport/npmJob.html.twig' %}
 					{% endif %}
 				{% endif %}
 			{% endfor %}
