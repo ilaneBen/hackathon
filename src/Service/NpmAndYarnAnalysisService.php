@@ -60,9 +60,9 @@ class NpmAndYarnAnalysisService
         $actualCommandString = $actualCommand->getCommandLine();
 
         if ($actualCommandString === implode(' ', array_map('escapeshellarg', $expectedCommand))) {
-            return $name = 'yarn audit';
+            return $name = 'Yarn audit';
         } else {
-            return $name = 'npm audit';
+            return $name = 'NPM audit';
         }
     }
 }

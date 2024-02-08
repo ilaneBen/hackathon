@@ -114,7 +114,6 @@ class ApiGitCloneController extends AbstractController
                 $test = $this->jobService->createJob($project, 'Eslint', $this->resultToArray->resultToarray($eslintProcess), $useEslint);
                 $jobs[] = $test;
             }
-
             $rapport = $this->rapportService->createRapport($project, $jobs, $directory);
             // Nettoyer le répertoire cloné une fois terminé
             $this->gitCloningService->cleanCloneDirectory($destination);

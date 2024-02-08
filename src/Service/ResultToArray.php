@@ -7,7 +7,7 @@ use Symfony\Component\Process\Process;
 class ResultToArray
 {
     /**
-     * Convertit la sortie JSON du processus PHP CodeSniffer en tableau.
+     * Convertit la sortie JSON du processus en tableau.
      *
      * @param Process $process le processus
      *
@@ -16,10 +16,10 @@ class ResultToArray
     public function resultToArray(Process $process): array
     {
         // Vérifier si la commande est "yarn audit"
-        $expectedCommand = ['yarn', 'audit', '--locked', '--json'];
+        $yarnCommand = ['yarn', 'audit', '--locked', '--json'];
         $actualCommand = $process->getCommandLine();
 
-        if ($actualCommand === implode(' ', array_map('escapeshellarg', $expectedCommand))) {
+        if ($actualCommand === implode(' ', array_map('escapeshellarg', $yarnCommand))) {
             // Récupérer la sortie du processus
             $output = $process->getOutput();
 
