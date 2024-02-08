@@ -8,6 +8,7 @@ use App\Service\EmailService;
 use App\Service\EslintAnalysisService;
 use App\Service\GitCloningService;
 use App\Service\JobService;
+use App\Service\NpmAndYarnAnalysisService;
 use App\Service\PhpCsAnalysisService;
 use App\Service\PhpStanAnalysisService;
 use App\Service\PhpVersionService;
@@ -37,7 +38,8 @@ class ApiGitCloneController extends AbstractController
         private EmailService $emailService,
         private ResultToArray $resultToArray,
         private EntityManagerInterface $entityManager,
-        private StyleLintService $lintService
+        private StyleLintService $lintService,
+        private NpmAndYarnAnalysisService $npmAndYarnAnalysisService
     ) {
     }
 
@@ -55,12 +57,12 @@ class ApiGitCloneController extends AbstractController
                 'message' => 'Aucun dépôt sélectionné',
             ]);
         }
-        $directory = 'repoClone_' . $repoUid;
+        $directory = 'repoClone_'.$repoUid;
         // Cloner le dépôt Git
         $this->gitCloningService->cloneRepository($repositoryUrl, $directory);
 
         // Chemin relatif du répertoire de destination
-        $destination = realpath(__DIR__ . '/../../../public/' . $directory);
+        $destination = realpath(__DIR__.'/../../../public/'.$directory);
         // Vérifier que le dossier repoClone_.$repoUid existe bien après le clonage
         if (!is_dir($destination)) {
             return $this->json([
@@ -79,11 +81,16 @@ class ApiGitCloneController extends AbstractController
             $usePHPVersion = $inputBag->get('usePHPVersion');
             $useEslint = $inputBag->get('useEslint');
             $usestyleLine = $inputBag->get('useStyleLine');
+            $nodeAudit = $inputBag->get('useAuditJS');
 
             // Exécuter les analyses
+            if ($nodeAudit) {
+                $nodeAuditProcess = $this->npmAndYarnAnalysisService->runAudit($destination);
+                $jobs[] = $this->jobService->createJob($project, $this->npmAndYarnAnalysisService->isYarnAuditCommand($nodeAuditProcess), $this->resultToArray->resultToArray($nodeAuditProcess), $nodeAudit);
+            }
             if ($usestyleLine) {
                 $styleLineProcess = $this->lintService->runStyleLintAnalysis($destination);
-                $jobs[] = $this->jobService->createJob($project, 'Style Lint', $this->resultToArray->resultToArrayJs($styleLineProcess), $usestyleLine);
+                $jobs[] = $this->jobService->createJob($project, 'Style Lint', $this->resultToArray->resultToArrayStyle($styleLineProcess), $usestyleLine);
             }
             // Exécuter PHPStan
             if ($useComposer) {

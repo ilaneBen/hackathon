@@ -78,7 +78,7 @@ class RapportController extends AbstractController
     public function delete(Request $request, Rapport $rapport, EntityManagerInterface $entityManager): Response
     {
         $project = $rapport->getProject();
-        $message = 'rapport ' . $rapport->getContent() . ' a bien été suprimer';
+        $message = 'rapport '.$rapport->getContent().' a bien été suprimer';
         if (true) {
             $entityManager->remove($rapport);
             $entityManager->flush();
