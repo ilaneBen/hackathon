@@ -31,8 +31,23 @@
             </div>
         </div>
     </div>
-    {% include 'pdf/composerAudit.html.twig' %}
-    {% include 'pdf/phpStanJob.html.twig' %}
-    {% include 'pdf/phpcsJob.html.twig' %}
+    <div>
+        <h2 class="mb-3 mt-5">Détails des Jobs</h2>
+        {% set displayedJobTypes = [] %}
+        {% for job in rapport.project.job %}
+            {% if job.resultat == true and job.name not in displayedJobTypes %}
+                {% set displayedJobTypes = displayedJobTypes|merge([job.name]) %}
+                {% if job.name == "PHP Cs" %}
+                    {% include 'pdf/phpcsJob.html.twig' %}
+                {% elseif job.name == "PHP STAN" %}
+                    {% include 'pdf/phpStanJob.html.twig' %}
+                {% elseif job.name == "Composer Audit" %}
+                    {% include 'pdf/composerAudit.html.twig' %}
+                {% elseif job.name == "Style Lint" %}
+                    {% include 'pdf/StyleLintJob.html.twig' %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </div>
 </section>
 </html>

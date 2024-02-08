@@ -10,19 +10,13 @@
                         <div class="d-flex justify-content-around mt-5">
 
                             <div class="d-flex job-stat pt-2">
-                                <p> Warnings:</p>
+                                <p> Erreurs: </p>
                                 <div>
                                     <p class="badge bg-danger">{{ details['Total Job Warnings'] }}</p>
                                 </div>
                             </div>
                             <div class="d-flex job-stat pt-2">
-                                <p> Parse Errors:</p>
-                                <div>
-                                    <p class="badge bg-danger">{{ details['Total Job Parse Errors'] }}</p>
-                                </div>
-                            </div>
-                            <div class="d-flex job-stat pt-2">
-                                <p> Deprecations:</p>
+                                <p> Deprecations: </p>
                                 <div>
                                     <p class="badge bg-danger">{{ details['Total Job Deprecations'] }}</p>
                                 </div>
@@ -51,21 +45,15 @@
                                                         <p><strong>Nom du fichier </strong>{{ pathParts[1] }}</p>
                                                     </div>
                                                     <div class="d-flex job-stat ">
-                                                        <p> Warnings:</p>
+                                                        <p> Erreurs : </p>
                                                         <div>
                                                             <p class="badge bg-danger">{{ result.totalWarnings }}</p>
                                                         </div>
                                                     </div>
                                                     <div class="d-flex job-stat ">
-                                                        <p> Parse Errors:</p>
-                                                        <div>
-                                                            <p class="badge bg-danger">{{ result.totalParseErrors }}</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="d-flex job-stat ">
                                                         <p> Deprecations:</p>
                                                         <div>
-                                                            <p class="badge bg-danger">{{ result.totalDeprecations }}</p>
+                                                            <p class="badge bg-warning">{{ result.totalDeprecations }}</p>
                                                         </div>
                                                     </div>
                                                     <button class="btn btn-primary btn-close-white" type="button"
