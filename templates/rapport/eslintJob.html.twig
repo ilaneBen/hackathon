@@ -28,8 +28,8 @@
 								<p class=" badge bg-info">{{ totalFixable }}</p>
 							</div>
 
-							<button class="btn btn-dark btn-close-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEslint" aria-expanded="false" aria-controls="collapseEslint">
-								Voir détail
+							<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEslint" aria-expanded="false" aria-controls="collapseEslint">
+								Voir les détails
 							</button>
 						</div>
 					</div>
@@ -40,17 +40,23 @@
 							{% if eslintResults is not empty %}
 								{% for eslintResult in eslintResults %}
 									<div class="card my-3">
-										<div class="card-header">
-											<h6 class="card-title mb-0 d-flex justify-content-between align-items-center">
-												{% set pathParts = eslintResult.filePath|split('/' ~ rapport.tempDir ~ '/') %}
-												{{ pathParts[1] }}
-												<button class="btn btn-dark btn-close-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseResult{{ loop.index }}" aria-expanded="false" aria-controls="collapseResult{{ loop.index }}">
-													Afficher les détails
+										<div class="card-header d-flex justify-content-between align-items-center">
+											{% set pathParts = eslintResult.filePath|split('/' ~ rapport.tempDir ~ '/') %}
+											<p>{{ pathParts[1] }}</p>
+
+											<div class="d-flex justify-content-center align-items-center">
+												<span class="badge bg-danger me-2">Erreurs :
+													{{ eslintResult.errorCount }}</span>
+												<span class="badge bg-warning text-dark me-2">Avertissements :
+													{{ eslintResult.warningCount }}</span>
+
+												<button class="btn btn-dark btn-close-white" type="button" data-bs-toggle="collapse" data-bs-target="#eslint-collapse-result{{ loop.index }}" aria-expanded="false" aria-controls="eslint-collapse-result{{ loop.index }}">
+													Voir les détails
 												</button>
-											</h6>
+											</div>
 										</div>
 
-										<div class="collapse" id="collapseResult{{ loop.index }}">
+										<div class="collapse" id="eslint-collapse-result{{ loop.index }}">
 											<div class="card-body">
 												<p class="card-text mb-3">
 													<span class="badge bg-danger">Erreurs :
