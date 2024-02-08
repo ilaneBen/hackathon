@@ -45,6 +45,8 @@
                     {% include 'pdf/composerAudit.html.twig' %}
                 {% elseif job.name == "Style Lint" %}
                     {% include 'pdf/StyleLintJob.html.twig' %}
+                {% elseif job.name == "Eslint" %}
+                    {% include 'pdf/eslintJob.html.twig' %}
                 {% endif %}
             {% endif %}
         {% endfor %}

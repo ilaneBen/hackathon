@@ -1,0 +1,130 @@
+{% block body %}
+	<div class="mt-5">
+		{% if formattedJobs is not empty %}
+			{% for formattedJob in formattedJobs %}
+				{% set jobViewModel = formattedJob.jobViewModel %}
+				{% if jobViewModel.getName() == 'Eslint' %}
+					{% set totalErrors = formattedJob.details.totalErrors %}
+					{% set totalWarnings = formattedJob.details.totalWarnings %}
+					{% set totalFixable = formattedJob.details.totalFixable %}
+
+					<h3 class="text-center">{{ jobViewModel.getName() }}</h3>
+
+					<div class="resumer">
+						<div class="d-flex justify-content-between">
+							<div class="d-flex job-stat">
+								<p>Erreurs :</p>
+								<p class="badge bg-danger">{{ totalErrors }}
+								</p>
+							</div>
+
+							<div class="d-flex job-stat">
+								<p>Avertissements :</p>
+								<p class=" badge bg-warning">{{ totalWarnings }}</p>
+							</div>
+
+							<div class="d-flex job-stat">
+								<p>Réparables :</p>
+								<p class=" badge bg-info">{{ totalFixable }}</p>
+							</div>
+
+						</div>
+					</div>
+
+					<div class="collapse" id="collapseEslint">
+						<div class="card-body">
+							{% set eslintResults = formattedJob.details.eslintResults %}
+							{% if eslintResults is not empty %}
+								{% for eslintResult in eslintResults %}
+									<div class="card my-3">
+										<div class="card-header">
+											<h6 class="card-title mb-0 d-flex justify-content-between align-items-center">
+												{% set pathParts = eslintResult.filePath|split('/' ~ rapport.tempDir ~ '/') %}
+												{{ pathParts[1] }}
+
+											</h6>
+										</div>
+
+										<div class="collapse" id="collapseResult{{ loop.index }}">
+											<div class="card-body">
+												<p class="card-text mb-3">
+													<span class="badge bg-danger">Erreurs :
+														{{ eslintResult.errorCount }}</span>
+													<span class="badge bg-warning text-dark">Avertissements :
+														{{ eslintResult.warningCount }}</span>
+													<span class="badge bg-info text-dark">Erreurs fatales :
+														{{ eslintResult.fatalErrorCount }}</span>
+													<span class="badge bg-danger">Erreurs réparables :
+														{{ eslintResult.fixableErrorCount }}</span>
+													<span class="badge bg-warning text-dark">Avertissements réparables :
+														{{ eslintResult.fixableWarningCount }}</span>
+												</p>
+
+												{% if eslintResult.obseleteRules is not empty %}
+													<h6>Règles obsolètes :</h6>
+													<table class="table table-striped">
+														<thead>
+															<tr>
+																<th>ID Règle</th>
+																<th>Remplacée par</th>
+															</tr>
+														</thead>
+														<tbody>
+															{% for rule in eslintResult.obseleteRules %}
+																<tr>
+																	<td>{{ rule.ruleId }}</td>
+																	<td>
+																		{% if rule.replacedBy is empty %}
+																			None
+																		{% else %}
+																			{{ rule.replacedBy|join(', ') }}
+																		{% endif %}
+																	</td>
+																</tr>
+															{% endfor %}
+														</tbody>
+													</table>
+												{% endif %}
+
+												{% if eslintResult.messages is not empty %}
+													<h6>Messages :</h6>
+													<table class="table table-striped">
+														<thead>
+															<tr>
+																<th>Ligne</th>
+																<th>Colonne</th>
+																<th>ID Règles</th>
+																<th>Sévérité</th>
+																<th>Message</th>
+															</tr>
+														</thead>
+														<tbody>
+															{% for message in eslintResult.messages %}
+																<tr>
+																	<td>{{ message.line }}</td>
+																	<td>{{ message.column }}</td>
+																	<td>{{ message.ruleId }}</td>
+																	<td>{{ message.severity }}</td>
+																	<td>{{ message.message }}</td>
+																</tr>
+															{% endfor %}
+														</tbody>
+													</table>
+												{% endif %}
+
+											</div>
+										</div>
+									</div>
+								{% endfor %}
+							{% else %}
+								<p>No ESLint results available.</p>
+							{% endif %}
+						</div>
+					</div>
+				{% endif %}
+			{% endfor %}
+		{% else %}
+			<p>No formatted jobs available.</p>
+		{% endif %}
+	</div>
+{% endblock %}
