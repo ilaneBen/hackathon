@@ -14,24 +14,26 @@
                             {% for key, value in details %}
                                 <div class="{% if loop.first %}resumer{% else %}d-none{% endif %}">
                                     <div class="d-flex justify-content-between">
-                                        <div class="d-flex job-stat pt-2">
-                                            <span class="badge text-bg-danger">Total Vulnerabilities : {{ details['NPM Audit Results'][2]['Vulnerabilities']['total'] }}</span>
-                                        </div>
-                                        <div class="d-flex job-stat pt-2">
-                                            <span class="badge text-bg-warning">high : {{ details['NPM Audit Results'][2]['Vulnerabilities']['high'] }}</span>
-                                        </div>
-                                        <div class="d-flex job-stat pt-2">
-                                            <span class="badge text-bg-secondary">moderate : {{ details['NPM Audit Results'][2]['Vulnerabilities']['moderate'] }}</span>
-                                        </div>
-                                        <div class="d-flex job-stat pt-2">
-                                            <span class="badge text-bg-info"> info : {{ details['NPM Audit Results'][2]['Vulnerabilities']['info'] }}</span>
-                                        </div>
-                                        <div class="d-flex job-stat pt-2">
-                                            <span class="badge text-bg-dark"> critical : {{ details['NPM Audit Results'][2]['Vulnerabilities']['critical'] }}</span>
-                                        </div>
-                                        <div class="d-flex job-stat pt-2">
+                                        <div class="d-flex">
+                                            <div class="d-flex me-2 job-stat pt-2">
+                                                <span class="badge text-bg-danger">Total Vulnerabilities : {{ details['NPM Audit Results'][2]['Vulnerabilities']['total'] }}</span>
+                                            </div>
+                                            <div class="d-flex me-2 job-stat pt-2">
+                                                <span class="badge text-bg-warning">high : {{ details['NPM Audit Results'][2]['Vulnerabilities']['high'] }}</span>
+                                            </div>
+                                            <div class="d-flex me-2 job-stat pt-2">
+                                                <span class="badge text-bg-secondary">moderate : {{ details['NPM Audit Results'][2]['Vulnerabilities']['moderate'] }}</span>
+                                            </div>
+                                            <div class="d-flex me-2 job-stat pt-2">
+                                                <span class="badge text-bg-info"> info : {{ details['NPM Audit Results'][2]['Vulnerabilities']['info'] }}</span>
+                                            </div>
+                                            <div class="d-flex me-2 job-stat pt-2">
+                                                <span class="badge text-bg-dark"> critical : {{ details['NPM Audit Results'][2]['Vulnerabilities']['critical'] }}</span>
+                                            </div>
+                                            <div class="d-flex me-2 job-stat pt-2">
                                             <span class="badge text-bg-light">low :
                                             {{ details['NPM Audit Results'][2]['Vulnerabilities']['low'] }}</span>
+                                            </div>
                                         </div>
                                         <a class="btn btn btn-primary" data-bs-toggle="collapse"
                                            href="#collapse-result-NPMAudit" role="button"
