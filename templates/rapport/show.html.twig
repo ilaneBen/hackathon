@@ -1,5 +1,3 @@
-{# templates/rapport/show.html.twig #}
-
 {% extends 'base.html.twig' %}
 
 {% block title %}Détails du Rapport
@@ -45,6 +43,10 @@
 						{% include 'rapport/eslintJob.html.twig' %}
 					{% elseif job.name == "Style Lint" %}
 						{% include 'rapport/StyleLintJob.html.twig' %}
+					{% elseif job.name == "Yarn audit" %}
+						{% include 'rapport/yarnJob.html.twig' %}
+					{% elseif job.name == "NPM audit" %}
+						{% include 'rapport/npmJob.html.twig' %}
 					{% endif %}
 				{% endif %}
 			{% endfor %}

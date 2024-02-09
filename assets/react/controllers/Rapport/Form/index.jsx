@@ -10,6 +10,7 @@ export default function ({ closeRef, project }) {
     usePHPCS: true,
     useStyleLine: true,
     useEslint: true,
+    useAuditJS: true,
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -33,6 +34,7 @@ export default function ({ closeRef, project }) {
     formData.set("useStyleLine", toolSettings.useStyleLine ? "1" : "0");
     formData.set("usePHPVersion", (toolSettings.usePHPVersion = "1"));
     formData.set("useEslint", toolSettings.useEslint ? "1" : "0");
+    formData.set("useAuditJS", toolSettings.useAuditJS ? "1" : "0");
 
     try {
       const response = await fetch(`/api/git/clone/${project.id}`, {
@@ -135,7 +137,22 @@ export default function ({ closeRef, project }) {
         </label>
         Utiliser Eslint
       </div>
-
+        <hr />
+        <div className="d-flex justify-content-center">
+            <h6>Audit NPM & Yarn</h6>
+        </div>
+        <div className="form-check form-switch">
+            <label className="form-check-label">
+                <input
+                    className="form-check-input"
+                    type="checkbox"
+                    name="useAuditJS"
+                    checked={toolSettings.useAuditJS}
+                    onChange={() => handleChange("useAuditJS")}
+                />
+            </label>
+            Utiliser Audit NPM ou Yarn
+        </div>
       <div className="form-group">
         <div className="form-group">
           <Button text="Créer" loadingText="Création..." isLoading={isLoading} />
