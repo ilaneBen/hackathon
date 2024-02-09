@@ -47,23 +47,58 @@
                                 <div class="collapse" id="collapse-result-NPMAudit">
                                     {% if key == 'NPM Audit Results' %}
                                         {% for npmAuditResult in value %}
-                                            <div class="mb-4">
+                                            {% if npmAuditResult.Index == 2 %}
 
                                                 {% if npmAuditResult['SpecificData'] is not empty %}
+
                                                     {% for dependency, details in npmAuditResult['SpecificData'] %}
-                                                        <div class="border border-danger p-3 mb-3">
-                                                            <p><strong>Dependency Name:</strong> {{ details.name ?? "N/A" }}</p>
-                                                            <p><strong>Details:</strong> {{ details.nodes[0] ?? "N/A" }}</p>
-                                                            <p><strong>Range:</strong> {{ details.range ?? "N/A" }}</p>
-                                                            <p><strong>Effects:</strong> {{ details.effects[0] ?? "N/A" }}</p>
-                                                            <p><strong>Fix Available:</strong> {{ details.fixAvailable.name ?? "N/A" }}</p>
-                                                            <p><strong>Fix Available Version:</strong> {{ details.fixAvailable.version ?? "N/A" }}</p>
-                                                            <p><strong>Severity:</strong> {{ details.severity ?? "N/A" }}</p>
+                                                        <div class="card my-3">
+                                                            <div class="card-header d-flex align-items-center justify-content-between">
+                                                                <p><strong>Dependency
+                                                                        Name:</strong> {{ details.name ?? "N/A" }}</p>
+                                                                <div>
+                                                                    <button type="button"
+                                                                            class="btn btn-dark btn-close-white"
+                                                                            data-bs-toggle="collapse"
+                                                                            data-bs-target="#npm-audit-collapse-result-{{ loop.index }}"
+                                                                            aria-expanded="false"
+                                                                            aria-controls="yarn-audit-collapse-result-{{ loop.index }}">
+                                                                        Voir detail
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="collapse "
+                                                                 id="npm-audit-collapse-result-{{ loop.index }}">
+                                                                <table class="table table-striped">
+                                                                    <thead class="thead-dark">
+                                                                    <tr>
+                                                                        <th>Details:</th>
+                                                                        <th>Range:</th>
+                                                                        <th>Effects:</th>
+                                                                        <th>Fix Available:</th>
+                                                                        <th>Fix Available Version:</th>
+                                                                        <th>Severity:</th>
+                                                                    </tr>
+                                                                    </thead>
+
+                                                                    <tbody>
+                                                                    <tr>
+                                                                        <td>{{ details.nodes[0] ?? "N/A" }}</td>
+                                                                        <td>{{ details.range ?? "N/A" }}</td>
+                                                                        <td>{{ details.effects[0] ?? "N/A" }}</td>
+                                                                        <td>{{ details.fixAvailable.name ?? "N/A" }}</td>
+                                                                        <td>{{ details.fixAvailable.version ?? "N/A" }}</td>
+                                                                        <td> {{ details.severity ?? "N/A" }}</td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
                                                         </div>
                                                     {% endfor %}
                                                 {% else %}
                                                 {% endif %}
-                                            </div>
+
+                                            {% endif %}
                                         {% endfor %}
                                     {% endif %}
                                 </div>
