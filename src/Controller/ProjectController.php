@@ -59,6 +59,12 @@ class ProjectController extends AbstractController
         // Récupérer l'utilisateur actuel
         $currentUser = $this->getUser();
 
+        if (!$currentUser) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+
+            return $this->redirectToRoute('home');
+        }
+
         // Vérifier si un utilisateur est connecté et s'il est le propriétaire du projet
         if ($currentUser !== $project->getUser()) {
             $this->addFlash('error', 'Vous n\'avez pas accès à ce projet.');

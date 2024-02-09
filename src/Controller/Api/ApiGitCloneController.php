@@ -46,6 +46,29 @@ class ApiGitCloneController extends AbstractController
     #[Route('/clone/{project}', name: 'clone')]
     public function gitClone(Project $project, Request $request): Response
     {
+        // Vérifier si un utilisateur est connecté
+        if (!$user = $this->getUser()) {
+            return $this->json([
+                'code' => 403,
+                'message' => 'Il faut être connecté pour accéder à cette ressource',
+            ]);
+        }
+
+        if (!$project) {
+            return $this->json([
+                'code' => 400,
+                'message' => "Ce projet n'existe pas",
+            ]);
+        }
+
+        // Vérifier si l'utilisateur actuel est le propriétaire du projet
+        if ($user !== $project->getUser()) {
+            return $this->json([
+                'code' => 403,
+                'message' => "Vous n'êtes pas le propriétaire du projet",
+            ]);
+        }
+
         $repoUid = Uuid::v4()->jsonSerialize();
         // dd($repoUid);
         // Récupérer l'URL du dépôt Git depuis la requête
@@ -64,7 +87,7 @@ class ApiGitCloneController extends AbstractController
         // Chemin relatif du répertoire de destination
         $destination = realpath(__DIR__ . '/../../../public/' . $directory);
 
-        // Vérifier que le dossier repoClone_.$repoUid existe bien après le clonage
+        // Vérifier que le dossier repoClone_.$repoUid existe bien après le clonage (return si repo git privé ou si repo gi inexistant)
         if (!is_dir($destination)) {
             return $this->json([
                 'code' => 500,

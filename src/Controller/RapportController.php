@@ -4,20 +4,34 @@ namespace App\Controller;
 
 use App\Entity\Rapport;
 use App\Model\JobViewModel;
-use Doctrine\ORM\EntityManagerInterface;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/rapport')]
+#[Route('/rapport', name: 'rapport_')]
 class RapportController extends AbstractController
 {
-    #[Route('/{id}', name: 'app_rapport_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'show', methods: ['GET'])]
     public function showRapport(Rapport $rapport): Response
     {
+        // Récupérer l'utilisateur actuel
+        $currentUser = $this->getUser();
+
+        if (!$currentUser) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+
+            return $this->redirectToRoute('home');
+        }
+
+        // Vérifier si un utilisateur est connecté et s'il est le propriétaire du projet
+        if ($currentUser !== $rapport->getProject()->getUser()) {
+            $this->addFlash('error', 'Vous n\'avez pas accès à ce rapport.');
+
+            return $this->redirectToRoute('home'); // Remplacez 'home' par le nom de votre route d'accueil
+        }
+
         $formattedJobs = [];
 
         foreach ($rapport->getJob() as $job) {
@@ -34,9 +48,25 @@ class RapportController extends AbstractController
         ]);
     }
 
-    #[Route('pdf/{id}', name: 'app_rapport_show_pdf', methods: ['GET'])]
+    #[Route('/pdf/{id}', name: 'show_pdf', methods: ['GET'])]
     public function pdfRapport(Rapport $rapport): Response
     {
+        // Récupérer l'utilisateur actuel
+        $currentUser = $this->getUser();
+
+        if (!$currentUser) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+
+            return $this->redirectToRoute('home');
+        }
+
+        // Vérifier si un utilisateur est connecté et s'il est le propriétaire du projet
+        if ($currentUser !== $rapport->getProject()->getUser()) {
+            $this->addFlash('error', 'Vous n\'avez pas accès à ce projet.');
+
+            return $this->redirectToRoute('home'); // Remplacez 'home' par le nom de votre route d'accueil
+        }
+
         $formattedJobs = [];
 
         foreach ($rapport->getJob() as $job) {
@@ -71,19 +101,5 @@ class RapportController extends AbstractController
         $response->headers->set('Content-Disposition', 'inline; filename="rapport.pdf"');
 
         return $response;
-    }
-    // Configure dompdf
-
-    #[Route('/{id}', name: 'app_rapport_delete', methods: ['POST'])]
-    public function delete(Request $request, Rapport $rapport, EntityManagerInterface $entityManager): Response
-    {
-        $project = $rapport->getProject();
-        $message = 'rapport '.$rapport->getContent().' a bien été suprimer';
-        if (true) {
-            $entityManager->remove($rapport);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('project_show', ['id' => $project->getId(), 'message' => $message], Response::HTTP_SEE_OTHER);
     }
 }

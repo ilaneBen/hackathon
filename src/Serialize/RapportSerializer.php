@@ -43,11 +43,9 @@ class RapportSerializer
         $serializedRapport = [
             'id' => $rapport->getId(),
             'date' => $rapport->getDate()->format('d-m-Y H:i'),
-            'showUrl' => $this->router->generate('app_rapport_show', ['id' => $rapport->getId()]),
-            'deleteUrl' => $this->router->generate('app_rapport_delete', ['id' => $rapport->getId()]),
-            'deleteCsrf' => $this->csrf->refreshToken('delete'.$rapport->getId())->getValue(),
-
-            // 'showUrl' => $this->router->generate('api_rapport_show', ['id' => $rapport->getId()]),
+            'showUrl' => $this->router->generate('rapport_show', ['id' => $rapport->getId()]),
+            'deleteUrl' => $this->router->generate('rapport_delete', ['id' => $rapport->getId()]),
+            'deleteCsrf' => $this->csrf->refreshToken('delete' . $rapport->getId())->getValue(),
         ];
 
         return $serializedRapport;

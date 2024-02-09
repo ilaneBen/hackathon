@@ -21,10 +21,26 @@ class ApiRapportController extends AbstractController
     #[Route('/{id}', name: 'delete', methods: ['POST'])]
     public function delete(Request $request, Rapport $rapport, EntityManagerInterface $entityManager): Response
     {
+        // Vérifier si un utilisateur est connecté
+        if (!$user = $this->getUser()) {
+            return $this->json([
+                'code' => 403,
+                'message' => 'Il faut être connecté pour accéder à cette ressource',
+            ]);
+        }
+
         if (!$rapport) {
             return $this->json([
                 'code' => 400,
                 'message' => "Ce rapport n'existe pas.",
+            ]);
+        }
+
+        // Vérifier si l'utilisateur actuel est le propriétaire du projet
+        if ($user !== $rapport->getProject()->getUser()) {
+            return $this->json([
+                'code' => 403,
+                'message' => "Vous n'êtes pas le propriétaire du rapport",
             ]);
         }
 
@@ -38,7 +54,7 @@ class ApiRapportController extends AbstractController
             ]);
         }
 
-        if ($this->isCsrfTokenValid('delete'.$rapport->getId(), $inputBag->get('deleteCsrf'))) {
+        if ($this->isCsrfTokenValid('delete' . $rapport->getId(), $inputBag->get('deleteCsrf'))) {
             $entityManager->remove($rapport);
             $entityManager->flush();
 
