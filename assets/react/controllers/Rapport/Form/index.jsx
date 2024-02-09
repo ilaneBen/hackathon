@@ -43,6 +43,7 @@ export default function ({ closeRef, project }) {
       });
 
       const responseData = await response.json();
+      console.log(responseData.code);
 
       if (responseData.code === 200) {
         const rapportId = responseData.rapportId;
@@ -50,7 +51,7 @@ export default function ({ closeRef, project }) {
         closeRef.current.click();
         window.location.href = `/rapport/${rapportId}`;
       } else {
-        toast.error("La requête a échoué avec le code :", responseData.code);
+        toast.error(responseData.message);
       }
     } catch (error) {
       toast.error("Une erreur est survenue lors de la création du rapport.");
@@ -137,22 +138,22 @@ export default function ({ closeRef, project }) {
         </label>
         Utiliser Eslint
       </div>
-        <hr />
-        <div className="d-flex justify-content-center">
-            <h6>Audit NPM & Yarn</h6>
-        </div>
-        <div className="form-check form-switch">
-            <label className="form-check-label">
-                <input
-                    className="form-check-input"
-                    type="checkbox"
-                    name="useAuditJS"
-                    checked={toolSettings.useAuditJS}
-                    onChange={() => handleChange("useAuditJS")}
-                />
-            </label>
-            Utiliser Audit NPM ou Yarn
-        </div>
+      <hr />
+      <div className="d-flex justify-content-center">
+        <h6>Audit NPM & Yarn</h6>
+      </div>
+      <div className="form-check form-switch">
+        <label className="form-check-label">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            name="useAuditJS"
+            checked={toolSettings.useAuditJS}
+            onChange={() => handleChange("useAuditJS")}
+          />
+        </label>
+        Utiliser Audit NPM ou Yarn
+      </div>
       <div className="form-group">
         <div className="form-group">
           <Button text="Créer" loadingText="Création..." isLoading={isLoading} />
