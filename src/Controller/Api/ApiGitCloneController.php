@@ -80,12 +80,12 @@ class ApiGitCloneController extends AbstractController
                 'message' => 'Aucun dépôt sélectionné',
             ]);
         }
-        $directory = 'repoClone_' . $repoUid;
+        $directory = 'repoClone_'.$repoUid;
         // Cloner le dépôt Git
         $this->gitCloningService->cloneRepository($repositoryUrl, $directory);
 
         // Chemin relatif du répertoire de destination
-        $destination = realpath(__DIR__ . '/../../../public/' . $directory);
+        $destination = realpath(__DIR__.'/../../../public/'.$directory);
 
         // Vérifier que le dossier repoClone_.$repoUid existe bien après le clonage (return si repo git privé ou si repo gi inexistant)
         if (!is_dir($destination)) {
