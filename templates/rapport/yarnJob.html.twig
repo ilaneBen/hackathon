@@ -17,17 +17,17 @@
                                                 <div class="d-flex job-stat">
                                                     <p>Total Vulnerabilities :</p>
                                                     {% if value['Total Vulnerabilities'] is defined %}
-                                                        <p class="badge bg-danger">
+                                                        <p class="badge text-bg-danger">
                                                             {{ value['Total Vulnerabilities'] }}
                                                         </p>
                                                     {% else %}
-                                                        <p class="badge bg-danger">0</p>
+                                                        <p class="badge text-bg-danger">0</p>
                                                     {% endif %}
                                                 </div>
 
                                                 <div>
                                                     <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#collapse-result-YarnAudit" aria-expanded="false" aria-controls="collapse-result-YarnAudit">
-                                                        View Details
+                                                        Voir detail
                                                     </button>
                                                 </div>
                                             </div>
@@ -40,7 +40,7 @@
                                                         <p>Total Vulnerabilities: {{ yarnAuditResult['Total Vulnerabilities'] }}</p>
                                                         <div>
                                                             <button type="button" class="btn btn-dark btn-close-white" data-bs-toggle="collapse" data-bs-target="#yarn-audit-collapse-result-{{ loop.index }}" aria-expanded="false" aria-controls="yarn-audit-collapse-result-{{ loop.index }}">
-                                                                View Details
+                                                                Voir detail
                                                             </button>
                                                         </div>
                                                     </div>

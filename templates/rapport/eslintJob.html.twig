@@ -14,7 +14,7 @@
 						<div class="d-flex justify-content-between">
 							<div class="d-flex job-stat">
 								<p>Erreurs :</p>
-								<p class="badge bg-danger">{{ totalErrors }}
+								<p class="badge text-bg-danger">{{ totalErrors }}
 								</p>
 							</div>
 
@@ -53,13 +53,13 @@
 										<div class="collapse" id="collapseResult{{ loop.index }}">
 											<div class="card-body">
 												<p class="card-text mb-3">
-													<span class="badge bg-danger">Erreurs :
+													<span class="badge text-bg-danger">Erreurs :
 														{{ eslintResult.errorCount }}</span>
 													<span class="badge bg-warning text-dark">Avertissements :
 														{{ eslintResult.warningCount }}</span>
 													<span class="badge bg-info text-dark">Erreurs fatales :
 														{{ eslintResult.fatalErrorCount }}</span>
-													<span class="badge bg-danger">Erreurs réparables :
+													<span class="badge text-bg-danger">Erreurs réparables :
 														{{ eslintResult.fixableErrorCount }}</span>
 													<span class="badge bg-warning text-dark">Avertissements réparables :
 														{{ eslintResult.fixableWarningCount }}</span>

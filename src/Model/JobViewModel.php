@@ -96,7 +96,6 @@ class JobViewModel
                 'Erreurs' => $result['errors'] ?? 0,
                 'Avertissements' => $result['warnings'] ?? 0,
                 'Fichiers' => $files,
-                // Ajoutez d'autres éléments si nécessaire
             ];
         }
 
@@ -287,24 +286,39 @@ class JobViewModel
     private function getNpmAuditDetails(array $npmAuditDetails): array
     {
         $npmAuditResults = [];
+        $specificDataIndex2 = [];
 
-        foreach ($npmAuditDetails['result'] as $index => $result) {
-            if (0 === $index) {
-                // Skip the first result (assuming it's an integer)
-                continue;
-            }
-
+        foreach ($npmAuditDetails['result'] as $resultIndex => $result) {
             $dependencies = $result['dependencies'] ?? [];
             $vulnerabilities = $result['vulnerabilities'] ?? [];
+            $specificData = [];
+
+            // Assurez-vous que $result est un tableau avant d'essayer de l'itérer
+            if (is_array($result)) {
+                foreach ($result as $dependencyName => $dependencyData) {
+                    // Ignorer les clés "dependencies" et "vulnerabilities"
+                    if ('dependencies' !== $dependencyName && 'vulnerabilities' !== $dependencyName) {
+                        $specificData[$dependencyName] = $dependencyData;
+                    }
+                }
+            }
 
             $npmAuditResults[] = [
+                'Index' => $resultIndex + 1,
                 'Dependencies' => $dependencies,
                 'Vulnerabilities' => $vulnerabilities,
+                'SpecificData' => $specificData,
             ];
+
+            // Stocker les données spécifiques à l'index 2
+            if (1 === $resultIndex) {
+                $specificDataIndex2 = $specificData;
+            }
         }
 
         return [
-            'Npm Audit Results' => $npmAuditResults,
+            'NPM Audit Results' => $npmAuditResults,
+            'SpecificDataIndex2' => $specificDataIndex2,
         ];
     }
 }
