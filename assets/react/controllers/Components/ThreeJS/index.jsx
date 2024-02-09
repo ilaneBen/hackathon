@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import {OrbitControls} from "three/addons/controls/OrbitControls";
 
-export default function monkey(width, height, ref, location) {
+export default function monkey(width, height, ref, location, interactiveCamera=false) {
   const path = location === "header" ? "/animation/monkey_header.glb" : "/animation/monkey_footer.glb";
 
   const scene = new THREE.Scene();
@@ -18,6 +19,11 @@ export default function monkey(width, height, ref, location) {
   renderer.setSize(width, height);
   renderer.setAnimationLoop(animation);
   renderer.shadowMap.enabled = true; // Ombres
+
+  if(interactiveCamera) {
+    const controls = new OrbitControls( camera, renderer.domElement );
+    controls.update();
+  }
 
   let monkey;
   let pivot;
