@@ -53,58 +53,62 @@ export default function ({ title, projectsUrl, newProjectPath }) {
         </button>
       </div>
 
-      <div className="table-responsive">
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nom</th>
-              <th>Lien repo</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {finalProjets.map((project) => (
-              <Fragment key={project.id}>
-                <tr>
-                  <td>{project.id}</td>
-                  <td>{project.name}</td>
-                  <td>
-                    <a href={project.url} target="_blank" rel="noopener noreferrer">
-                      {project.url}
-                    </a>
-                  </td>
-                  <td className="actions-row">
-                    <a href={project.showUrl} className="btn btn-primary btn-sm">
-                      <i className="bi bi-eye-fill"></i>
-                    </a>
+      {finalProjets.length > 0 ? (
+        <div className="table-responsive">
+          <table className="table table-striped">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Lien repo</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {finalProjets.map((project) => (
+                <Fragment key={project.id}>
+                  <tr>
+                    <td>{project.id}</td>
+                    <td>{project.name}</td>
+                    <td>
+                      <a href={project.url} target="_blank" rel="noopener noreferrer">
+                        {project.url}
+                      </a>
+                    </td>
+                    <td className="actions-row">
+                      <a href={project.showUrl} className="btn btn-primary btn-sm">
+                        <i className="bi bi-eye-fill"></i>
+                      </a>
 
-                    <button
-                      type="button"
-                      className="btn btn-secondary btn-sm"
-                      data-bs-toggle="modal"
-                      data-bs-target="#projectModal"
-                      onClick={() => toggleForm("edit", project)}
-                    >
-                      <i className="bi bi-pencil-square"></i>
-                    </button>
+                      <button
+                        type="button"
+                        className="btn btn-secondary btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#projectModal"
+                        onClick={() => toggleForm("edit", project)}
+                      >
+                        <i className="bi bi-pencil-square"></i>
+                      </button>
 
-                    <button
-                      type="button"
-                      className="btn btn-danger btn-sm"
-                      data-bs-toggle="modal"
-                      data-bs-target="#projectModal"
-                      onClick={() => handleDelete(project)}
-                    >
-                      <i className="bi bi-trash-fill"></i>
-                    </button>
-                  </td>
-                </tr>
-              </Fragment>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                      <button
+                        type="button"
+                        className="btn btn-danger btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#projectModal"
+                        onClick={() => handleDelete(project)}
+                      >
+                        <i className="bi bi-trash-fill"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </Fragment>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p class="text-center">Vous n'avez aucun projet.</p>
+      )}
 
       <Modal
         closeRef={closeRef}
