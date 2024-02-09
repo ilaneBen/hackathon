@@ -4,24 +4,24 @@
             {% for formattedJob in formattedJobs %}
                 {% set jobViewModel = formattedJob.jobViewModel %}
                 {% if jobViewModel.getName() == 'Yarn audit' %}
-                    <div>
+                    <div class="card mb-3">
+                        <div class="card-header">
                         <h3 class="text-center">{{ jobViewModel.getName() }}</h3>
+                        </div>
                         <p>{% set details = formattedJob.details %}</p>
-
-                        {% if details is defined %}
+                        <div class="card-body">
+                            {% if details is defined %}
                             {% for key, value in details %}
                                 {% if key == 'Yarn Audit Results' %}
                                     {% if value is not empty %}
                                         <div class="{% if loop.first %}resumer{% else %}d-none{% endif %}">
                                             <div class="d-flex justify-content-between">
                                                 <div class="d-flex job-stat">
-                                                    <p>Total Vulnerabilities :</p>
-                                                    {% if value['Total Vulnerabilities'] is defined %}
-                                                        <p class="badge text-bg-danger">
-                                                            {{ value['Total Vulnerabilities'] }}
-                                                        </p>
+                                                    {% if details['Total Vulnerabilities'] is defined %}
+                                                        <span class="badge text-bg-danger">Total Vulnerabilities :  {{ details['Total Vulnerabilities'] }}
+                                                        </span>
                                                     {% else %}
-                                                        <p class="badge text-bg-danger">0</p>
+                                                        <span class="badge text-bg-danger">Total Vulnerabilities : 0</span>
                                                     {% endif %}
                                                 </div>
 
@@ -45,26 +45,28 @@
                                                         </div>
                                                     </div>
                                                     <div class="collapse" id="yarn-audit-collapse-result-{{ loop.index }}">
-                                                        <table class="table table-striped">
-                                                            <thead class="thead-dark">
-                                                            <tr>
-                                                                <th>CVE</th>
-                                                                <th>Link</th>
-                                                                <th>Title</th>
-                                                                <th>Severity</th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            {% for vulnerability in yarnAuditResult['Vulnerabilities'] %}
+                                                        <div class="card-body">
+                                                            <table class="table table-striped">
+                                                                <thead class="thead-dark">
                                                                 <tr>
-                                                                    <td>{{ vulnerability['CVE'] }}</td>
-                                                                    <td><a href="{{ vulnerability['Link'] }}" target="_blank">{{ vulnerability['Link'] }}</a></td>
-                                                                    <td>{{ vulnerability['Title'] }}</td>
-                                                                    <td>{{ vulnerability['Severity'] }}</td>
+                                                                    <th>CVE</th>
+                                                                    <th>Link</th>
+                                                                    <th>Title</th>
+                                                                    <th>Severity</th>
                                                                 </tr>
-                                                            {% endfor %}
-                                                            </tbody>
-                                                        </table>
+                                                                </thead>
+                                                                <tbody>
+                                                                {% for vulnerability in yarnAuditResult['Vulnerabilities'] %}
+                                                                    <tr>
+                                                                        <td>{{ vulnerability['CVE'] }}</td>
+                                                                        <td><a href="{{ vulnerability['Link'] }}" target="_blank">{{ vulnerability['Link'] }}</a></td>
+                                                                        <td>{{ vulnerability['Title'] }}</td>
+                                                                        <td>{{ vulnerability['Severity'] }}</td>
+                                                                    </tr>
+                                                                {% endfor %}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             {% endfor %}
@@ -73,14 +75,12 @@
                                         <p>No data available for Yarn Audit</p>
                                     {% endif %}
                                 {% else %}
-                                    <p>
-                                        {{ value }}
-                                    </p>
                                 {% endif %}
                             {% endfor %}
                         {% else %}
                             <p>No details available for this Job</p>
                         {% endif %}
+                        </div>
                     </div>
                 {% endif %}
             {% endfor %}

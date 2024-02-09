@@ -30,9 +30,8 @@
 		<div>
 			<h2 class="mb-3 mt-5">Détails des Jobs</h2>
 			{% set displayedJobTypes = [] %}
-			{% for job in rapport.project.job %}
+			{% for job in rapport.job %}
 				{% if job.resultat == true and job.name not in displayedJobTypes %}
-					{% set displayedJobTypes = displayedJobTypes|merge([job.name]) %}
 					{% if job.name == "PHP Cs" %}
 						{% include 'rapport/phpcsJob.html.twig' %}
 					{% elseif job.name == "PHP STAN" %}

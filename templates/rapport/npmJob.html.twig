@@ -4,47 +4,44 @@
             {% for formattedJob in formattedJobs %}
                 {% set jobViewModel = formattedJob.jobViewModel %}
                 {% if jobViewModel.getName() == 'NPM audit' %}
-                    <div class="">
-                        <h3 class="text-center">{{ jobViewModel.getName() }}</h3>
-                        <p>{% set details = formattedJob.details %}</p>
-
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h3 class="text-center">{{ jobViewModel.getName() }}</h3>
+                            <p>{% set details = formattedJob.details %}</p>
+                        </div>
+                        <div class="card-body">
                         {% if details is defined %}
                             {% for key, value in details %}
                                 <div class="{% if loop.first %}resumer{% else %}d-none{% endif %}">
                                     <div class="d-flex justify-content-between">
                                         <div class="d-flex job-stat pt-2">
-                                            <p>Total Vulnerabilities :</p>
-                                            <p class="badge text-bg-danger">{{ details['NPM Audit Results'][2]['Vulnerabilities']['total'] }}</p>
+                                            <span class="badge text-bg-danger">Total Vulnerabilities : {{ details['NPM Audit Results'][2]['Vulnerabilities']['total'] }}</span>
                                         </div>
                                         <div class="d-flex job-stat pt-2">
-                                            <p>high :</p>
-                                            <p class="badge text-bg-warning">{{ details['NPM Audit Results'][2]['Vulnerabilities']['high'] }}</p>
+                                            <span class="badge text-bg-warning">high : {{ details['NPM Audit Results'][2]['Vulnerabilities']['high'] }}</span>
                                         </div>
                                         <div class="d-flex job-stat pt-2">
-                                            <p>moderate :</p>
-                                            <p class="badge text-bg-secondary">{{ details['NPM Audit Results'][2]['Vulnerabilities']['moderate'] }}</p>
+                                            <span class="badge text-bg-secondary">moderate : {{ details['NPM Audit Results'][2]['Vulnerabilities']['moderate'] }}</span>
                                         </div>
                                         <div class="d-flex job-stat pt-2">
-                                            <p>info :</p>
-                                            <p class="badge text-bg-info">{{ details['NPM Audit Results'][2]['Vulnerabilities']['info'] }}</p>
+                                            <span class="badge text-bg-info"> info : {{ details['NPM Audit Results'][2]['Vulnerabilities']['info'] }}</span>
                                         </div>
                                         <div class="d-flex job-stat pt-2">
-                                            <p>critical :</p>
-                                            <p class="badge text-bg-dark">{{ details['NPM Audit Results'][2]['Vulnerabilities']['critical'] }}</p>
+                                            <span class="badge text-bg-dark"> critical : {{ details['NPM Audit Results'][2]['Vulnerabilities']['critical'] }}</span>
                                         </div>
                                         <div class="d-flex job-stat pt-2">
-                                            <p>low :</p>
-                                            <p class="badge text-bg-light">{{ details['NPM Audit Results'][2]['Vulnerabilities']['low'] }}</p>
+                                            <span class="badge text-bg-light">low :
+                                            {{ details['NPM Audit Results'][2]['Vulnerabilities']['low'] }}</span>
                                         </div>
-                                        <a class="btn btn-dark btn-close-white" data-bs-toggle="collapse"
+                                        <a class="btn btn btn-primary" data-bs-toggle="collapse"
                                            href="#collapse-result-NPMAudit" role="button"
                                            aria-expanded="false"
                                            aria-controls="collapse-result-NPMAudit">
-                                            Voir detail
+                                            Voir les detail
                                         </a>
                                     </div>
                                 </div>
-                                <div class="collapse" id="collapse-result-NPMAudit">
+                                <div class="collapse  " id="collapse-result-NPMAudit">
                                     {% if key == 'NPM Audit Results' %}
                                         {% for npmAuditResult in value %}
                                             {% if npmAuditResult.Index == 2 %}
@@ -55,7 +52,8 @@
                                                         <div class="card my-3">
                                                             <div class="card-header d-flex align-items-center justify-content-between">
                                                                 <p><strong>Dependency
-                                                                        Name:</strong> {{ details.name ?? "N/A" }}</p>
+                                                                        Name:</strong> {{ details.name ?? "N/A" }}
+                                                                </p>
                                                                 <div>
                                                                     <button type="button"
                                                                             class="btn btn-dark btn-close-white"
@@ -67,31 +65,32 @@
                                                                     </button>
                                                                 </div>
                                                             </div>
-                                                            <div class="collapse "
-                                                                 id="npm-audit-collapse-result-{{ loop.index }}">
-                                                                <table class="table table-striped">
-                                                                    <thead class="thead-dark">
-                                                                    <tr>
-                                                                        <th>Details:</th>
-                                                                        <th>Range:</th>
-                                                                        <th>Effects:</th>
-                                                                        <th>Fix Available:</th>
-                                                                        <th>Fix Available Version:</th>
-                                                                        <th>Severity:</th>
-                                                                    </tr>
-                                                                    </thead>
+                                                            <div class="collapse " id="npm-audit-collapse-result-{{ loop.index }}">
+                                                                <div class="card-body">
+                                                                    <table class="table table-striped">
+                                                                        <thead class="thead-dark">
+                                                                        <tr>
+                                                                            <th>Details:</th>
+                                                                            <th>Range:</th>
+                                                                            <th>Effects:</th>
+                                                                            <th>Fix Available:</th>
+                                                                            <th>Fix Available Version:</th>
+                                                                            <th>Severity:</th>
+                                                                        </tr>
+                                                                        </thead>
 
-                                                                    <tbody>
-                                                                    <tr>
-                                                                        <td>{{ details.nodes[0] ?? "N/A" }}</td>
-                                                                        <td>{{ details.range ?? "N/A" }}</td>
-                                                                        <td>{{ details.effects[0] ?? "N/A" }}</td>
-                                                                        <td>{{ details.fixAvailable.name ?? "N/A" }}</td>
-                                                                        <td>{{ details.fixAvailable.version ?? "N/A" }}</td>
-                                                                        <td> {{ details.severity ?? "N/A" }}</td>
-                                                                    </tr>
-                                                                    </tbody>
-                                                                </table>
+                                                                        <tbody>
+                                                                        <tr>
+                                                                            <td>{{ details.nodes[0] ?? "N/A" }}</td>
+                                                                            <td>{{ details.range ?? "N/A" }}</td>
+                                                                            <td>{{ details.effects[0] ?? "N/A" }}</td>
+                                                                            <td>{{ details.fixAvailable.name ?? "N/A" }}</td>
+                                                                            <td>{{ details.fixAvailable.version ?? "N/A" }}</td>
+                                                                            <td> {{ details.severity ?? "N/A" }}</td>
+                                                                        </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     {% endfor %}
@@ -104,8 +103,9 @@
                                 </div>
                             {% endfor %}
                         {% else %}
-                            <p>No details available for this Job</p>
+                            <p>No details available for this  Job</p>
                         {% endif %}
+                        </div>
                     </div>
                 {% endif %}
             {% endfor %}
