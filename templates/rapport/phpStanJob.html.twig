@@ -1,38 +1,33 @@
 {% block body %}
-	<div class="mb-5 mt-5">
-		{% if formattedJobs is not empty %}
-			{% for formattedJob in formattedJobs %}
-				{% set jobViewModel = formattedJob.jobViewModel %}
-				{% if jobViewModel.getName() == 'PHP STAN' %}
-					<div>
-						<p>{% set details = formattedJob.details %}</p>
-						{% if details is defined %}
-							{% for key, value in details %}
+	{% if formattedJobs is not empty %}
+		{% for formattedJob in formattedJobs %}
+			{% set jobViewModel = formattedJob.jobViewModel %}
+			{% if jobViewModel.getName() == 'PHP STAN' %}
+				<div class="card mb-3">
+					{% set details = formattedJob.details %}
+					{% if details is defined %}
+						{% for key, value in details %}
 
-								{% if key == 'Résultats de PHP STAN' %}
-									<h3 class="text-center">{{ jobViewModel.getName() }}</h3>
-									<div class="{% if loop.first %}resumer{% else %}d-none{% endif %}">
-										<div class="d-flex justify-content-between">
-											<div class="d-flex job-stat">
-												<p>Erreurs :</p>
-												<p class="badge bg-danger">{{ value.Erreurs }}
-												</p>
-											</div>
-											<div>
-												<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-result-phpStan" aria-expanded="false" aria-controls="collapse-result-phpStan">
-													Voir les détails
-												</button>
-											</div>
-										</div>
+							{% if key == 'Résultats de PHP STAN' %}
+								<div class="card-header">
+									<h3 class="card-title text-center my-2">{{ jobViewModel.getName() }}</h3>
+								</div>
+
+								<div class="card-body">
+									<div class="d-flex justify-content-between align-items-center">
+										<span class="badge bg-danger me-2">
+											Erreurs :
+											{{ value.Erreurs }}
+										</span>
+
+										<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-result-phpStan" aria-expanded="false" aria-controls="collapse-result-phpStan">
+											Voir les détails
+										</button>
 									</div>
 
 									<div class="collapse" id="collapse-result-phpStan">
 										{% for key, result in value %}
 											{% if key != 'Erreurs' %}
-												<div class="{% if loop.first %}resumer{% else %}d-none{% endif %}">
-													<div class="d-flex justify-content-around"></div>
-												</div>
-
 												{% for file in result.Fichiers %}
 													<div class="card my-3">
 														<div class="card-header d-flex align-items-center justify-content-between">
@@ -76,16 +71,16 @@
 											{% endif %}
 										{% endfor %}
 									</div>
-								{% endif %}
-							{% endfor %}
-						{% else %}
-							<p>{{ value }}</p>
-						{% endif %}
-					</div>
-				{% endif %}
-			{% endfor %}
-		{% else %}
-			<p>Aucun Job disponible pour ce Rapport</p>
-		{% endif %}
-	</div>
+								</div>
+							{% endif %}
+						{% endfor %}
+					{% else %}
+						<p>{{ value }}</p>
+					{% endif %}
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% else %}
+		<p>Aucun Job disponible pour ce Rapport</p>
+	{% endif %}
 {% endblock %}

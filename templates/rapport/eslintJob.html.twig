@@ -1,141 +1,141 @@
 {% block body %}
-	<div class="mt-5">
-		{% if formattedJobs is not empty %}
-			{% for formattedJob in formattedJobs %}
-				{% set jobViewModel = formattedJob.jobViewModel %}
-				{% if jobViewModel.getName() == 'Eslint' %}
-					{% set totalErrors = formattedJob.details.totalErrors %}
-					{% set totalWarnings = formattedJob.details.totalWarnings %}
-					{% set totalFixable = formattedJob.details.totalFixable %}
+	{% if formattedJobs is not empty %}
+		{% for formattedJob in formattedJobs %}
+			{% set jobViewModel = formattedJob.jobViewModel %}
+			{% if jobViewModel.getName() == 'Eslint' %}
+				{% set totalErrors = formattedJob.details.totalErrors %}
+				{% set totalWarnings = formattedJob.details.totalWarnings %}
+				{% set totalFixable = formattedJob.details.totalFixable %}
 
-					<h3 class="text-center">{{ jobViewModel.getName() }}</h3>
-
-					<div class="resumer">
-						<div class="d-flex justify-content-between">
-							<div class="d-flex job-stat">
-								<p>Erreurs :</p>
-								<p class="badge text-bg-danger">{{ totalErrors }}
-								</p>
-							</div>
-
-							<div class="d-flex job-stat">
-								<p>Avertissements :</p>
-								<p class=" badge bg-warning">{{ totalWarnings }}</p>
-							</div>
-
-							<div class="d-flex job-stat">
-								<p>Réparables :</p>
-								<p class=" badge bg-info">{{ totalFixable }}</p>
-							</div>
-
-							<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEslint" aria-expanded="false" aria-controls="collapseEslint">
-								Voir les détails
-							</button>
-						</div>
+				<div class="card mb-3">
+					<div class="card-header">
+						<h3 class="card-title text-center my-2">{{ jobViewModel.getName() }}</h3>
 					</div>
 
-					<div class="collapse" id="collapseEslint">
-						<div class="card-body">
-							{% set eslintResults = formattedJob.details.eslintResults %}
-							{% if eslintResults is not empty %}
-								{% for eslintResult in eslintResults %}
-									<div class="card my-3">
-										<div class="card-header d-flex justify-content-between align-items-center">
-											{% set pathParts = eslintResult.filePath|split('/' ~ rapport.tempDir ~ '/') %}
-											<p>{{ pathParts[1] }}</p>
+					<div class="card-body">
+						<div class="resumer">
+							<div class="d-flex justify-content-between align-items-center">
+								<div>
+									<span class="badge bg-danger me-2">
+										Erreurs :
+										{{ totalErrors }}
+									</span>
+									<span class="badge bg-warning text-dark me-2">Avertissements :
+										{{ totalWarnings }}</span>
+									<span class="badge bg-info me-2">Réparables :
+										{{ totalFixable }}
+									</span>
+								</div>
 
-											<div class="d-flex justify-content-center align-items-center">
-												<span class="badge bg-danger me-2">Erreurs :
-													{{ eslintResult.errorCount }}</span>
-												<span class="badge bg-warning text-dark me-2">Avertissements :
-													{{ eslintResult.warningCount }}</span>
+								<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEslint" aria-expanded="false" aria-controls="collapseEslint">
+									Voir les détails
+								</button>
+							</div>
+						</div>
 
-												<button class="btn btn-dark btn-close-white" type="button" data-bs-toggle="collapse" data-bs-target="#eslint-collapse-result{{ loop.index }}" aria-expanded="false" aria-controls="eslint-collapse-result{{ loop.index }}">
-													Voir les détails
-												</button>
-											</div>
-										</div>
+						<div class="collapse" id="collapseEslint">
+							<div class="card-body">
+								{% set eslintResults = formattedJob.details.eslintResults %}
+								{% if eslintResults is not empty %}
+									{% for eslintResult in eslintResults %}
+										<div class="card my-3">
+											<div class="card-header d-flex justify-content-between align-items-center">
+												{% set pathParts = eslintResult.filePath|split('/' ~ rapport.tempDir ~ '/') %}
+												<p>{{ pathParts[1] }}</p>
 
-										<div class="collapse" id="eslint-collapse-result{{ loop.index }}">
-											<div class="card-body">
-												<p class="card-text mb-3">
-													<span class="badge text-bg-danger">Erreurs :
+												<div class="d-flex justify-content-center align-items-center">
+													<span class="badge bg-danger me-2">Erreurs :
 														{{ eslintResult.errorCount }}</span>
-													<span class="badge bg-warning text-dark">Avertissements :
+													<span class="badge bg-warning text-dark me-2">Avertissements :
 														{{ eslintResult.warningCount }}</span>
-													<span class="badge bg-info text-dark">Erreurs fatales :
-														{{ eslintResult.fatalErrorCount }}</span>
-													<span class="badge text-bg-danger">Erreurs réparables :
-														{{ eslintResult.fixableErrorCount }}</span>
-													<span class="badge bg-warning text-dark">Avertissements réparables :
-														{{ eslintResult.fixableWarningCount }}</span>
-												</p>
 
-												{% if eslintResult.obseleteRules is not empty %}
-													<h6>Règles obsolètes :</h6>
-													<table class="table table-striped">
-														<thead>
-															<tr>
-																<th>ID Règle</th>
-																<th>Remplacée par</th>
-															</tr>
-														</thead>
-														<tbody>
-															{% for rule in eslintResult.obseleteRules %}
+													<button class="btn btn-dark btn-close-white" type="button" data-bs-toggle="collapse" data-bs-target="#eslint-collapse-result{{ loop.index }}" aria-expanded="false" aria-controls="eslint-collapse-result{{ loop.index }}">
+														Voir les détails
+													</button>
+												</div>
+											</div>
+
+											<div class="collapse" id="eslint-collapse-result{{ loop.index }}">
+												<div class="card-body">
+													<p class="card-text mb-3">
+														<span class="badge text-bg-danger">Erreurs :
+															{{ eslintResult.errorCount }}</span>
+														<span class="badge bg-warning text-dark">Avertissements :
+															{{ eslintResult.warningCount }}</span>
+														<span class="badge bg-info text-dark">Erreurs fatales :
+															{{ eslintResult.fatalErrorCount }}</span>
+														<span class="badge text-bg-danger">Erreurs réparables :
+															{{ eslintResult.fixableErrorCount }}</span>
+														<span class="badge bg-warning text-dark">Avertissements réparables :
+															{{ eslintResult.fixableWarningCount }}</span>
+													</p>
+
+													{% if eslintResult.obseleteRules is not empty %}
+														<h6>Règles obsolètes :</h6>
+														<table class="table table-striped">
+															<thead>
 																<tr>
-																	<td>{{ rule.ruleId }}</td>
-																	<td>
-																		{% if rule.replacedBy is empty %}
-																			None
-																		{% else %}
-																			{{ rule.replacedBy|join(', ') }}
-																		{% endif %}
-																	</td>
+																	<th>ID Règle</th>
+																	<th>Remplacée par</th>
 																</tr>
-															{% endfor %}
-														</tbody>
-													</table>
-												{% endif %}
+															</thead>
+															<tbody>
+																{% for rule in eslintResult.obseleteRules %}
+																	<tr>
+																		<td>{{ rule.ruleId }}</td>
+																		<td>
+																			{% if rule.replacedBy is empty %}
+																				None
+																			{% else %}
+																				{{ rule.replacedBy|join(', ') }}
+																			{% endif %}
+																		</td>
+																	</tr>
+																{% endfor %}
+															</tbody>
+														</table>
+													{% endif %}
 
-												{% if eslintResult.messages is not empty %}
-													<h6>Messages :</h6>
-													<table class="table table-striped">
-														<thead>
-															<tr>
-																<th>Ligne</th>
-																<th>Colonne</th>
-																<th>ID Règles</th>
-																<th>Sévérité</th>
-																<th>Message</th>
-															</tr>
-														</thead>
-														<tbody>
-															{% for message in eslintResult.messages %}
+													{% if eslintResult.messages is not empty %}
+														<h6>Messages :</h6>
+														<table class="table table-striped">
+															<thead>
 																<tr>
-																	<td>{{ message.line }}</td>
-																	<td>{{ message.column }}</td>
-																	<td>{{ message.ruleId }}</td>
-																	<td>{{ message.severity }}</td>
-																	<td>{{ message.message }}</td>
+																	<th>Ligne</th>
+																	<th>Colonne</th>
+																	<th>ID Règles</th>
+																	<th>Sévérité</th>
+																	<th>Message</th>
 																</tr>
-															{% endfor %}
-														</tbody>
-													</table>
-												{% endif %}
+															</thead>
+															<tbody>
+																{% for message in eslintResult.messages %}
+																	<tr>
+																		<td>{{ message.line }}</td>
+																		<td>{{ message.column }}</td>
+																		<td>{{ message.ruleId }}</td>
+																		<td>{{ message.severity }}</td>
+																		<td>{{ message.message }}</td>
+																	</tr>
+																{% endfor %}
+															</tbody>
+														</table>
+													{% endif %}
 
+												</div>
 											</div>
 										</div>
-									</div>
-								{% endfor %}
-							{% else %}
-								<p>No ESLint results available.</p>
-							{% endif %}
+									{% endfor %}
+								{% else %}
+									<p>No ESLint results available.</p>
+								{% endif %}
+							</div>
 						</div>
 					</div>
-				{% endif %}
-			{% endfor %}
-		{% else %}
-			<p>No formatted jobs available.</p>
-		{% endif %}
-	</div>
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% else %}
+		<p>No formatted jobs available.</p>
+	{% endif %}
 {% endblock %}

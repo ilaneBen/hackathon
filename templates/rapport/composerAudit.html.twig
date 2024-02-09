@@ -1,79 +1,76 @@
 {% block body %}
-	<div class="mb-5">
-		{% if formattedJobs is not empty %}
-			{% for formattedJob in formattedJobs %}
-				{% set jobViewModel = formattedJob.jobViewModel %}
-				{% if jobViewModel.getName() == 'Composer Audit' %}
-					<div>
-						<h3 class="text-center">{{ jobViewModel.getName() }}</h3>
-						<p>{% set details = formattedJob.details %}</p>
-						{% if details is defined %}
-							{% for key, value in details %}
-								<div class="{% if loop.first %}resumer{% else %}d-none{% endif %}">
-									<div class="d-flex justify-content-between">
-										<div class="d-flex job-stat pt-2">
-											<p>Vulnérabilités :</p>
-											<p class="badge text-bg-danger">{{ details['Total Vulnerabilities'] }}</p>
-										</div>
-										<button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#collapse-result-Composer" aria-expanded="false" aria-controls="collapse-result-Composer">
-											Voir les détails
-										</button>
-									</div>
-								</div>
-
-								<div class="collapse" id="collapse-result-Composer">
-									{% if key == 'Composer Audit Results' %}
-										{% for packageData in value %}
-											<div class="card my-3">
-												<div class="card-header d-flex align-items-center justify-content-between">
-													<p>{{ packageData['Package Name'] }}</p>
-
-													<div class="d-flex justify-content-center align-items-center">
-														<button type="button" class="btn btn-dark btn-close-white" data-bs-toggle="collapse" data-bs-target="#composer-collapse-result-{{ loop.index }}" aria-expanded="false" aria-controls="composer-collapse-result-{{ loop.index }}">
-															Voir les détails
-														</button>
-													</div>
-												</div>
-
-												<div class="collapse" id="composer-collapse-result-{{ loop.index }}">
-													<div class="card-body">
-														{% for vulnerability in packageData['Vulnerabilities'] %}
-															<div class="border border-danger p-3 mb-3">
-																<p>
-																	<strong>CVE :</strong>
-																	{{ vulnerability['CVE'] }}</p>
-																<p>
-																	<strong>Titre :</strong>
-																	{{ vulnerability['Title'] }}</p>
-																<p>
-																	<strong>Advisory :
-																																																																																																																																																																																																																																																																																																																																																																																																												                                                                ID:</strong>
-																	{{ vulnerability['Advisory ID'] }}</p>
-																<p>
-																	<strong>Reporté à :
-																																																																																																																																																																																																																																																																																																																																																																																																												                                                                At:</strong>
-																	{{ vulnerability['Reported At'] }}</p>
-																<p>
-																	<strong>Lien :</strong>
-																	<a href="{{ vulnerability['Link'] }}" target="_blank">{{ vulnerability['Link'] }}</a>
-																</p>
-															</div>
-														{% endfor %}
-													</div>
-												</div>
-											</div>
-										{% endfor %}
-									{% endif %}
-								</div>
-							{% endfor %}
-						{% else %}
-							<p>{{ value }}</p>
-						{% endif %}
+	{% if formattedJobs is not empty %}
+		{% for formattedJob in formattedJobs %}
+			{% set jobViewModel = formattedJob.jobViewModel %}
+			{% if jobViewModel.getName() == 'Composer Audit' %}
+				{% set details = formattedJob.details %}
+				<div class="card mb-3">
+					<div class="card-header">
+						<h3 class="card-title text-center my-2">{{ jobViewModel.getName() }}</h3>
 					</div>
-				{% endif %}
-			{% endfor %}
-		{% else %}
-			<p>Aucun Job disponible pour ce Rapport</p>
-		{% endif %}
-	</div>
+
+					{% if details is defined %}
+						<div class="card-body">
+							<div class="resumer">
+								<div class="d-flex justify-content-between">
+									<span class="badge bg-info">Vulnérabilités :
+										{{ details['Total Vulnerabilities'] }}
+									</span>
+
+									<button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#collapse-result-Composer" aria-expanded="false" aria-controls="collapse-result-Composer">
+										Voir les détails
+									</button>
+								</div>
+							</div>
+
+							<div class="collapse" id="collapse-result-Composer">
+								{% for packageData in details['Composer Audit Results'] %}
+									<div class="card my-3">
+										<div class="card-header d-flex align-items-center justify-content-between">
+											<p>{{ packageData['Package Name'] }}</p>
+
+											<div class="d-flex justify-content-center align-items-center">
+												<button type="button" class="btn btn-dark btn-close-white" data-bs-toggle="collapse" data-bs-target="#composer-collapse-result-{{ loop.index }}" aria-expanded="false" aria-controls="composer-collapse-result-{{ loop.index }}">
+													Voir les détails
+												</button>
+											</div>
+										</div>
+
+										<div class="collapse" id="composer-collapse-result-{{ loop.index }}">
+											<div class="card-body">
+												{% for vulnerability in packageData['Vulnerabilities'] %}
+													<div class="border border-danger p-3 mb-3">
+														<p>
+															<strong>CVE :</strong>
+															{{ vulnerability['CVE'] }}</p>
+														<p>
+															<strong>Titre :</strong>
+															{{ vulnerability['Title'] }}</p>
+														<p>
+															<strong>Advisory ID :</strong>
+															{{ vulnerability['Advisory ID'] }}</p>
+														<p>
+															<strong>Reporté à :</strong>
+															{{ vulnerability['Reported At'] }}</p>
+														<p>
+															<strong>Lien :</strong>
+															<a href="{{ vulnerability['Link'] }}" target="_blank">{{ vulnerability['Link'] }}</a>
+														</p>
+													</div>
+												{% endfor %}
+											</div>
+										</div>
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+					{% else %}
+						<p>{{ value }}</p>
+					{% endif %}
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% else %}
+		<p>Aucun Job disponible pour ce Rapport</p>
+	{% endif %}
 {% endblock %}
