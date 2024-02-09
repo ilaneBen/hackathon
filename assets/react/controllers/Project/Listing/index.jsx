@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import Modal from "../../Components/Modal/index.jsx";
 import Form from "../Form/index.jsx";
-import Delete from "../Delete/index.jsx";
+import DeleteForm from "../../Components/DeleteForm/index.jsx";
 
 export default function ({ title, projectsUrl, newProjectPath }) {
   const [finalProjets, setFinalProjects] = useState([]);
@@ -123,7 +123,14 @@ export default function ({ title, projectsUrl, newProjectPath }) {
             setFinalProjects={setFinalProjects}
           />
         ) : (
-          <Delete closeRef={closeRef} project={project} csrf={deleteCsrf} setFinalProjects={setFinalProjects} />
+          <DeleteForm
+            closeRef={closeRef}
+            elementToDelete={project}
+            csrf={deleteCsrf}
+            setState={setFinalProjects}
+            buttonText="Supprimer le projet"
+            deleteUrl={project?.deleteUrl}
+          />
         )}
       </Modal>
     </div>

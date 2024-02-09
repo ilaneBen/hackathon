@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Button from "../../Components/Button";
 import toast from "react-hot-toast";
 
-export default function ({ closeRef, rapport, csrf, setRapports }) {
+export default function ({ closeRef, elementToDelete, csrf, setState, deleteUrl, buttonText = "Supprimer" }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const submitForm = (e) => {
@@ -11,7 +11,7 @@ export default function ({ closeRef, rapport, csrf, setRapports }) {
 
     const formData = new FormData(e.target);
 
-    fetch(rapport.deleteUrl, {
+    fetch(deleteUrl, {
       method: "POST",
       body: formData,
     })
@@ -20,7 +20,9 @@ export default function ({ closeRef, rapport, csrf, setRapports }) {
         if (res?.code === 200) {
           toast.success(res?.message);
           closeRef.current.click();
-          setRapports((finalRapports) => finalRapports.filter((finalRapport) => rapport.id !== finalRapport.id));
+
+          // Remove the deleted element from the state
+          setState((prevState) => prevState.filter((el) => elementToDelete.id !== el.id));
         } else {
           toast.error(res?.message);
         }
@@ -30,12 +32,12 @@ export default function ({ closeRef, rapport, csrf, setRapports }) {
 
   return (
     <form onSubmit={submitForm}>
-      <p>Attention, vous êtes sur le point de supprimer un rapport.</p>
+      <p>Attention, vous êtes sur le point de supprimer un élément.</p>
 
       <input type="hidden" name="deleteCsrf" value={csrf} />
 
       <div className="text-center mt-3">
-        <Button text="Supprimer le rapport" loadingText="Suppression..." isLoading={isLoading} variant="danger" />
+        <Button text={buttonText} loadingText="Suppression..." isLoading={isLoading} variant="danger" />
       </div>
     </form>
   );

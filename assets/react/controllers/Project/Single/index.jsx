@@ -1,9 +1,9 @@
 import React, { useRef, useState } from "react";
 import Modal from "../../Components/Modal/index.jsx";
 import Form from "../../Rapport/Form";
-import Delete from "../../Rapport/Delete";
 import clsx from "clsx";
 import "./style.scss";
+import DeleteForm from "../../Components/DeleteForm/index.jsx";
 
 const ProjectDetails = ({ project }) => {
   let dernierRapport = null;
@@ -147,9 +147,14 @@ const ProjectDetails = ({ project }) => {
         {isForm ? (
           <Form closeRef={closeRef} rapports={rapports} project={project} />
         ) : (
-          <>
-            <Delete closeRef={closeRef} rapport={rapport} csrf={deleteCsrf} setRapports={setRapports} />
-          </>
+          <DeleteForm
+            closeRef={closeRef}
+            elementToDelete={rapport}
+            csrf={deleteCsrf}
+            setState={setRapports}
+            buttonText="Supprimer le rapport"
+            deleteUrl={rapport?.deleteUrl}
+          />
         )}
       </Modal>
     </div>
